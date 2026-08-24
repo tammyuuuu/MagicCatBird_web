@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>紫水晶视觉方案对比</title>
+  <style>
+    :root { color-scheme: dark; --purple:#b983ff; --gold:#e6ca82; }
+    * { box-sizing:border-box; }
+    body {
+      margin:0; min-height:100vh; color:#eadfff;
+      font-family:"Microsoft YaHei","PingFang SC",sans-serif;
+      background:
+        radial-gradient(circle at 50% 15%,rgba(112,54,154,.26),transparent 34%),
+        radial-gradient(circle at 15% 80%,rgba(50,56,130,.18),transparent 28%),
+        linear-gradient(145deg,#08040f,#16091f 55%,#08040e);
+    }
+    body::before {
+      content:""; position:fixed; inset:0; pointer-events:none; opacity:.5;
+      background-image:radial-gradient(circle,#d9c0ff 0 1px,transparent 1.4px);
+      background-size:47px 47px;
+    }
+    main { position:relative; width:min(1180px,94vw); margin:auto; padding:38px 0 52px; }
+    .topline { display:flex; justify-content:space-between; align-items:center; gap:16px; }
+    h1 { margin:0; color:#f3eaff; font:500 clamp(24px,3vw,38px) Georgia,serif; letter-spacing:5px; }
+    .back { color:#bda0df; text-decoration:none; border:1px solid #68458e; padding:8px 14px; background:#140a20cc; }
+    .intro { color:#a990c4; line-height:1.8; margin:14px 0 26px; }
+    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
+    .card { position:relative; overflow:hidden; border:1px solid #5b3c77; background:#12091dcc; box-shadow:0 14px 38px #0008; }
+    .card.favorite { border-color:var(--gold); box-shadow:0 0 0 1px #e6ca8240,0 14px 45px #8e53cd38; }
+    .badge { position:absolute; top:12px; right:12px; z-index:2; padding:5px 9px; color:#2a1900; background:var(--gold); font-size:12px; letter-spacing:1px; }
+    .art { width:100%; aspect-ratio:1; display:block; object-fit:cover; }
+    .body { padding:16px 17px 18px; }
+    h2 { margin:0 0 8px; color:#f0e4ff; font:500 20px Georgia,serif; letter-spacing:2px; }
+    .desc { min-height:52px; margin:0 0 15px; color:#a992bf; font-size:13px; line-height:1.7; }
+    .small-preview { display:flex; align-items:center; gap:14px; padding:11px; border:1px solid #39264d; background:#09050e; }
+    .small-preview img { width:72px; height:72px; object-fit:cover; border-radius:8px; box-shadow:0 0 18px #9b62cf35; }
+    .small-preview span { color:#89739c; font-size:12px; line-height:1.6; }
+    .note { margin-top:22px; padding:15px 18px; color:#bda9cf; border-left:3px solid var(--gold); background:#12091dcc; line-height:1.8; }
+    @media (max-width:800px) { .grid{grid-template-columns:1fr;} .desc{min-height:0;} .topline{align-items:flex-start;flex-direction:column;} }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="topline">
+      <h1>紫水晶视觉方案</h1>
+      <a class="back" href="manifest_web.html">返回显化之境</a>
+    </div>
+    <p class="intro">三张图片目前仅用于风格审核，尚未替换正式物品。每张卡片底部以 72×72 像素模拟物品库中的辨识效果。</p>
+    <section class="grid">
+      <article class="card">
+        <img class="art" src="图片/待审核/水晶/amethyst_candidate_a_v01.png" alt="A 魔法手绘晶簇">
+        <div class="body">
+          <h2>A · 魔法手绘</h2>
+          <p class="desc">最接近参考图，保留明显的手绘线条、蓝紫渐变和绘本温度。</p>
+          <div class="small-preview"><img src="图片/待审核/水晶/amethyst_candidate_a_v01.png" alt="A 缩略图"><span>物品库模拟尺寸<br>72 × 72 px</span></div>
+        </div>
+      </article>
+      <article class="card">
+        <img class="art" src="图片/待审核/水晶/amethyst_candidate_b_v01.png" alt="B 精致游戏道具">
+        <div class="body">
+          <h2>B · 游戏道具插画</h2>
+          <p class="desc">晶面和轮廓更规整，保持插画感，同时具有较强的游戏物品辨识度。</p>
+          <div class="small-preview"><img src="图片/待审核/水晶/amethyst_candidate_b_v01.png" alt="B 缩略图"><span>物品库模拟尺寸<br>72 × 72 px</span></div>
+        </div>
+      </article>
+      <article class="card favorite">
+        <span class="badge">当前首选</span>
+        <img class="art" src="图片/待审核/水晶/amethyst_candidate_c_v01.png" alt="C 梦幻半写实晶簇">
+        <div class="body">
+          <h2>C · 梦幻半写实</h2>
+          <p class="desc">通透折射和体积感最强，整体更华丽，也更接近网站现有的神秘氛围。</p>
+          <div class="small-preview"><img src="图片/待审核/水晶/amethyst_candidate_c_v01.png" alt="C 缩略图"><span>物品库模拟尺寸<br>72 × 72 px</span></div>
+        </div>
+      </article>
+    </section>
+    <div class="note">当前记录：你最喜欢 C。确认路线后，将重新为胜出方案制作透明背景的正式母版和不同场景版本。</div>
+  </main>
+</body>
+</html>

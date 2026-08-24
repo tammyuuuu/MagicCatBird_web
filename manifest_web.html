@@ -1,0 +1,2817 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>显化之境 · 意念成真</title>
+  <style>
+    :root {
+      --ui-bg: rgba(24,13,44,0.92);
+      --ui-purple: #9f72df;
+      --ui-purple-text: #d8c1f4;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 100vw; height: 100vh;
+      overflow: hidden;
+      background: #0a0218;
+      font-family: 'Courier New', Courier, monospace;
+      color: #d4b0ff;
+      user-select: none;
+    }
+    .ui-nav-link {
+      background: var(--ui-bg);
+      border: 1px solid var(--ui-purple);
+      color: var(--ui-purple-text);
+      box-shadow: 0 0 15px rgba(159,114,223,0.2);
+      border-radius: 10px;
+    }
+    .ui-nav-link:hover {
+      background: rgba(35,19,61,0.96);
+      border-color: #c19aee;
+      color: #f0e4ff;
+      box-shadow: 0 0 25px rgba(159,114,223,0.4);
+    }
+
+    /* ===== 星空背景 ===== */
+    #starfield {
+      position: fixed; inset: 0; z-index: 0;
+      background: radial-gradient(ellipse at 50% 30%, #1a0a2e, #0a0218);
+      overflow: hidden;
+    }
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: #fff;
+      animation: twinkle var(--dur, 3s) ease-in-out infinite alternate;
+    }
+    @keyframes twinkle {
+      0%   { opacity: 0.2; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* ===== 桌面 ===== */
+    #desktop {
+      position: fixed; inset: 0; z-index: 1;
+      pointer-events: none;
+    }
+
+    /* ===== 显化圆阵 ===== */
+    #altar {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -55%);
+      width: 420px; height: 420px;
+      border-radius: 50%;
+      z-index: 5;
+      pointer-events: auto;
+    }
+
+    /* 外圈光环 */
+    .altar-ring {
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      border: 2px solid rgba(190,125,255,0.28);
+      box-shadow:
+        0 0 32px rgba(180,100,255,0.12),
+        inset 0 0 30px rgba(200,160,255,0.07);
+    }
+    .altar-ring:nth-child(1) { inset: -10px; border-color: rgba(215,185,255,0.2); }
+    .altar-ring:nth-child(2) { inset: 10px; border-color: rgba(190,125,255,0.26); }
+    .altar-ring:nth-child(3) { inset: 30px; border-color: rgba(220,190,255,0.16); }
+    .altar-ring:nth-child(4) { inset: 50px; border-color: rgba(190,125,255,0.2); }
+
+    /* 旋转符文环 */
+    .rune-ring {
+      position: absolute; inset: -6px;
+      border-radius: 50%;
+      border: 1px dashed rgba(224,188,112,0.28);
+      animation: ringSpin 30s linear infinite;
+    }
+    .rune-ring:nth-child(6) { inset: 20px; animation-duration: 25s; animation-direction: reverse; }
+    .rune-ring:nth-child(7) { inset: 46px; animation-duration: 35s; }
+
+    @keyframes ringSpin {
+      0%   { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* 符文标记 */
+    .rune {
+      position: absolute;
+      font-size: 14px; color: rgba(232,202,134,0.38);
+      pointer-events: none;
+    }
+
+    /* 中心光晕 */
+    .altar-glow {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(190,125,255,0.17), rgba(180,100,255,0.07) 42%, transparent 72%);
+      pointer-events: none;
+      animation: glowPulse 4s ease-in-out infinite alternate;
+    }
+    @keyframes glowPulse {
+      0%   { opacity: 0.5; transform: translate(-50%,-50%) scale(1); }
+      100% { opacity: 1; transform: translate(-50%,-50%) scale(1.15); }
+    }
+
+    /* ===== 显化物品（放在圆阵内） ===== */
+    .altar-item {
+      position: absolute;
+      z-index: 10;
+      cursor: grab;
+      transition: filter 0.3s;
+      pointer-events: auto;
+    }
+    .altar-item:active { cursor: grabbing; }
+
+    .altar-item .gem {
+      width: 36px; height: 36px;
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    }
+    .altar-item .gem-white    { background: linear-gradient(135deg, #f0f0ff, #c8c8e8); }
+    .altar-item .gem-amethyst { background: linear-gradient(135deg, #b56aff, #7a2ab8); }
+    .altar-item .gem-rose     { background: linear-gradient(135deg, #ff8aae, #d45a80); }
+    .altar-item .gem-citrine  { background: linear-gradient(135deg, #ffd54f, #f0a030); }
+    .altar-item .gem-emerald  { background: linear-gradient(135deg, #50d090, #208050); }
+    .altar-item .gem-sapphire { background: linear-gradient(135deg, #5a9aff, #2058c0); }
+
+    .altar-item .altar-item-image {
+      width: 58px; height: 92px; display: block; object-fit: contain;
+      pointer-events: none;
+      filter: drop-shadow(0 0 8px rgba(var(--item-glow, 150,190,255),.5));
+      transition: filter .35s ease;
+    }
+    .altar-item.activated .altar-item-image {
+      filter: brightness(1.2) saturate(1.08) drop-shadow(0 0 10px rgba(var(--item-glow, 150,190,255),.9));
+    }
+    .altar-candle {
+      position: relative; width: 28px; height: 132px; overflow: visible;
+      filter: drop-shadow(0 0 7px rgba(255,190,118,.38));
+    }
+    .altar-candle-crop { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+    .altar-candle img {
+      position: absolute; width: 648.1%; height: 157.66%;
+      left: -273.42%; top: -37.03%; pointer-events: none;
+    }
+    .altar-candle-flame {
+      position: absolute; left: 50%; top: -11px; width: 10px; height: 18px;
+      transform: translateX(-50%); transform-origin: 50% 88%;
+      border-radius: 62% 38% 60% 40% / 72% 56% 44% 28%;
+      background: radial-gradient(ellipse at 50% 70%, #fffbd0 0 14%, #ffd35d 30%, #ff873a 60%, rgba(255,93,35,.2) 76%, transparent 78%);
+      filter: drop-shadow(0 0 6px rgba(255,176,61,.88));
+      animation: manifestCandleFlame .9s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    .altar-crafted-candle { position:relative;width:40px;height:82px;border:1.5px solid rgba(240,224,242,.82);border-radius:7px 7px 15px 15px;background:linear-gradient(180deg,var(--crafted-light,#f8dce5),var(--crafted-wax,#efb7ca));box-shadow:0 0 14px var(--crafted-glow,rgba(232,137,174,.55)); }
+    .altar-crafted-candle::before { content:'';position:absolute;left:50%;top:-7px;width:2px;height:9px;transform:translateX(-50%);background:#e8d8c6; }
+    @keyframes manifestCandleFlame {
+      from { transform: translateX(-50%) scale(.92,.96) rotate(-2deg); }
+      to { transform: translateX(-50%) scale(1.05,1.08) rotate(2deg); }
+    }
+
+    .altar-item .candle-mini {
+      width: 12px; height: 22px;
+      background: linear-gradient(180deg, #f0dcc0, #dcc0a0);
+      border: 1px solid #b89870;
+      border-radius: 1px;
+      position: relative;
+    }
+    .altar-item .candle-mini .wick {
+      position: absolute; top: -3px; left: 50%; transform: translateX(-50%);
+      width: 1px; height: 3px; background: #444;
+    }
+    .altar-item .candle-mini .flame {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      width: 5px; height: 9px;
+      background: radial-gradient(ellipse at 50% 40%, #fff7a0, #ffa030 40%, transparent 70%);
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .altar-item .candle-mini .flame.lit { opacity: 1; animation: miniDance 0.8s ease-in-out infinite alternate; }
+    @keyframes miniDance {
+      0%   { transform: translateX(-50%) scale(1) rotate(-2deg); }
+      100% { transform: translateX(-48%) scale(1.05,0.9) rotate(1deg); }
+    }
+
+    .altar-item .ingr-icon { font-size: 22px; }
+    .altar-item .page-icon { font-size: 20px; }
+
+    .altar-item-label {
+      position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%);
+      font-size: 8px; color: rgba(200,160,255,0.5);
+      white-space: nowrap; letter-spacing: 1px;
+    }
+
+    /* ===== 显化物品被「激活」后的光晕 ===== */
+    .altar-item.activated .gem {
+      filter: brightness(1.8) drop-shadow(0 0 10px currentColor);
+    }
+    .altar-item.activated::after {
+      content: '';
+      position: absolute; inset: -8px;
+      border: 1px solid rgba(200,160,255,0.3);
+      border-radius: 50%;
+      animation: ringSpin 2s linear infinite;
+      pointer-events: none;
+    }
+
+    /* ===== 意图面板 ===== */
+    #intentionPanel {
+      position: fixed;
+      right: 30px; top: 50%; transform: translateY(-50%);
+      z-index: 20;
+      width: 220px;
+      background: rgba(10,4,22,0.85);
+      border: 2px solid #5a307a;
+      padding: 18px 16px;
+      backdrop-filter: blur(8px);
+    }
+    #intentionPanel .panel-title {
+      font-size: 12px; letter-spacing: 3px; color: #c9a0ff;
+      text-align: center; padding-bottom: 10px;
+      border-bottom: 2px solid #3a1e5e; margin-bottom: 12px;
+    }
+    #intentionInput {
+      width: 100%; min-height: 120px;
+      background: rgba(20,8,40,0.4);
+      border: 2px solid #3a1e5e;
+      color: #e0ccff;
+      font-family: inherit; font-size: 12px; line-height: 1.8;
+      padding: 10px; resize: vertical;
+      outline: none;
+      transition: border-color 0.3s;
+      letter-spacing: 1px;
+    }
+    #intentionInput:focus { border-color: #8a4dff; }
+    #intentionInput::placeholder { color: #5a3a7a; }
+
+    /* ===== 占卜抽屉（左侧） ===== */
+    #divinationDrawer {
+      position: fixed;
+      left: 0; top: 50%; transform: translateY(-50%);
+      z-index: 20;
+      transition: all 0.4s cubic-bezier(0.25,1,0.5,1);
+    }
+    #divinationDrawer.closed { width: 0; }
+    #divinationDrawer.closed .drawer-panel { display: none; }
+    #divinationDrawer.open { width: 200px; }
+
+    #divinationDrawer .drawer-tab {
+      position: absolute; right: -36px; top: 50%; transform: translateY(-50%);
+      width: 36px; height: 80px;
+      background: rgba(20,8,40,0.85);
+      border: 2px solid #5a307a; border-left: none;
+      border-radius: 0 6px 6px 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; cursor: pointer; z-index: 5;
+      writing-mode: vertical-rl; letter-spacing: 2px;
+      transition: all 0.3s;
+    }
+    #divinationDrawer .drawer-tab:hover { border-color: #b080ff; }
+
+    #divinationDrawer .drawer-panel {
+      width: 100%; height: 440px;
+      background: rgba(10,4,22,0.92);
+      border: 2px solid #5a307a; border-left: none;
+      backdrop-filter: blur(8px);
+      padding: 14px 10px;
+      overflow-y: auto;
+    }
+
+    .divination-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
+    }
+    .divination-item {
+      background: rgba(10,4,22,0.6);
+      border: 2px solid #3a1e5e;
+      aspect-ratio: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      cursor: pointer; gap: 3px;
+      transition: all 0.25s;
+    }
+    .divination-item:hover {
+      border-color: #8a4dff; background: rgba(20,8,40,0.8);
+      transform: scale(1.05);
+    }
+    .divination-item .di-icon { font-size: 22px; }
+    .divination-item .di-label { font-size: 8px; color: #b898e0; letter-spacing: 1px; }
+    .divination-item .di-image {
+      width: 44px; height: 50px; object-fit: contain; display: block;
+      pointer-events: none;
+      filter: drop-shadow(0 0 6px rgba(var(--item-glow, 150,190,255),.48));
+    }
+    .divination-item .di-candle-preview {
+      position: relative; width: 19px; height: 50px; overflow: hidden;
+      pointer-events: none; filter: drop-shadow(0 0 6px rgba(255,190,118,.4));
+    }
+    .divination-item .di-candle-preview img {
+      position: absolute; width: 123px; height: 79px;
+      left: -52px; top: -19px; pointer-events: none;
+    }
+
+    /* ===== 激活按钮 ===== */
+    #activateBtn {
+      position: fixed;
+      bottom: 50px; left: 50%; transform: translateX(-50%);
+      z-index: 30;
+      padding: 12px 40px;
+      background: rgba(180,100,255,0.15);
+      border: 2px solid #8a4dff;
+      color: #d4b0ff;
+      font-family: inherit; font-size: 14px; letter-spacing: 6px;
+      cursor: pointer;
+      transition: all 0.4s;
+    }
+    #activateBtn:hover {
+      background: rgba(180,100,255,0.25);
+      border-color: #b080ff;
+      box-shadow: 0 0 30px rgba(180,100,255,0.2);
+    }
+    #activateBtn.active {
+      background: rgba(200,160,80,0.2);
+      border-color: #f0d080;
+      color: #f0d080;
+      box-shadow: 0 0 50px rgba(240,208,128,0.3);
+    }
+
+    /* ===== 初始爆发 ===== */
+    .energy-burst {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 0; height: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(200,160,255,0.25), transparent);
+      pointer-events: none;
+      z-index: 40;
+    }
+    .energy-burst.burst {
+      animation: burstExpand 2s ease-out forwards;
+    }
+    @keyframes burstExpand {
+      0%   { width: 0; height: 0; opacity: 1; }
+      100% { width: 200vw; height: 200vw; opacity: 0; }
+    }
+
+    /* ===== 连续能量波 ===== */
+    .energy-wave {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 3;
+      opacity: 0;
+      transition: opacity 1s;
+    }
+    .energy-wave.active { opacity: 1; }
+
+    .energy-wave .ring {
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      border: 2px solid rgba(200,160,255,0.15);
+      animation: waveExpand 3s ease-out infinite;
+    }
+    .energy-wave .ring:nth-child(2) { animation-delay: 1s; }
+    .energy-wave .ring:nth-child(3) { animation-delay: 2s; border-width: 1px; border-color: rgba(240,208,128,0.1); }
+
+    @keyframes waveExpand {
+      0%   { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(2.5); opacity: 0; }
+    }
+
+    /* ===== 引导文字 ===== */
+    #guidance {
+      position: fixed;
+      bottom: 110px; left: 50%; transform: translateX(-50%);
+      z-index: 25;
+      font-size: 11px; color: #5a3a7a;
+      letter-spacing: 3px;
+      text-align: center;
+      opacity: 0.6;
+      pointer-events: none;
+      transition: opacity 0.5s;
+    }
+    #guidance.active { opacity: 1; color: #c9a0ff; }
+
+    /* ===== 状态提示 ===== */
+    .status-toast {
+      position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+      z-index: 9999;
+      background: rgba(10,4,22,0.9);
+      border: 2px solid #c8a050;
+      padding: 10px 20px;
+      font-size: 12px; color: #f0d080;
+      letter-spacing: 2px;
+      opacity: 0;
+      transition: opacity 0.5s, transform 0.5s;
+      pointer-events: none;
+    }
+    .status-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-10px);
+    }
+
+
+    /* ===== 显化计数器 ===== */
+    #manifestCount {
+      position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
+      z-index: 15;
+      font-size: 10px; color: #5a3a7a; letter-spacing: 2px;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    /* ===== 侧边标签（物品/记录，固定常显，不随抽屉移动） ===== */
+    .side-tab {
+      position: fixed;
+      left: 0;
+      z-index: 100;
+      width: 26px;
+      background: rgba(20,8,40,0.85);
+      border: 2px solid #5a307a; border-left: none;
+      border-radius: 0 6px 6px 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; color: #a070d8; cursor: pointer;
+      padding: 12px 2px;
+      writing-mode: vertical-rl; letter-spacing: 3px;
+      transition: all 0.3s;
+    }
+    .side-tab:hover { border-color: #b080ff; color: #e0ccff; }
+    .side-tab.drawer-bookmark {
+      width: 36px; height: 86px; padding: 0; border-left: none;
+      border-radius: 0 10px 10px 0; writing-mode: horizontal-tb;
+      letter-spacing: 0; display: grid; place-items: center;
+      overflow: hidden; isolation: isolate; backdrop-filter: blur(8px);
+    }
+    .side-tab.drawer-bookmark::before {
+      content: ''; position: absolute; inset: 4px 4px 4px 0;
+      border: 1px solid color-mix(in srgb, currentColor 32%, transparent);
+      border-left: none; border-radius: 0 9px 9px 0;
+      box-shadow: inset -3px 0 8px color-mix(in srgb, currentColor 8%, transparent);
+      pointer-events: none;
+    }
+    .side-tab.drawer-bookmark::after {
+      content: ''; position: absolute; inset: 5px 5px 5px 0;
+      border-radius: 0 8px 8px 0;
+      background:
+        radial-gradient(circle at 50% 24%, color-mix(in srgb, currentColor 30%, transparent) 0 1px, transparent 1.4px),
+        radial-gradient(circle at 50% 76%, color-mix(in srgb, currentColor 30%, transparent) 0 1px, transparent 1.4px),
+        linear-gradient(135deg, transparent 46%, color-mix(in srgb, currentColor 10%, transparent) 47% 49%, transparent 50%) 0 0 / 12px 12px,
+        linear-gradient(45deg, transparent 46%, color-mix(in srgb, currentColor 7%, transparent) 47% 49%, transparent 50%) 0 0 / 12px 12px;
+      opacity: .72; pointer-events: none; z-index: -1;
+    }
+    .drawer-bookmark .tab-text {
+      writing-mode: vertical-rl; letter-spacing: 4px; font-size: 14px;
+      line-height: 1; transform: translateX(1px);
+      text-shadow: 0 0 6px color-mix(in srgb, currentColor 35%, transparent);
+    }
+    #divTab.drawer-bookmark {
+      top: calc(50% - 78px); color: #f1d49a; border-color: #d5a553;
+      background: linear-gradient(90deg, rgba(28,18,45,.97), rgba(24,13,44,.93));
+    }
+    #recTab.drawer-bookmark {
+      top: calc(50% + 23px); color: #b9def1; border-color: #5ba4cd;
+      background: linear-gradient(90deg, rgba(20,34,52,.96), rgba(24,13,44,.9));
+    }
+    .side-tab.drawer-bookmark:hover { width: 41px; color: #fff; }
+
+    /* ===== 意图面板呼出按钮（仅手机显示，桌面隐藏） ===== */
+    #intentionTab { display: none; }
+
+    /* ===== 生成许愿瓶按钮 ===== */
+    #wishGenerateBtn {
+      width: 100%;
+      margin-top: 14px;
+      padding: 11px 0;
+      background: rgba(180,100,255,0.15);
+      border: 2px solid #8a4dff;
+      color: #d4b0ff;
+      font-family: inherit;
+      font-size: 12px;
+      letter-spacing: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    #wishGenerateBtn:hover { background: rgba(180,100,255,0.25); border-color: #b080ff; box-shadow: 0 0 16px rgba(180,100,255,0.2); }
+
+    /* ===== 许愿瓶（瓶子 + 瓶内卷纸条） ===== */
+    .wish-bottle {
+      width: 60px; height: 92px;
+    }
+    .wish-bottle .bottle-cork {
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 20px; height: 11px;
+      background: linear-gradient(180deg, #d0a070, #8a5a30);
+      border-radius: 3px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    }
+    .wish-bottle .bottle-neck {
+      position: absolute; top: 11px; left: 50%; transform: translateX(-50%);
+      width: 16px; height: 17px;
+      background: linear-gradient(90deg, rgba(150,220,255,0.35), rgba(220,245,255,0.18), rgba(150,220,255,0.35));
+      border-left: 2px solid rgba(180,230,255,0.5);
+      border-right: 2px solid rgba(180,230,255,0.5);
+    }
+    .wish-bottle .bottle-body {
+      position: absolute; top: 26px; left: 50%; transform: translateX(-50%);
+      width: 46px; height: 58px;
+      background: linear-gradient(160deg, rgba(150,220,255,0.30), rgba(90,160,255,0.10));
+      border: 2px solid rgba(180,230,255,0.45);
+      border-radius: 8px 8px 16px 16px;
+      overflow: hidden;
+      box-shadow: inset 0 0 14px rgba(150,220,255,0.15), 0 4px 14px rgba(120,180,255,0.12);
+    }
+    .wish-bottle .bottle-body::after {
+      content: '';
+      position: absolute; top: 6px; left: 7px;
+      width: 9px; height: 28px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.35), transparent);
+      border-radius: 6px;
+      transform: rotate(8deg);
+      pointer-events: none;
+    }
+    .wish-bottle .rolled-note {
+      position: absolute; top: 32px; left: 50%; transform: translateX(-50%);
+      width: 22px; height: 40px;
+      background: linear-gradient(90deg, #f2e8c8, #d8c89a 40%, #f2e8c8);
+      border-radius: 4px;
+      box-shadow: inset 0 0 6px rgba(130,90,30,0.35), 0 1px 3px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+    .wish-bottle .rolled-note .note-roll {
+      position: absolute; top: 0; bottom: 0; left: 8px; width: 5px;
+      background: rgba(130,90,30,0.28);
+    }
+    .wish-bottle .rolled-note .wax-seal {
+      position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%);
+      width: 9px; height: 9px;
+      background: radial-gradient(circle at 40% 40%, #e06585, #a03050);
+      border-radius: 50%;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+    .wish-bottle .rolled-note .note-wish {
+      position: absolute; inset: 2px 6px;
+      display: none;
+      align-items: center; justify-content: center;
+      text-align: center;
+      font-size: 9px; line-height: 1.35; color: #5a4020;
+      word-break: break-all;
+      overflow: hidden;
+    }
+    /* 打开状态：瓶塞上移淡出、纸条上浮展开显示愿望 */
+    .wish-bottle.open .bottle-cork {
+      top: -12px;
+      opacity: 0.3;
+      transform: translateX(-50%) rotate(18deg);
+    }
+    .wish-bottle.open .bottle-body { overflow: visible; }
+    .wish-bottle.open .rolled-note {
+      top: -100px;
+      width: 132px; height: 46px;
+      transform: translateX(-50%);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.35), inset 0 0 8px rgba(130,90,30,0.2);
+      z-index: 25;
+    }
+    .wish-bottle.open .rolled-note .note-wish { display: flex; }
+    .wish-bottle.open .rolled-note .note-roll { display: none; }
+    .wish-bottle.open .rolled-note .wax-seal { display: none; }
+
+    /* ===== 清空圆阵按钮（秘仪圆环，左下角） ===== */
+    #altarClearBtn {
+      position: fixed;
+      bottom: 42px; left: 40px;
+      transform: translateX(-50%);
+      z-index: 30;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: rgba(30,12,60,0.9);
+      border: 2px solid #8a4dff;
+      color: #d4b0ff;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.35s cubic-bezier(0.25,1,0.5,1);
+      box-shadow: 0 0 14px rgba(180,100,255,0.15);
+      font-family: inherit;
+    }
+    #altarClearBtn::before {
+      content: '';
+      position: absolute; inset: -6px;
+      border-radius: 50%;
+      border: 1px dashed rgba(180,100,255,0.28);
+      animation: altarRingSpin 14s linear infinite;
+      pointer-events: none;
+    }
+    #altarClearBtn::after {
+      content: '';
+      position: absolute; inset: 1px;
+      border-radius: 50%;
+      border: 1px solid rgba(180,100,255,0.08);
+      pointer-events: none;
+    }
+    #altarClearBtn .clear-rune {
+      position: absolute;
+      font-size: 6px; color: rgba(200,160,255,0.25);
+      pointer-events: none;
+    }
+    #altarClearBtn .clear-rune.r1 { top: 3px; left: 50%; transform: translateX(-50%); }
+    #altarClearBtn .clear-rune.r2 { bottom: 3px; left: 50%; transform: translateX(-50%); }
+    #altarClearBtn .clear-rune.r3 { left: 5px; top: 50%; transform: translateY(-50%); }
+    #altarClearBtn .clear-rune.r4 { right: 5px; top: 50%; transform: translateY(-50%); }
+    #altarClearBtn:hover { border-color: #b080ff; box-shadow: 0 0 24px rgba(180,100,255,0.35); transform: translateX(-50%) scale(1.08); }
+    #altarClearBtn:active { transform: translateX(-50%) scale(0.95); }
+    #altarClearBtn:hover .clear-rune { color: rgba(200,160,255,0.5); }
+    @keyframes altarRingSpin { to { transform: rotate(360deg); } }
+
+    /* ===== 记录按钮（右下角，蓝色系） ===== */
+    #manifestRecordBtn {
+      position: fixed;
+      bottom: 42px; right: 40px;
+      transform: translateX(50%);
+      z-index: 30;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: rgba(20,12,50,0.9);
+      border: 2px solid #4da0ff;
+      color: #a8d8ff;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.35s cubic-bezier(0.25,1,0.5,1);
+      box-shadow: 0 0 14px rgba(100,180,255,0.15);
+      font-family: inherit;
+    }
+    #manifestRecordBtn::before {
+      content: '';
+      position: absolute; inset: -6px;
+      border-radius: 50%;
+      border: 1px dashed rgba(100,180,255,0.28);
+      animation: altarRingSpin 14s linear infinite;
+      pointer-events: none;
+    }
+    #manifestRecordBtn::after {
+      content: '';
+      position: absolute; inset: 1px;
+      border-radius: 50%;
+      border: 1px solid rgba(100,180,255,0.08);
+      pointer-events: none;
+    }
+    #manifestRecordBtn .clear-rune {
+      position: absolute;
+      font-size: 6px; color: rgba(140,200,255,0.3);
+      pointer-events: none;
+    }
+    #manifestRecordBtn .clear-rune.r1 { top: 3px; left: 50%; transform: translateX(-50%); }
+    #manifestRecordBtn .clear-rune.r2 { bottom: 3px; left: 50%; transform: translateX(-50%); }
+    #manifestRecordBtn .clear-rune.r3 { left: 5px; top: 50%; transform: translateY(-50%); }
+    #manifestRecordBtn .clear-rune.r4 { right: 5px; top: 50%; transform: translateY(-50%); }
+    #manifestRecordBtn:hover { border-color: #6ab8ff; box-shadow: 0 0 24px rgba(100,180,255,0.35); transform: translateX(50%) scale(1.08); }
+    #manifestRecordBtn:active { transform: translateX(50%) scale(0.95); }
+    #manifestRecordBtn:hover .clear-rune { color: rgba(140,200,255,0.5); }
+
+    /* ===== 记录抽屉 ===== */
+    #recordDrawer {
+      position: fixed;
+      left: 0; top: 50%; transform: translateY(-50%);
+      z-index: 60;
+      transition: all 0.4s cubic-bezier(0.25,1,0.5,1);
+    }
+    #recordDrawer.closed { width: 0; }
+    #recordDrawer.closed .drawer-panel { display: none; }
+    #recordDrawer.open { width: 200px; }
+    #recordDrawer .drawer-panel {
+      width: 100%; height: 400px;
+      background: rgba(10,4,22,0.92);
+      border: 2px solid #5a307a; border-left: none;
+      backdrop-filter: blur(8px);
+      padding: 14px 10px 14px 36px;   /* 左内边距避开侧边标签 */
+      overflow-y: auto;
+    }
+
+    /* ===== 选区截图工具 ===== */
+    #captureOverlay {
+      position: fixed; inset: 0;
+      z-index: 20000;
+      background: rgba(5,2,12,0.45);
+      display: none;
+      cursor: crosshair;
+    }
+    #captureOverlay.active { display: block; }
+    #captureTip {
+      position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+      background: rgba(20,8,40,0.92);
+      border: 2px solid #5a307a;
+      color: #d4b0ff;
+      padding: 10px 22px;
+      font-size: 14px;
+      letter-spacing: 2px;
+      z-index: 20010;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    #captureRect {
+      position: fixed;
+      border: 2px dashed #b080ff;
+      background: rgba(180,100,255,0.12);
+      display: none;
+      z-index: 20005;
+      pointer-events: none;
+    }
+    .capture-btn {
+      position: fixed;
+      z-index: 20010;
+      height: 46px; padding: 0 28px;
+      border-radius: 23px;
+      display: none;
+      align-items: center; justify-content: center;
+      cursor: pointer; font-family: inherit;
+      font-size: 14px; letter-spacing: 2px;
+      transition: all 0.3s;
+    }
+    .capture-btn.show { display: flex; }
+    #captureConfirm {
+      bottom: 130px; left: 50%; transform: translateX(-50%);
+      background: rgba(60,160,90,0.92);
+      border: 2px solid #50d090;
+      color: #e0ffe8;
+    }
+    #captureCancel {
+      bottom: 70px; left: 50%; transform: translateX(-50%);
+      width: 46px; height: 46px;
+      padding: 0;
+      border-radius: 50%;
+      background: rgba(60,30,10,0.92);
+      border: 2px solid #c8a050;
+      color: #f0d080;
+      font-size: 16px;
+    }
+
+    /* ===== 记录页 ===== */
+    #recordPage {
+      position: fixed; inset: 0;
+      z-index: 15000;
+      background: radial-gradient(ellipse at 50% 30%, #1a0a2e, #0d001a);
+      display: none;
+      overflow-y: auto;
+      padding: 20px 18px 40px;
+    }
+    #recordPage.active { display: block; }
+    #recordPage .rp-title {
+      text-align: center;
+      color: #c9a0ff;
+      font-size: 18px;
+      letter-spacing: 6px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid #3a1e5e;
+      margin-bottom: 16px;
+    }
+    #recordPage .rp-photo { width: 100%; text-align: center; margin-bottom: 16px; }
+    #recordPage .rp-photo img {
+      max-width: 100%;
+      border: 3px solid #6b3fa0;
+      border-radius: 6px;
+      box-shadow: 0 0 30px rgba(180,100,255,0.25);
+    }
+    #recordPage .rp-field { margin-bottom: 16px; }
+    #recordPage .rp-field label {
+      display: block;
+      color: #a080d0;
+      font-size: 13px;
+      letter-spacing: 3px;
+      margin-bottom: 6px;
+    }
+    #recordPage .rp-field input,
+    #recordPage .rp-field textarea {
+      width: 100%;
+      background: rgba(20,8,40,0.7);
+      border: 2px solid #5a307a;
+      color: #e0ccff;
+      font-family: inherit;
+      font-size: 14px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      outline: none;
+      box-sizing: border-box;
+    }
+    #recordPage .rp-field textarea {
+      min-height: 120px;
+      resize: vertical;
+      line-height: 1.8;
+    }
+    #recordPage .rp-field input:focus,
+    #recordPage .rp-field textarea:focus { border-color: #b080ff; }
+    #recordPage .rp-actions {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    #recordPage .rp-btn {
+      height: 46px; padding: 0 26px;
+      border-radius: 23px;
+      border: 2px solid #8a4dff;
+      background: rgba(30,12,60,0.9);
+      color: #d4b0ff;
+      font-family: inherit;
+      font-size: 14px;
+      letter-spacing: 3px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    #recordPage .rp-btn:hover { border-color: #b080ff; color: #fff; }
+    #recordPage .rp-btn.primary { border-color: #50d090; background: rgba(60,160,90,0.85); color: #e0ffe8; }
+    #recordPage .rp-btn.danger  { border-color: #ff6a8a; background: rgba(160,60,80,0.85); color: #ffe0e8; }
+    #recordPage #rpCancel {
+      width: 46px; height: 46px;
+      padding: 0;
+      border-radius: 50%;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    /* ===== 记录列表 ===== */
+    .record-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .record-item {
+      background: rgba(10,4,22,0.6);
+      border: 2px solid #3a1e5e;
+      border-radius: 8px;
+      padding: 8px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .record-item:hover { border-color: #8a4dff; background: rgba(20,8,40,0.8); }
+    .record-item img {
+      width: 44px; height: 58px;
+      object-fit: cover;
+      border: 1px solid #4a2a6a;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .record-item .ri-info { flex: 1; min-width: 0; }
+    .record-item .ri-q {
+      font-size: 12px; color: #d4b0ff;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .record-item .ri-date { font-size: 10px; color: #5a3a7a; margin-top: 4px; }
+    .record-empty {
+      font-size: 12px; color: #5a3a7a; text-align: center;
+      padding: 30px 0; letter-spacing: 2px; line-height: 2;
+    }
+
+    /* ===== 圣物柜：炼金魔药列表 ===== */
+    .potion-sec-title {
+      font-size: 11px; letter-spacing: 3px; color: #a080d0;
+      text-align: center; margin: 16px 0 8px;
+      padding-top: 12px; border-top: 1px dashed #3a1e5e;
+    }
+    .potion-list { display: flex; flex-direction: column; gap: 8px; }
+    .potion-item {
+      background: rgba(10,4,22,0.6);
+      border: 2px solid #3a1e5e;
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex; align-items: center; justify-content: flex-start;
+      cursor: pointer;
+      font-size: 13px; color: #c9a0ff; letter-spacing: 2px;
+      transition: all 0.25s;
+    }
+    .potion-item:hover { border-color: #8a4dff; background: rgba(20,8,40,0.8); color: #e0ccff; }
+    .potion-item::before { content:'';width:10px;height:10px;margin-right:8px;flex:0 0 10px;border:1px solid rgba(255,255,255,.42);border-radius:50%;background:var(--potion-swatch,#9452dc);box-shadow:0 0 8px var(--potion-glow,rgba(148,82,220,.48)); }
+    .potion-item .potion-name { min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+    .potion-item .potion-delete { width:25px;height:25px;flex:0 0 25px;margin-left:auto;padding:0;border:1px solid rgba(213,165,83,.38);border-radius:50%;background:rgba(31,16,47,.7);color:rgba(241,212,154,.76);font-family:inherit;font-size:15px;line-height:22px;cursor:pointer;transition:border-color .22s,color .22s,box-shadow .22s; }
+    .potion-item .potion-delete:hover { color:#fff0bd;border-color:#e1bd68;box-shadow:0 0 9px rgba(213,165,83,.22); }
+    .potion-empty { font-size: 11px; color: #5a3a7a; text-align: center; padding: 12px 0; line-height: 1.8; letter-spacing: 1px; }
+
+    /* ===== 圆阵中的魔药瓶（CSS 绘制） ===== */
+    .altar-item .altar-potion {
+      position: relative;
+      width: 52px; height: 78px;
+      filter: drop-shadow(0 7px 9px rgba(21,5,43,.42)) drop-shadow(0 0 7px var(--potion-glow,rgba(155,94,218,.22)));
+    }
+    .altar-incense { width:58px;height:76px;position:relative;filter:drop-shadow(0 7px 10px rgba(20,7,33,.36)); }
+    .altar-incense::before { content:'';position:absolute;left:17px;right:17px;top:0;height:10px;border:1px solid #d5a553;border-radius:5px 5px 2px 2px;background:linear-gradient(90deg,#70502e,#d0aa66,#684524);z-index:2; }
+    .altar-incense::after { content:'';position:absolute;inset:8px 4px 0;border:1px solid rgba(226,207,238,.76);border-radius:15px 15px 21px 21px;background:linear-gradient(120deg,rgba(255,255,255,.16),rgba(111,72,139,.12)),linear-gradient(to top,#755b47 0 48%,transparent 49%);box-shadow:inset 6px 2px 8px rgba(255,255,255,.08),0 0 9px rgba(213,165,83,.16); }
+    .altar-potion::after { content:'';position:absolute;left:50%;bottom:0;width:43px;height:7px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse,rgba(176,107,235,.25),transparent 72%);filter:blur(2px);z-index:-1; }
+    .altar-potion .ap-cork { position:absolute; top:0; left:50%; transform:translateX(-50%); width:11px; height:9px; background:linear-gradient(90deg,#6d4d2b,#d2a966 48%,#62401f); border:1px solid #d7b56f; border-radius:4px 4px 2px 2px; box-shadow:0 0 4px rgba(213,165,83,.28); }
+    .altar-potion .ap-neck { position:absolute; top:8px; left:50%; transform:translateX(-50%); width:12px; height:19px; background:linear-gradient(90deg,rgba(91,52,121,.12),rgba(255,255,255,.22) 42%,rgba(77,41,108,.1)); border-left:1px solid rgba(225,205,237,.72); border-right:1px solid rgba(225,205,237,.72); }
+    .altar-potion .ap-collar { position:absolute;z-index:4;top:23px;left:50%;width:19px;height:5px;transform:translateX(-50%);border:1px solid #cda257;border-radius:50%;background:linear-gradient(180deg,#efd08b,#7c542b); }
+    .altar-potion .ap-body { position:absolute; top:26px; left:50%; transform:translateX(-50%); width:47px; height:49px; background:linear-gradient(118deg,rgba(255,255,255,.14),rgba(129,75,158,.09) 30%,rgba(63,29,91,.14)); border:1.2px solid rgba(225,202,239,.78); border-radius:46% 46% 49% 49%/28% 28% 68% 68%; overflow:hidden; box-shadow:inset 7px 2px 9px rgba(255,255,255,.08),inset -6px -2px 10px rgba(31,8,54,.16),0 0 9px rgba(157,90,215,.13); }
+    .altar-potion .ap-body::after { content:''; position:absolute; top:7px; left:8px; width:5px; height:18px; background:linear-gradient(180deg, rgba(255,255,255,.55), transparent); border-radius:4px; transform:rotate(11deg); pointer-events:none; }
+    .altar-potion .ap-liquid { position:absolute; left:0; right:0; bottom:0; height:48%; background:linear-gradient(180deg,var(--potion-top,rgba(185,111,245,.72)),var(--potion-bottom,rgba(73,24,143,.94))); border-radius:16% 16% 22px 22px; box-shadow:0 -2px 6px var(--potion-glow,rgba(200,126,255,.38)); animation:altarPotionGlow 3s ease-in-out infinite; }
+    .altar-potion .ap-liquid::before { content:'';position:absolute;left:0;right:0;top:-2px;height:4px;border-radius:50%;background:var(--potion-surface,rgba(226,175,255,.62)); }
+    .altar-potion .ap-emblem { position:absolute;z-index:5;top:39px;left:50%;transform:translateX(-50%);width:15px;height:18px;display:grid;place-items:center;border:1px solid rgba(211,173,94,.62);border-radius:50%;color:#e6c979;font-size:10px;text-shadow:0 0 4px rgba(232,199,119,.48);pointer-events:none; }
+    @keyframes altarPotionGlow { 50% { filter:brightness(1.16);box-shadow:0 -3px 8px rgba(200,126,255,.5); } }
+
+    /* ===== 激活按钮（金色胶囊，与清除/记录同排同高，固定宽度不变形） ===== */
+    #activateBtn {
+      bottom: 42px; left: 50%; transform: translateX(-50%);
+      width: 112px; height: 44px;
+      padding: 0;
+      background: linear-gradient(160deg, #e0b64c, #b8842a);
+      border: 2px solid #f4d070;
+      color: #2a1a05;
+      font-size: 13px; letter-spacing: 0px;
+      border-radius: 22px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 20px rgba(240,200,96,0.4);
+    }
+    #activateBtn::before {
+      content: '';
+      position: absolute; inset: -5px;
+      border-radius: 26px;
+      border: 1px dashed rgba(240,200,96,0.4);
+      animation: altarRingSpin 14s linear infinite;
+      pointer-events: none;
+    }
+    #activateBtn:hover {
+      background: linear-gradient(160deg, #ecc358, #c89430);
+      border-color: #f7d87a;
+      box-shadow: 0 0 28px rgba(240,200,96,0.55);
+    }
+    #activateBtn.active {
+      background: linear-gradient(160deg, #f2d268, #caa03a);
+      border-color: #ffe9a0;
+      color: #1f1505;
+      box-shadow: 0 0 46px rgba(240,208,128,0.55);
+    }
+    #activateBtn.active::before { border-color: rgba(255,224,140,0.55); }
+    #activateBtn .btn-text { line-height: 1; }
+    #activateBtn .btn-star {
+      position: absolute;
+      top: 50%; transform: translateY(-50%);
+      font-size: 12px;
+      color: rgba(42,26,5,0.75);
+      pointer-events: none;
+      line-height: 1;
+    }
+    #activateBtn .btn-star-l { left: 12px; }
+    #activateBtn .btn-star-r { right: 12px; }
+    #activateBtn.active .btn-star { color: rgba(31,21,5,0.8); }
+
+    /* ===== 抽屉左内边距避开侧边标签 ===== */
+    #divinationDrawer .drawer-panel {
+      padding: 14px 10px 14px 36px;
+    }
+
+    /* ===== 与黑猫占卜桌统一的全高左侧抽屉 ===== */
+    #divinationDrawer,
+    #recordDrawer {
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      width: 280px;
+      height: auto;
+      transform: translateX(-100%);
+      z-index: 300;
+      transition: transform .4s cubic-bezier(.25,1,.5,1);
+    }
+    #divinationDrawer.closed,
+    #recordDrawer.closed { width: 280px; transform: translateX(-100%); }
+    #divinationDrawer.open,
+    #recordDrawer.open { width: 280px; transform: translateX(0); }
+    #divinationDrawer.closed .drawer-panel,
+    #recordDrawer.closed .drawer-panel { display: block; }
+    #divinationDrawer .drawer-panel,
+    #recordDrawer .drawer-panel {
+      width: 100%; height: 100%;
+      padding: 20px 16px 20px 48px;
+      overflow-y: auto;
+      background: linear-gradient(135deg, rgba(13,6,28,.98), rgba(24,12,43,.96));
+      border-left: none;
+      backdrop-filter: blur(10px);
+    }
+    #divinationDrawer .drawer-panel {
+      border-color: #d5a553;
+      box-shadow: 8px 0 24px rgba(213,165,83,.16), inset -1px 0 rgba(241,212,154,.07);
+    }
+    #recordDrawer .drawer-panel {
+      border-color: #5ba4cd;
+      box-shadow: 8px 0 24px rgba(91,164,205,.16), inset -1px 0 rgba(185,222,241,.07);
+    }
+    #divinationDrawer .panel-title,
+    #recordDrawer .panel-title {
+      font-size: 16px; letter-spacing: 4px;
+      text-align: center; padding-bottom: 14px; margin-bottom: 14px;
+      border-bottom: 2px solid;
+    }
+    #divinationDrawer .panel-title { color: #f1d49a; border-color: rgba(142,104,48,.62); }
+    #recordDrawer .panel-title { color: #b9def1; border-color: rgba(91,164,205,.48); }
+    .divination-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    #divinationDrawer .divination-item {
+      border-color: rgba(142,104,48,.62);
+      background: rgba(24,13,44,.82);
+      box-shadow: inset 0 0 12px rgba(213,165,83,.04);
+    }
+    #divinationDrawer .divination-item:hover {
+      border-color: #e8c574;
+      background: rgba(35,19,61,.96);
+      box-shadow: 0 0 18px rgba(213,165,83,.22), inset 0 0 12px rgba(213,165,83,.06);
+    }
+    #divinationDrawer .di-label { color: #f1d49a; }
+    #divinationDrawer .potion-sec-title {
+      color: #f1d49a;
+      border-color: rgba(142,104,48,.48);
+    }
+    #divinationDrawer .potion-item {
+      color: #f1d49a;
+      border-color: rgba(142,104,48,.55);
+      background: rgba(24,13,44,.82);
+    }
+    #divinationDrawer .potion-item:hover {
+      color: #fff1cc; border-color: #e8c574;
+      background: rgba(35,19,61,.96);
+    }
+    #recordDrawer .record-item {
+      color: #b9def1;
+      border-color: rgba(87,159,201,.5);
+      background: rgba(18,31,48,.76);
+      box-shadow: inset 0 0 12px rgba(91,164,205,.05);
+    }
+    #recordDrawer .record-item:hover {
+      border-color: #87c5e5;
+      background: rgba(24,43,62,.94);
+      box-shadow: 0 0 18px rgba(91,164,205,.27);
+    }
+    #recordDrawer .record-item img { border-color: rgba(87,159,201,.7); }
+    #recordDrawer .record-item .ri-q { color: #b9def1; }
+    #recordDrawer .record-item .ri-date,
+    #recordDrawer .record-empty { color: rgba(185,222,241,.58); }
+    #recordDrawer .layout-record-glyph {
+      width: 46px; height: 46px; flex: 0 0 46px;
+      display: grid; place-items: center;
+      border: 1px solid rgba(117,190,229,.58); border-radius: 50%;
+      color: #fff0bd; font-size: 21px;
+      background: radial-gradient(circle, rgba(87,159,201,.22), rgba(16,29,47,.72) 67%);
+      box-shadow: inset 0 0 12px rgba(91,164,205,.18), 0 0 9px rgba(91,164,205,.15);
+    }
+    #recordDrawer .ri-count { margin-top: 3px; font-size: 10px; color: rgba(255,231,174,.65); }
+    #recordDrawer .layout-delete {
+      width: 25px; height: 25px; flex: 0 0 25px; padding: 0;
+      border: 1px solid rgba(127,190,222,.35); border-radius: 50%;
+      color: rgba(185,222,241,.7); background: rgba(8,20,34,.5);
+      cursor: pointer; line-height: 22px;
+    }
+    #recordDrawer .layout-delete:hover { color: #fff0bd; border-color: #e1bd68; }
+    .side-tab.drawer-bookmark { z-index: 310; }
+
+    /* ===== 星愿笺：圆角暗金面板 ===== */
+    #intentionPanel {
+      left: 50%; right: auto; top: 50%;
+      width: min(360px, calc(100vw - 34px));
+      padding: 20px 18px;
+      transform: translate(-50%, -50%) scale(.94);
+      border-radius: 18px;
+      border-color: #d5a553;
+      background: linear-gradient(145deg, rgba(28,18,45,.96), rgba(19,10,35,.94));
+      box-shadow: 0 12px 35px rgba(0,0,0,.3), 0 0 24px rgba(213,165,83,.12), inset 0 0 22px rgba(213,165,83,.035);
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transition: opacity .28s, transform .34s cubic-bezier(.2,.8,.2,1), visibility .28s;
+      z-index: 420;
+    }
+    #intentionPanel.open { opacity:1;visibility:visible;pointer-events:auto;transform:translate(-50%,-50%) scale(1); }
+    #intentionPanel::before {
+      content: '';
+      position: absolute; inset: 6px;
+      border: 1px solid rgba(241,212,154,.2);
+      border-radius: 13px;
+      pointer-events: none;
+    }
+    #intentionPanel .panel-title {
+      color: #f1d49a;
+      border-color: rgba(142,104,48,.62);
+      text-shadow: 0 0 8px rgba(213,165,83,.25);
+    }
+    #intentionInput {
+      position: relative;
+      border-radius: 11px;
+      border-color: rgba(142,104,48,.65);
+      background: rgba(16,9,31,.68);
+      color: #f5e6bd;
+      box-shadow: inset 0 0 14px rgba(213,165,83,.04);
+    }
+    #intentionInput:focus {
+      border-color: #d5a553;
+      box-shadow: 0 0 14px rgba(213,165,83,.16), inset 0 0 14px rgba(213,165,83,.05);
+    }
+    #intentionInput::placeholder { color: rgba(241,212,154,.38); }
+    #wishGenerateBtn {
+      position: relative;
+      border-radius: 12px;
+      border-color: #d5a553;
+      background: linear-gradient(145deg, rgba(64,43,23,.76), rgba(39,24,38,.9));
+      color: #f1d49a;
+      box-shadow: 0 0 14px rgba(213,165,83,.12);
+    }
+    #wishGenerateBtn:hover {
+      border-color: #e8c574;
+      background: linear-gradient(145deg, rgba(82,57,28,.86), rgba(49,29,46,.94));
+      box-shadow: 0 0 20px rgba(213,165,83,.25);
+    }
+    #intentionTab {
+      position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
+      z-index: 410; width: 58px; height: 58px; padding: 0;
+      display: grid; place-items: center;
+      border: 2px solid #d5a553; border-radius: 50%;
+      background: radial-gradient(circle at 50% 38%, rgba(65,42,82,.98), #180d2c);
+      color: #f1d49a; cursor: pointer;
+      box-shadow: 0 0 18px rgba(213,165,83,.3), inset 0 0 10px rgba(241,212,154,.08);
+      transition: transform .3s, box-shadow .3s, border-color .3s;
+    }
+    #intentionTab svg { width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 4px rgba(241,212,154,.5));pointer-events:none; }
+    #intentionTab:hover,#intentionTab.active { transform:translateY(-50%) scale(1.08);border-color:#edc879;box-shadow:0 0 28px rgba(213,165,83,.5),inset 0 0 12px rgba(241,212,154,.12); }
+    #intentionCloseBtn { position:absolute;z-index:3;top:12px;right:12px;width:28px;height:28px;padding:0;border:1px solid rgba(213,165,83,.48);border-radius:50%;background:transparent;color:#dcbf82;cursor:pointer; }
+    #intentionCloseBtn::before,#intentionCloseBtn::after { content:'';position:absolute;left:7px;top:12px;width:12px;height:1.3px;border-radius:2px;background:currentColor; }
+    #intentionCloseBtn::before { transform:rotate(45deg); } #intentionCloseBtn::after { transform:rotate(-45deg); }
+    #intentionCloseBtn:hover { color:#fff0c6;border-color:#edc879;box-shadow:0 0 10px rgba(213,165,83,.22); }
+
+    /* 显化按钮与“存入物品库”统一为金色镂空胶囊 */
+    #activateBtn,#activateBtn.active {
+      background: rgba(24,13,44,.9); border-color:#d5a553; color:#f1d49a;
+      box-shadow:0 0 20px rgba(213,165,83,.25),inset 0 0 10px rgba(241,212,154,.05);
+    }
+    #activateBtn:hover,#activateBtn.active:hover { background:rgba(51,37,26,.72);border-color:#edc879;color:#fff0c8;box-shadow:0 0 29px rgba(213,165,83,.42); }
+    #activateBtn .btn-star,#activateBtn.active .btn-star { color:rgba(241,212,154,.82); }
+
+    /* ===== 与占卜桌一致的清除／记录按钮图标 ===== */
+    #altarClearBtn {
+      background: rgba(24,13,44,.92);
+      border-color: #9f72df;
+      color: #d8c1f4;
+      box-shadow: 0 0 15px rgba(159,114,223,.2);
+    }
+    #altarClearBtn::before { border-color: rgba(159,114,223,.32); }
+    #altarClearBtn:hover { border-color: #c19aee; box-shadow: 0 0 25px rgba(159,114,223,.4); }
+    #manifestRecordBtn {
+      background: rgba(24,13,44,.92);
+      border-color: #579fc9;
+      color: #b9def1;
+      box-shadow: 0 0 15px rgba(87,159,201,.2);
+    }
+    #manifestRecordBtn::before { border-color: rgba(87,159,201,.32); }
+    #manifestRecordBtn:hover { border-color: #83c3e5; box-shadow: 0 0 25px rgba(87,159,201,.4); }
+    #altarClearBtn .clear-icon,
+    #manifestRecordBtn .record-icon {
+      width: 27px; height: 27px;
+      overflow: visible;
+      pointer-events: none;
+    }
+    #altarClearBtn .clear-icon { color: #d8c1f4; filter: drop-shadow(0 0 4px rgba(193,154,238,.5)); }
+    #altarClearBtn .magic-broom-handle {
+      fill: none; stroke: #9b5b42; stroke-width: 2.15;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+    #altarClearBtn .magic-broom-handle-highlight {
+      fill: none; stroke: #edb486; stroke-width: .55; stroke-linecap: round; opacity: .72;
+    }
+    #altarClearBtn .magic-broom-band { fill: #e3ae52; stroke: #ffe3a0; stroke-width: .75; }
+    #altarClearBtn .magic-broom-brush { fill: #ef6356; stroke: #ff9b66; stroke-width: 1; }
+    #altarClearBtn .magic-broom-detail { fill: none; stroke: #ffd28a; stroke-width: .75; }
+    #altarClearBtn .magic-broom-ribbon { fill: none; stroke: #e3ae52; stroke-width: .75; stroke-linecap: round; }
+    #altarClearBtn .magic-broom-star { fill: #c79aff; stroke: none; }
+    #manifestRecordBtn .record-icon { color: #b9def1; filter: drop-shadow(0 0 4px rgba(131,195,229,.5)); }
+    #manifestRecordBtn .camera-body,
+    #manifestRecordBtn .camera-lens {
+      fill: none; stroke: currentColor; stroke-width: 1.7;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+    #manifestRecordBtn .camera-spark { fill: #fff3c8; stroke: none; }
+    #manifestRecordBtn .layout-icon { width: 25px; height: 25px; color: #b9def1; filter: drop-shadow(0 0 4px rgba(131,195,229,.5)); pointer-events: none; }
+    #manifestRecordBtn .layout-frame,
+    #manifestRecordBtn .layout-line {
+      fill: none; stroke: currentColor; stroke-width: 1.55;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+    #manifestRecordBtn .layout-node { fill: #fff3c8; stroke: none; }
+
+    #layoutSaveDialog {
+      position: fixed; inset: 0; z-index: 21000;
+      display: none; place-items: center;
+      background: rgba(6,2,15,.58); backdrop-filter: blur(5px);
+    }
+    #layoutSaveDialog.open { display: grid; }
+    .layout-save-card {
+      width: min(330px, calc(100vw - 36px));
+      padding: 24px 22px 20px;
+      border: 2px solid #579fc9; border-radius: 17px;
+      background: linear-gradient(145deg, rgba(21,14,43,.98), rgba(10,7,27,.98));
+      box-shadow: 0 15px 42px rgba(0,0,0,.48), 0 0 24px rgba(87,159,201,.2), inset 0 0 20px rgba(87,159,201,.04);
+    }
+    .layout-save-title { text-align: center; color: #b9def1; font-size: 16px; letter-spacing: 4px; margin-bottom: 17px; }
+    #layoutNameInput {
+      width: 100%; padding: 11px 13px;
+      border: 1px solid rgba(87,159,201,.62); border-radius: 10px;
+      background: rgba(12,10,31,.78); color: #e5f5ff;
+      font: inherit; font-size: 13px; letter-spacing: 1px; outline: none;
+    }
+    #layoutNameInput:focus { border-color: #83c3e5; box-shadow: 0 0 13px rgba(87,159,201,.2); }
+    .layout-save-actions { display: flex; justify-content: center; gap: 10px; margin-top: 16px; }
+    .layout-save-actions button {
+      min-width: 92px; padding: 9px 14px; border-radius: 10px;
+      border: 1px solid #579fc9; background: rgba(20,24,48,.86);
+      color: #b9def1; font: inherit; cursor: pointer;
+    }
+    .layout-save-actions button.primary { border-color: #d5a553; color: #f1d49a; background: rgba(55,39,31,.82); }
+
+    /* ===== 月光许愿瓶与展开星愿纸条 ===== */
+    .wish-bottle {
+      width: 72px; height: 110px;
+      filter: drop-shadow(0 7px 10px rgba(0,0,0,.34));
+    }
+    .wish-bottle .bottle-aura {
+      position: absolute; inset: 12px 3px 0;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(244,205,121,.16), rgba(154,105,220,.08) 48%, transparent 72%);
+      animation: bottleAuraBreath 2.8s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    @keyframes bottleAuraBreath {
+      from { opacity: .55; transform: scale(.9); }
+      to { opacity: 1; transform: scale(1.08); }
+    }
+    .wish-bottle .bottle-cork {
+      top: 0; width: 23px; height: 13px;
+      border: 1px solid #8c5c2f;
+      border-radius: 5px 5px 3px 3px;
+      background:
+        linear-gradient(105deg, transparent 32%, rgba(92,54,25,.38) 34% 38%, transparent 40%) 0 0 / 8px 100%,
+        linear-gradient(180deg, #e1bd79, #a66c38);
+      box-shadow: inset 0 1px rgba(255,236,185,.55), 0 2px 4px rgba(0,0,0,.4);
+      z-index: 5;
+      transition: top .45s ease, opacity .35s ease, transform .45s ease;
+    }
+    .wish-bottle .bottle-neck {
+      top: 12px; width: 20px; height: 23px;
+      border-left: 2px solid rgba(236,207,146,.72);
+      border-right: 2px solid rgba(236,207,146,.72);
+      background: linear-gradient(90deg, rgba(108,67,164,.25), rgba(242,224,181,.16) 42% 58%, rgba(95,56,151,.24));
+      box-shadow: inset 4px 0 7px rgba(255,255,255,.08);
+    }
+    .wish-bottle .bottle-neck::after {
+      content: '';
+      position: absolute; left: 50%; bottom: 1px; transform: translateX(-50%);
+      width: 26px; height: 6px;
+      border: 1px solid #d5a553;
+      border-radius: 4px;
+      background: linear-gradient(180deg, #f0cf8a, #8d612f);
+      box-shadow: 0 0 6px rgba(213,165,83,.28);
+    }
+    .wish-bottle .bottle-body {
+      top: 32px; width: 58px; height: 69px;
+      border: 2px solid rgba(225,192,126,.78);
+      border-radius: 15px 15px 23px 23px / 13px 13px 20px 20px;
+      background:
+        radial-gradient(circle at 50% 68%, rgba(225,181,90,.14), transparent 40%),
+        linear-gradient(145deg, rgba(115,71,168,.32), rgba(37,24,67,.24) 45%, rgba(213,165,83,.14));
+      box-shadow: inset 0 0 16px rgba(224,197,255,.12), inset -5px -6px 12px rgba(53,25,83,.18), 0 0 14px rgba(213,165,83,.14);
+    }
+    .wish-bottle .bottle-body::before {
+      content: '☾';
+      position: absolute; left: 50%; top: 22px; transform: translateX(-50%);
+      width: 24px; height: 24px;
+      border: 1px solid rgba(241,212,154,.72);
+      border-radius: 50%;
+      display: grid; place-items: center;
+      color: #f1d49a; font-size: 17px; line-height: 1;
+      text-shadow: 0 0 7px rgba(241,212,154,.5);
+      box-shadow: 0 0 8px rgba(213,165,83,.12), inset 0 0 8px rgba(213,165,83,.08);
+      pointer-events: none;
+    }
+    .wish-bottle .bottle-body::after {
+      top: 8px; left: 8px; width: 8px; height: 34px;
+      background: linear-gradient(180deg, rgba(255,247,222,.5), rgba(255,255,255,.05));
+      border-radius: 8px; transform: rotate(7deg);
+    }
+    .wish-bottle .bottle-stars {
+      position: absolute; inset: 0; pointer-events: none;
+    }
+    .wish-bottle .bottle-stars::before,
+    .wish-bottle .bottle-stars::after {
+      position: absolute; color: #f4d58f; font-size: 7px;
+      text-shadow: 0 0 5px rgba(244,213,143,.75);
+    }
+    .wish-bottle .bottle-stars::before { content: '✦'; left: 8px; top: 14px; }
+    .wish-bottle .bottle-stars::after { content: '✧'; right: 7px; top: 40px; }
+    .wish-bottle .rolled-note {
+      top: 26px; width: 16px; height: 16px;
+      opacity: 0;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      box-shadow: none;
+      transform: translateX(-50%) scale(.18);
+      transition: top .55s cubic-bezier(.25,1,.5,1), width .55s cubic-bezier(.25,1,.5,1), height .55s cubic-bezier(.25,1,.5,1), opacity .35s ease, transform .55s cubic-bezier(.25,1,.5,1);
+    }
+    .wish-bottle .rolled-note .note-roll,
+    .wish-bottle .rolled-note .wax-seal { display: none; }
+    .wish-bottle .bottle-star-fill {
+      position: absolute; inset: 3px 3px 2px;
+      z-index: 3; pointer-events: none;
+    }
+    .wish-bottle .bottle-star-fill::before {
+      content: '';
+      position: absolute; inset: 20% 2px 0;
+      border-radius: 0 0 18px 18px;
+      background:
+        radial-gradient(circle at 12% 72%, #ffeaa4 0 1px, transparent 1.8px),
+        radial-gradient(circle at 26% 48%, #e8b9ff 0 1px, transparent 1.7px),
+        radial-gradient(circle at 38% 82%, #ffd878 0 1.2px, transparent 2px),
+        radial-gradient(circle at 51% 58%, #fff0b8 0 1px, transparent 1.8px),
+        radial-gradient(circle at 64% 76%, #dca7ff 0 1.1px, transparent 1.9px),
+        radial-gradient(circle at 77% 45%, #ffe39a 0 1px, transparent 1.8px),
+        radial-gradient(circle at 88% 84%, #fff2c2 0 1.2px, transparent 2px),
+        radial-gradient(ellipse at 50% 100%, rgba(236,190,87,.32), transparent 72%);
+      filter: drop-shadow(0 0 3px rgba(255,213,103,.7));
+      opacity: .9;
+      transition: opacity .45s ease;
+    }
+    .wish-bottle.open .bottle-star-fill::before { opacity: 0; }
+    .wish-bottle .bottle-star-fill span {
+      position: absolute;
+      left: var(--x); top: var(--y);
+      color: var(--star-color, #f4d477);
+      font-size: var(--s, 7px);
+      line-height: 1;
+      text-shadow: 0 0 4px rgba(255,213,103,.9), 0 0 8px rgba(195,127,232,.4);
+      animation: bottleStarTwinkle var(--twinkle, 1.8s) ease-in-out infinite alternate;
+      animation-delay: var(--delay, 0s);
+    }
+    @keyframes bottleStarTwinkle {
+      from { opacity: .42; transform: scale(.72) rotate(-8deg); }
+      to { opacity: 1; transform: scale(1.15) rotate(8deg); }
+    }
+    .wish-bottle.open .bottle-star-fill span {
+      animation: bottleStarEscape 1.45s cubic-bezier(.2,.7,.25,1) both;
+      animation-delay: var(--delay, 0s);
+    }
+    @keyframes bottleStarEscape {
+      0% { opacity: .9; transform: translate(0,0) scale(.7) rotate(0); }
+      35% { opacity: 1; }
+      100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.25) rotate(120deg); }
+    }
+    .wish-bottle .rolled-note .note-roll {
+      left: 9px; width: 5px;
+      background: linear-gradient(90deg, rgba(104,61,19,.12), rgba(119,71,22,.36), rgba(255,245,205,.18));
+    }
+    .wish-bottle .rolled-note .wax-seal {
+      bottom: 6px; width: 11px; height: 11px;
+      border: 1px solid #79253d;
+      background: radial-gradient(circle at 38% 34%, #ef8095, #a52e52 58%, #681a37);
+      box-shadow: 0 1px 3px rgba(0,0,0,.35), 0 0 5px rgba(208,75,111,.25);
+    }
+    .wish-bottle .rolled-note .wax-seal::after {
+      content: '✦'; display: grid; place-items: center;
+      width: 100%; height: 100%; color: rgba(255,215,180,.72); font-size: 6px;
+    }
+    .wish-bottle.open .bottle-cork { top: -16px; opacity: .55; transform: translateX(-50%) rotate(20deg); }
+    .wish-bottle.open .rolled-note {
+      top: -136px; width: 184px; height: 78px;
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+      overflow: visible;
+      border-color: rgba(231,202,143,.78);
+      border-radius: 18px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.14), transparent 22% 67%, rgba(219,188,255,.08)),
+        radial-gradient(circle at 72% 18%, rgba(221,194,255,.13), transparent 34%),
+        linear-gradient(145deg, rgba(46,25,75,.72), rgba(16,9,35,.67));
+      box-shadow:
+        0 12px 28px rgba(0,0,0,.46),
+        0 0 18px rgba(179,119,229,.24),
+        0 0 24px rgba(213,165,83,.13),
+        inset 0 0 18px rgba(216,190,255,.08),
+        inset 0 1px rgba(255,255,255,.2);
+      backdrop-filter: blur(7px) saturate(1.15);
+      outline: 1px solid rgba(255,244,213,.15);
+      outline-offset: -5px;
+    }
+    .wish-bottle.open .rolled-note::before,
+    .wish-bottle.open .rolled-note::after {
+      content: none;
+    }
+    .wish-bottle.open .rolled-note .note-wish {
+      inset: 16px 20px 11px;
+      border-top: 1px solid rgba(232,209,255,.14);
+      border-bottom: 1px solid rgba(238,211,157,.16);
+      background-position: center;
+      z-index: 1;
+    }
+    .wish-bottle .note-moon,
+    .wish-bottle .note-sparkles,
+    .wish-bottle .note-shimmer { display: none; pointer-events: none; }
+    .wish-bottle.open .note-moon {
+      display: grid; place-items: center;
+      position: absolute; left: 50%; top: -10px;
+      transform: translateX(-50%);
+      width: 22px; height: 22px; border-radius: 50%;
+      border: 1px solid rgba(236,210,158,.82);
+      background: linear-gradient(145deg, rgba(83,48,115,.92), rgba(22,13,48,.92));
+      color: #f1d49a; font-size: 14px; line-height: 1;
+      text-shadow: 0 0 6px rgba(241,212,154,.65);
+      box-shadow: 0 3px 8px rgba(0,0,0,.32), 0 0 10px rgba(192,135,235,.24), inset 0 1px rgba(255,255,255,.17);
+      z-index: 4;
+    }
+    .wish-bottle.open .note-sparkles {
+      display: block; position: absolute; inset: 0;
+      color: rgba(239,214,165,.76); font-size: 7px;
+      text-shadow: 0 0 5px rgba(214,167,244,.7); z-index: 3;
+    }
+    .wish-bottle.open .note-sparkles::before,
+    .wish-bottle.open .note-sparkles::after {
+      position: absolute; animation: noteStarBreath 1.9s ease-in-out infinite alternate;
+    }
+    .wish-bottle.open .note-sparkles::before { content: '✦'; left: -8px; top: 20px; }
+    .wish-bottle.open .note-sparkles::after { content: '✧'; right: -7px; bottom: 15px; animation-delay: -.8s; }
+    .wish-bottle.open .note-shimmer {
+      display: block; position: absolute; inset: 2px 7px;
+      border-radius: 6px; overflow: hidden; z-index: 2;
+    }
+    .wish-bottle.open .note-shimmer::after {
+      content: ''; position: absolute; top: -30%; bottom: -30%; width: 34px; left: -45px;
+      transform: skewX(-18deg);
+      background: linear-gradient(90deg, transparent, rgba(239,220,255,.2), rgba(255,247,214,.28), transparent);
+      animation: noteMoonSweep 4.6s ease-in-out infinite;
+    }
+    @keyframes noteStarBreath {
+      from { opacity: .38; transform: scale(.82); }
+      to { opacity: .95; transform: scale(1.16); }
+    }
+    @keyframes noteMoonSweep {
+      0%, 35% { left: -45px; opacity: 0; }
+      48% { opacity: .75; }
+      68%, 100% { left: 196px; opacity: 0; }
+    }
+
+    /* ===== 四套页面主题（与黑猫占卜桌共用选择） ===== */
+    #themeSwitcher { position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:1200;height:30px;padding:0 10px;display:flex;align-items:center;gap:9px;border:1px solid rgba(159,114,223,.48);border-radius:16px;background:rgba(24,13,44,.82);box-shadow:0 0 15px rgba(159,114,223,.2);backdrop-filter:blur(8px);pointer-events:auto; }
+    .theme-dot { position:relative;width:17px;height:17px;padding:0;border:1.5px solid rgba(255,255,255,.55);border-radius:50%;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s; }
+    .theme-dot:hover { transform:scale(1.12); }
+    .theme-dot::after { content:'';position:absolute;inset:-5px;border:1px solid transparent;border-radius:50%;pointer-events:none; }
+    .theme-dot.active::after { border-color:currentColor; }
+    .theme-dot[data-theme="mystic"] { background:#8f62d1;border-color:#d4b35f;color:#e4c978; }
+    .theme-dot[data-theme="noir"] { background:#fffdf9;border-color:rgba(23,23,26,.32);color:#17171a; }
+    .theme-dot[data-theme="noir"].active { border-color:#fff;box-shadow:0 0 7px rgba(23,23,26,.42); }
+    .theme-dot[data-theme="noir"].active::after { border-color:transparent;box-shadow:0 0 9px 2px rgba(23,23,26,.5); }
+    .theme-dot[data-theme="parchment"] { background:#4a1722;border-color:#c9a454;color:#dfc174; }
+    .theme-dot[data-theme="dopamine"] { background:linear-gradient(135deg,#f2a8c5 0 35%,#a9d8ee 35% 68%,#bfe4d2 68%);color:#df72a5; }
+
+    body[data-theme="noir"] { --ui-bg:rgba(255,253,249,.9);--ui-purple-text:#242429;color:#242429;background:#faf9f6; }
+    body[data-theme="noir"] #starfield { background-color:#fbfaf7;background-image:radial-gradient(ellipse at 50% 36%,rgba(255,255,255,.98),rgba(240,240,238,.64) 48%,rgba(224,224,222,.58) 100%),radial-gradient(circle at 18% 22%,rgba(255,255,255,.9),transparent 28%),radial-gradient(circle at 82% 72%,rgba(205,205,210,.22),transparent 32%); }
+    body[data-theme="noir"] .star { display:block;background:#55565b;box-shadow:0 0 3px rgba(25,25,28,.32),0 0 8px rgba(255,255,255,.96);animation:noirStarTwinkle 3.4s ease-in-out infinite alternate!important; }
+    body[data-theme="noir"] .star:nth-child(3n) { width:1px!important;height:1px!important;background:#a9a9ad;animation-duration:4.6s!important; }
+    body[data-theme="noir"] .star:nth-child(11n) { width:3px!important;height:3px!important;background:#fff;border:1px solid rgba(52,52,56,.42);box-shadow:0 0 4px rgba(30,30,34,.32),0 0 11px rgba(255,255,255,1);animation-duration:1.8s!important; }
+    @keyframes noirStarTwinkle { 0% { opacity:.16;transform:scale(.62);filter:brightness(.8); } 72% { opacity:.48; } 100% { opacity:1;transform:scale(1.42);filter:brightness(1.65); } }
+    body[data-theme="noir"] #themeSwitcher { background:rgba(255,253,249,.86);border-color:rgba(22,22,25,.3);box-shadow:0 5px 15px rgba(22,22,25,.12); }
+    body[data-theme="noir"] .altar-ring { border-color:rgba(25,25,28,.42)!important;box-shadow:0 0 12px rgba(0,0,0,.06),inset 0 0 16px rgba(0,0,0,.025); }
+    body[data-theme="noir"] .rune-ring { border-color:rgba(25,25,28,.25); }
+    body[data-theme="noir"] .rune { color:rgba(25,25,28,.42); }
+    body[data-theme="noir"] .altar-glow { background:radial-gradient(circle,rgba(30,30,34,.08),transparent 70%); }
+    body[data-theme="noir"] .altar-item.activated::after { border-color:rgba(25,25,28,.34); }
+    body[data-theme="noir"] .world-switch--west {
+      --ws-ink:#2c2d32;--ws-ink-hi:#0f0f12;
+      --ws-border:rgba(37,37,41,.5);--ws-border-hi:rgba(37,37,41,.85);
+      --ws-halo:rgba(37,37,41,.14);--ws-glow:rgba(37,37,41,.3);
+      background:linear-gradient(160deg,rgba(255,253,249,.96),rgba(238,237,233,.92));
+      box-shadow:0 0 0 4px rgba(37,37,41,.08),inset 0 0 14px rgba(37,37,41,.08),0 6px 18px rgba(20,20,24,.16);
+    }
+    body[data-theme="noir"] .world-switch--west .ws-tip { border-color:rgba(37,37,41,.42);background:linear-gradient(90deg,rgba(255,253,249,.98),rgba(240,239,236,.94)); }
+    body[data-theme="noir"] .energy-burst { background:radial-gradient(circle,rgba(255,255,255,.48),rgba(180,180,184,.14) 42%,transparent 72%); }
+    body[data-theme="noir"] .energy-wave .ring { border-color:rgba(35,35,39,.26);box-shadow:0 0 10px rgba(255,255,255,.5); }
+    body[data-theme="noir"] .energy-wave .ring:nth-child(3) { border-color:rgba(105,105,110,.18); }
+    body[data-theme="noir"] #activateBtn.active { background:rgba(255,255,255,.78);border-color:#252529;color:#252529;box-shadow:0 0 24px rgba(35,35,39,.18),0 0 0 4px rgba(255,255,255,.55); }
+    body[data-theme="noir"] #divinationDrawer .drawer-panel,body[data-theme="noir"] #recordDrawer .drawer-panel,body[data-theme="noir"] #intentionPanel,body[data-theme="noir"] #layoutSaveDialog .layout-save-card,body[data-theme="noir"] #recordPage { background:rgba(255,253,249,.94);border-color:#252529;color:#252529;box-shadow:0 12px 32px rgba(0,0,0,.12); }
+    body[data-theme="noir"] .drawer-bookmark,body[data-theme="noir"] #intentionTab,body[data-theme="noir"] #activateBtn,body[data-theme="noir"] #altarClearBtn,body[data-theme="noir"] #manifestRecordBtn,body[data-theme="noir"] .ui-nav-link { background:rgba(255,253,249,.82);border-color:#252529;color:#252529;box-shadow:0 5px 14px rgba(0,0,0,.1); }
+    body[data-theme="noir"] .ui-nav-link { background:rgba(255,253,249,.46);border:2px solid #17171a;color:#17171a;box-shadow:0 5px 14px rgba(0,0,0,.1);backdrop-filter:blur(6px); }
+    body[data-theme="noir"] .ui-nav-link:hover { background:#17171a;border-color:#17171a;color:#fff; }
+    body[data-theme="noir"] #divinationDrawer .panel-title,body[data-theme="noir"] #recordDrawer .panel-title,body[data-theme="noir"] #intentionPanel .panel-title { color:#252529;border-color:rgba(25,25,28,.3);text-shadow:none; }
+    body[data-theme="noir"] #altarClearBtn .clear-icon,body[data-theme="noir"] #manifestRecordBtn .layout-icon { color:#252529;filter:none; }
+    body[data-theme="noir"] #guidance,body[data-theme="noir"] #guidance.active { color:#4d4d52;text-shadow:none; }
+    body[data-theme="noir"] .status-toast { background:rgba(255,253,249,.95);border-color:#252529;color:#252529;box-shadow:0 8px 22px rgba(0,0,0,.12); }
+    body[data-theme="noir"] #activateBtn .btn-star,body[data-theme="noir"] #activateBtn.active .btn-star { color:#252529;text-shadow:none; }
+    body[data-theme="noir"] #altarClearBtn::before,body[data-theme="noir"] #manifestRecordBtn::before { border-color:rgba(37,37,41,.38); }
+    body[data-theme="noir"] #altarClearBtn::after,body[data-theme="noir"] #manifestRecordBtn::after { border-color:rgba(37,37,41,.14); }
+    body[data-theme="noir"] #altarClearBtn .clear-rune,body[data-theme="noir"] #manifestRecordBtn .clear-rune { color:rgba(37,37,41,.48);text-shadow:none; }
+    body[data-theme="noir"] #altarClearBtn .magic-broom-handle,body[data-theme="noir"] #altarClearBtn .magic-broom-handle-highlight,body[data-theme="noir"] #altarClearBtn .magic-broom-detail,body[data-theme="noir"] #altarClearBtn .magic-broom-ribbon { fill:none;stroke:#252529;filter:none; }
+    body[data-theme="noir"] #altarClearBtn .magic-broom-band { fill:#fff;stroke:#252529; }
+    body[data-theme="noir"] #altarClearBtn .magic-broom-brush { fill:#fff;stroke:#252529; }
+    body[data-theme="noir"] #altarClearBtn .magic-broom-star,body[data-theme="noir"] #manifestRecordBtn .layout-node { fill:#252529; }
+    body[data-theme="noir"] #manifestRecordBtn .layout-frame,body[data-theme="noir"] #manifestRecordBtn .layout-line { stroke:#252529; }
+    body[data-theme="noir"] #divTab.drawer-bookmark,body[data-theme="noir"] #recTab.drawer-bookmark { --bookmark-rgb:32,32,36;background:rgba(255,253,249,.94);border-color:#252529;color:#252529;box-shadow:4px 7px 15px rgba(0,0,0,.1); }
+    body[data-theme="noir"] #divinationDrawer .divination-item,body[data-theme="noir"] #divinationDrawer .potion-item,body[data-theme="noir"] #recordDrawer .record-item { background:rgba(255,253,249,.72);border-color:rgba(37,37,41,.62);color:#252529;box-shadow:none; }
+    body[data-theme="noir"] #divinationDrawer .divination-item:hover,body[data-theme="noir"] #divinationDrawer .potion-item:hover,body[data-theme="noir"] #recordDrawer .record-item:hover { background:#fff;border-color:#111;color:#111;box-shadow:0 5px 13px rgba(0,0,0,.1); }
+    body[data-theme="noir"] #divinationDrawer .di-label,body[data-theme="noir"] #divinationDrawer .potion-sec-title,body[data-theme="noir"] #recordDrawer .record-item .ri-q,body[data-theme="noir"] #recordDrawer .ri-count,body[data-theme="noir"] #recordDrawer .record-empty { color:#252529;border-color:rgba(37,37,41,.34); }
+    body[data-theme="noir"] #recordDrawer .layout-delete,body[data-theme="noir"] #divinationDrawer .potion-delete { color:#252529;background:#fffdf9;border-color:rgba(37,37,41,.55); }
+    body[data-theme="noir"] #intentionInput,body[data-theme="noir"] #wishGenerateBtn,body[data-theme="noir"] #layoutSaveDialog input,body[data-theme="noir"] #layoutSaveDialog button,body[data-theme="noir"] #recordPage input,body[data-theme="noir"] #recordPage textarea,body[data-theme="noir"] #recordPage .rp-btn { background:rgba(255,255,255,.7);border-color:#252529;color:#252529; }
+
+    body[data-theme="parchment"] { --ui-bg:rgba(43,17,23,.94);--ui-purple-text:#f0d990;color:#f0d990;background:#160b0d; }
+    body[data-theme="parchment"] #starfield { background:radial-gradient(ellipse at 50% 35%,#55242d,#271117 68%,#12090b); }
+    body[data-theme="parchment"] .star { background:#e8c778;opacity:.3!important; }
+    body[data-theme="parchment"] #themeSwitcher { background:rgba(45,18,24,.88);border-color:#b89047;box-shadow:0 5px 16px rgba(0,0,0,.3); }
+    body[data-theme="parchment"] .altar-ring { border-color:rgba(216,177,91,.48)!important;box-shadow:0 0 22px rgba(205,151,66,.12),inset 0 0 20px rgba(205,151,66,.05); }
+    body[data-theme="parchment"] .rune-ring { border-color:rgba(223,193,116,.48); }
+    body[data-theme="parchment"] .rune { color:rgba(240,213,145,.58); }
+    body[data-theme="parchment"] .altar-glow { background:radial-gradient(circle,rgba(191,113,60,.2),rgba(91,35,37,.09) 45%,transparent 72%); }
+    body[data-theme="parchment"] .altar-item.activated::after { border-color:rgba(203,167,92,.44); }
+    body[data-theme="parchment"] .world-switch--west {
+      --ws-ink:#e8c97d;--ws-ink-hi:#f6e0a2;
+      --ws-border:rgba(203,167,92,.66);--ws-border-hi:rgba(228,192,114,.95);
+      --ws-halo:rgba(203,167,92,.18);--ws-glow:rgba(232,190,116,.44);
+    }
+    body[data-theme="parchment"] .energy-burst { background:radial-gradient(circle,rgba(223,193,116,.3),rgba(92,43,34,.13) 46%,transparent 72%); }
+    body[data-theme="parchment"] .energy-wave .ring { border-color:rgba(203,167,92,.3);box-shadow:0 0 10px rgba(203,167,92,.12); }
+    body[data-theme="parchment"] .energy-wave .ring:nth-child(3) { border-color:rgba(95,145,126,.22); }
+    body[data-theme="parchment"] #divinationDrawer .drawer-panel,body[data-theme="parchment"] #recordDrawer .drawer-panel,body[data-theme="parchment"] #intentionPanel,body[data-theme="parchment"] #layoutSaveDialog .layout-save-card,body[data-theme="parchment"] #recordPage { background:linear-gradient(145deg,rgba(68,24,33,.97),rgba(16,42,37,.96));border-color:#b89049;color:#eed696;box-shadow:0 15px 36px rgba(0,0,0,.4); }
+    body[data-theme="parchment"] .drawer-bookmark,body[data-theme="parchment"] #intentionTab,body[data-theme="parchment"] #activateBtn,body[data-theme="parchment"] #altarClearBtn,body[data-theme="parchment"] #manifestRecordBtn,body[data-theme="parchment"] .ui-nav-link { background:linear-gradient(145deg,#4a1a26,#173b35);border-color:#b89049;color:#ecd38f;box-shadow:0 5px 15px rgba(0,0,0,.3); }
+    body[data-theme="parchment"] .ui-nav-link { background:linear-gradient(145deg,#4a1a26,#173b35);border:1px solid #b89049;color:#ecd38f;box-shadow:0 5px 14px rgba(0,0,0,.3),inset 0 0 0 1px rgba(238,199,105,.06); }
+    body[data-theme="parchment"] .ui-nav-link:hover { border-color:#e0c174;color:#fff0bd; }
+    body[data-theme="parchment"] #divinationDrawer .panel-title,body[data-theme="parchment"] #recordDrawer .panel-title,body[data-theme="parchment"] #intentionPanel .panel-title { color:#efd58f;border-color:rgba(203,167,92,.5); }
+    body[data-theme="parchment"] #guidance,body[data-theme="parchment"] #guidance.active { color:#dfc174;text-shadow:0 0 8px rgba(203,167,92,.2); }
+    body[data-theme="parchment"] .status-toast { background:linear-gradient(145deg,rgba(74,26,38,.97),rgba(23,59,53,.97));border-color:#c09a50;color:#f1d994;box-shadow:0 9px 24px rgba(0,0,0,.34),inset 0 0 10px rgba(239,213,132,.05); }
+    body[data-theme="parchment"] #activateBtn .btn-star,body[data-theme="parchment"] #activateBtn.active .btn-star { color:#efd584;text-shadow:0 0 5px rgba(203,167,92,.3); }
+    body[data-theme="parchment"] #altarClearBtn::before,body[data-theme="parchment"] #manifestRecordBtn::before { border-color:rgba(203,167,92,.44); }
+    body[data-theme="parchment"] #altarClearBtn::after,body[data-theme="parchment"] #manifestRecordBtn::after { border-color:rgba(223,193,116,.18); }
+    body[data-theme="parchment"] #altarClearBtn .clear-rune,body[data-theme="parchment"] #manifestRecordBtn .clear-rune { color:rgba(239,213,132,.56); }
+    body[data-theme="parchment"] #altarClearBtn .magic-broom-handle,body[data-theme="parchment"] #altarClearBtn .magic-broom-handle-highlight,body[data-theme="parchment"] #altarClearBtn .magic-broom-detail,body[data-theme="parchment"] #altarClearBtn .magic-broom-ribbon { fill:none;stroke:#efd584;filter:none; }
+    body[data-theme="parchment"] #altarClearBtn .magic-broom-band { fill:#173b35;stroke:#efd584; }
+    body[data-theme="parchment"] #altarClearBtn .magic-broom-brush { fill:#4a1a26;stroke:#efd584; }
+    body[data-theme="parchment"] #altarClearBtn .magic-broom-star,body[data-theme="parchment"] #manifestRecordBtn .layout-node { fill:#efd584; }
+    body[data-theme="parchment"] #manifestRecordBtn .layout-frame,body[data-theme="parchment"] #manifestRecordBtn .layout-line { stroke:#efd584; }
+    body[data-theme="parchment"] #divTab.drawer-bookmark { --bookmark-rgb:203,167,92;background:linear-gradient(145deg,#4a1a26,#173b35);border-color:#c09a50;color:#f1d994; }
+    body[data-theme="parchment"] #recTab.drawer-bookmark { --bookmark-rgb:112,151,148;background:linear-gradient(145deg,#173b35,#4a1a26);border-color:#9fbdad;color:#d8e6d9; }
+    body[data-theme="parchment"] #divinationDrawer .divination-item,body[data-theme="parchment"] #divinationDrawer .potion-item,body[data-theme="parchment"] #recordDrawer .record-item { background:linear-gradient(145deg,rgba(73,25,35,.82),rgba(22,55,48,.78));border-color:rgba(203,167,92,.58);color:#efd596;box-shadow:inset 0 0 10px rgba(215,175,91,.04); }
+    body[data-theme="parchment"] #divinationDrawer .di-label,body[data-theme="parchment"] #divinationDrawer .potion-sec-title,body[data-theme="parchment"] #recordDrawer .record-item .ri-q,body[data-theme="parchment"] #recordDrawer .ri-count { color:#efd596;border-color:rgba(203,167,92,.45); }
+    body[data-theme="parchment"] #recordDrawer .layout-delete,body[data-theme="parchment"] #divinationDrawer .potion-delete { color:#efd596;background:#29141a;border-color:#b89049; }
+    body[data-theme="parchment"] #intentionInput,body[data-theme="parchment"] #wishGenerateBtn,body[data-theme="parchment"] #layoutSaveDialog input,body[data-theme="parchment"] #layoutSaveDialog button,body[data-theme="parchment"] #recordPage input,body[data-theme="parchment"] #recordPage textarea,body[data-theme="parchment"] #recordPage .rp-btn { background:rgba(28,22,21,.58);border-color:#b89049;color:#efd596; }
+
+    body[data-theme="dopamine"] { --ui-bg:rgba(255,255,255,.78);--ui-purple-text:#68758a;color:#68758a;background:#f8f7f4; }
+    body[data-theme="dopamine"] #starfield { background-color:#fbfbfa;background-image:radial-gradient(circle at 24% 22%,rgba(242,168,197,.24),transparent 34%),radial-gradient(circle at 78% 72%,rgba(169,216,238,.28),transparent 37%),radial-gradient(circle at 62% 18%,rgba(191,228,210,.2),transparent 28%),radial-gradient(circle,rgba(255,255,255,.88) 0 1px,transparent 1.5px);background-size:auto,auto,auto,20px 20px; }
+    body[data-theme="dopamine"] .star { background:#91cbe6;box-shadow:0 0 4px rgba(145,203,230,.62),0 0 9px rgba(255,255,255,.96);animation:dopamineStarTwinkle 3.2s ease-in-out infinite alternate!important; }
+    body[data-theme="dopamine"] .star:nth-child(3n) { background:#e598b8;box-shadow:0 0 5px rgba(229,152,184,.48); }
+    body[data-theme="dopamine"] .star:nth-child(3n+1) { background:#9fd8bf;box-shadow:0 0 5px rgba(159,216,191,.5); }
+    body[data-theme="dopamine"] .star:nth-child(7n) { width:3px!important;height:3px!important;background:#fff;box-shadow:0 0 5px #fff,0 0 12px rgba(169,216,238,.85);animation-duration:1.65s!important; }
+    body[data-theme="dopamine"] .star:nth-child(5n) { animation-duration:4.4s!important; }
+    @keyframes dopamineStarTwinkle { 0% { opacity:.18;transform:scale(.58);filter:brightness(.85) saturate(.8); } 68% { opacity:.55; } 100% { opacity:1;transform:scale(1.48);filter:brightness(1.5) saturate(1.2); } }
+    body[data-theme="dopamine"] #themeSwitcher { background:rgba(255,255,255,.78);border-color:rgba(143,175,204,.42);box-shadow:0 5px 18px rgba(111,128,151,.12); }
+    body[data-theme="dopamine"] .altar-ring { border-color:rgba(145,203,230,.55)!important;box-shadow:0 0 25px rgba(169,216,238,.18),inset 0 0 22px rgba(242,168,197,.08); }
+    body[data-theme="dopamine"] .altar-ring:nth-child(even) { border-color:rgba(229,152,184,.38)!important; }
+    body[data-theme="dopamine"] .rune-ring { border-color:rgba(225,193,112,.42); }
+    body[data-theme="dopamine"] .rune { color:rgba(114,137,164,.45); }
+    body[data-theme="dopamine"] .altar-glow { background:radial-gradient(circle,rgba(242,168,197,.18),rgba(169,216,238,.09) 45%,transparent 72%); }
+    body[data-theme="dopamine"] .altar-item.activated::after { border-color:rgba(229,152,184,.38); }
+    body[data-theme="dopamine"] .world-switch--west {
+      --ws-ink:#b66788;--ws-ink-hi:#df72a5;
+      --ws-border:rgba(229,152,184,.62);--ws-border-hi:rgba(233,120,168,.92);
+      --ws-halo:rgba(229,152,184,.2);--ws-glow:rgba(229,152,184,.42);
+      background:linear-gradient(160deg,rgba(255,255,255,.96),rgba(248,244,249,.94));
+      box-shadow:0 0 0 4px rgba(229,152,184,.14),inset 0 0 14px rgba(229,152,184,.14),0 6px 18px rgba(112,129,151,.16);
+    }
+    body[data-theme="dopamine"] .world-switch--west .ws-tip { border-color:rgba(229,152,184,.5);background:linear-gradient(90deg,rgba(255,255,255,.98),rgba(247,244,250,.95));color:#b66788; }
+    body[data-theme="dopamine"] .energy-burst { background:radial-gradient(circle,rgba(242,168,197,.23),rgba(169,216,238,.12) 46%,transparent 72%); }
+    body[data-theme="dopamine"] .energy-wave .ring { border-color:rgba(145,203,230,.34);box-shadow:0 0 10px rgba(169,216,238,.16); }
+    body[data-theme="dopamine"] .energy-wave .ring:nth-child(2) { border-color:rgba(229,152,184,.26); }
+    body[data-theme="dopamine"] .energy-wave .ring:nth-child(3) { border-color:rgba(191,228,210,.32); }
+    body[data-theme="dopamine"] #divinationDrawer .drawer-panel,body[data-theme="dopamine"] #recordDrawer .drawer-panel,body[data-theme="dopamine"] #intentionPanel,body[data-theme="dopamine"] #layoutSaveDialog .layout-save-card,body[data-theme="dopamine"] #recordPage { background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(247,246,250,.88));border-color:#a9cfe3;color:#68758a;box-shadow:0 14px 38px rgba(112,129,151,.17);backdrop-filter:blur(12px); }
+    body[data-theme="dopamine"] .drawer-bookmark,body[data-theme="dopamine"] #intentionTab,body[data-theme="dopamine"] #activateBtn,body[data-theme="dopamine"] #altarClearBtn,body[data-theme="dopamine"] #manifestRecordBtn,body[data-theme="dopamine"] .ui-nav-link { background:rgba(255,255,255,.68);border-color:#a9cfe3;color:#68758a;box-shadow:0 6px 16px rgba(112,129,151,.12);backdrop-filter:blur(8px); }
+    body[data-theme="dopamine"] .ui-nav-link { background:rgba(255,255,255,.58);border:1.5px solid #a9cfe3;color:#67758a;box-shadow:0 5px 13px rgba(112,129,151,.1);backdrop-filter:blur(7px); }
+    body[data-theme="dopamine"] .ui-nav-link:hover { background:rgba(255,255,255,.85);border-color:#e598b8;color:#68758a; }
+    body[data-theme="dopamine"] #intentionTab { background:rgba(255,255,255,.72);border-color:#91cbe6;color:#607c91;box-shadow:0 6px 17px rgba(145,203,230,.18),0 0 0 3px rgba(169,216,238,.1); }
+    body[data-theme="dopamine"] #intentionTab svg { stroke:#607c91;filter:drop-shadow(0 0 4px rgba(145,203,230,.38)); }
+    body[data-theme="dopamine"] #intentionTab:hover,body[data-theme="dopamine"] #intentionTab.active { border-color:#72b9dc;color:#486d86;box-shadow:0 8px 20px rgba(145,203,230,.24),0 0 0 3px rgba(169,216,238,.16); }
+    body[data-theme="dopamine"] #activateBtn { border-color:#e598b8; }
+    body[data-theme="dopamine"] #altarClearBtn { background:rgba(255,248,251,.82);border-color:#e598b8;color:#b66788;box-shadow:0 6px 16px rgba(229,152,184,.18); }
+    body[data-theme="dopamine"] #divinationDrawer .panel-title,body[data-theme="dopamine"] #recordDrawer .panel-title,body[data-theme="dopamine"] #intentionPanel .panel-title { color:#68758a;border-color:rgba(145,203,230,.45);text-shadow:none; }
+    body[data-theme="dopamine"] #altarClearBtn .clear-icon,body[data-theme="dopamine"] #manifestRecordBtn .layout-icon { color:#68758a;filter:none; }
+    body[data-theme="dopamine"] #guidance,body[data-theme="dopamine"] #guidance.active { color:#78869a;text-shadow:none; }
+    body[data-theme="dopamine"] .status-toast { background:rgba(255,255,255,.9);border-color:#e598b8;color:#68758a;box-shadow:0 9px 24px rgba(112,129,151,.15),0 0 0 3px rgba(169,216,238,.16);backdrop-filter:blur(9px); }
+    body[data-theme="dopamine"] #activateBtn .btn-star,body[data-theme="dopamine"] #activateBtn.active .btn-star { color:#df72a5;text-shadow:0 0 5px rgba(229,152,184,.28); }
+    body[data-theme="dopamine"] #altarClearBtn::before { border-color:rgba(229,152,184,.5); }
+    body[data-theme="dopamine"] #manifestRecordBtn::before { border-color:rgba(145,203,230,.52); }
+    body[data-theme="dopamine"] #altarClearBtn::after,body[data-theme="dopamine"] #manifestRecordBtn::after { border-color:rgba(104,117,138,.14); }
+    body[data-theme="dopamine"] #altarClearBtn .clear-rune { color:rgba(229,152,184,.62);text-shadow:none; }
+    body[data-theme="dopamine"] #manifestRecordBtn .clear-rune { color:rgba(145,203,230,.68);text-shadow:none; }
+    body[data-theme="dopamine"] #altarClearBtn .magic-broom-handle,body[data-theme="dopamine"] #altarClearBtn .magic-broom-handle-highlight,body[data-theme="dopamine"] #altarClearBtn .magic-broom-detail,body[data-theme="dopamine"] #altarClearBtn .magic-broom-ribbon { fill:none;stroke:#b66788;filter:none; }
+    body[data-theme="dopamine"] #altarClearBtn .magic-broom-band { fill:#bfe4d2;stroke:#6f9f8d; }
+    body[data-theme="dopamine"] #altarClearBtn .magic-broom-brush { fill:#f2a8c5;stroke:#c9789c; }
+    body[data-theme="dopamine"] #altarClearBtn .magic-broom-star { fill:#df72a5; }
+    body[data-theme="dopamine"] #manifestRecordBtn .layout-frame,body[data-theme="dopamine"] #manifestRecordBtn .layout-line { stroke:#607c91; }
+    body[data-theme="dopamine"] #manifestRecordBtn .layout-node { fill:#df72a5; }
+    body[data-theme="dopamine"] #divTab.drawer-bookmark { --bookmark-rgb:229,152,184;background:rgba(255,255,255,.72);border-color:#e598b8;color:#866a7a; }
+    body[data-theme="dopamine"] #recTab.drawer-bookmark { --bookmark-rgb:145,203,230;background:rgba(255,255,255,.72);border-color:#91cbe6;color:#607c91; }
+    body[data-theme="dopamine"] #divinationDrawer .divination-item,body[data-theme="dopamine"] #divinationDrawer .potion-item,body[data-theme="dopamine"] #recordDrawer .record-item { background:rgba(255,255,255,.66);border-color:rgba(145,203,230,.58);color:#68758a;box-shadow:0 4px 11px rgba(112,129,151,.08); }
+    body[data-theme="dopamine"] #divinationDrawer .divination-item:nth-child(3n+1) { border-color:rgba(229,152,184,.62); }
+    body[data-theme="dopamine"] #divinationDrawer .divination-item:nth-child(3n+2) { border-color:rgba(191,228,210,.75); }
+    body[data-theme="dopamine"] #divinationDrawer .di-label,body[data-theme="dopamine"] #divinationDrawer .potion-sec-title,body[data-theme="dopamine"] #recordDrawer .record-item .ri-q,body[data-theme="dopamine"] #recordDrawer .ri-count,body[data-theme="dopamine"] #recordDrawer .record-empty { color:#68758a;border-color:rgba(145,203,230,.42); }
+    body[data-theme="dopamine"] #recordDrawer .layout-delete,body[data-theme="dopamine"] #divinationDrawer .potion-delete { color:#68758a;background:rgba(255,255,255,.78);border-color:#91cbe6; }
+    body[data-theme="dopamine"] #intentionInput,body[data-theme="dopamine"] #wishGenerateBtn,body[data-theme="dopamine"] #layoutSaveDialog input,body[data-theme="dopamine"] #layoutSaveDialog button,body[data-theme="dopamine"] #recordPage input,body[data-theme="dopamine"] #recordPage textarea,body[data-theme="dopamine"] #recordPage .rp-btn { background:rgba(255,255,255,.72);border-color:#a9cfe3;color:#68758a; }
+
+    /* ===== 星愿笺：悬浮星愿匣 ===== */
+    #intentionPanel {
+      --wish-accent:#d5a553;--wish-accent-soft:rgba(213,165,83,.2);--wish-ink:#f1d49a;
+      --wish-surface:linear-gradient(155deg,rgba(30,18,48,.97),rgba(15,9,31,.95));
+      --wish-input:rgba(10,6,24,.48);--wish-shadow:rgba(0,0,0,.38);
+      width:min(356px,calc(100vw - 34px));padding:42px 24px 24px;
+      border:1px solid var(--wish-accent);border-radius:24px;background:var(--wish-surface);color:var(--wish-ink);
+      box-shadow:0 22px 55px var(--wish-shadow),0 0 28px var(--wish-accent-soft),inset 0 0 30px rgba(255,255,255,.025);
+    }
+    #intentionPanel::before { inset:8px;border:1px solid var(--wish-accent-soft);border-radius:17px; }
+    #intentionPanel .intention-emblem { position:absolute;left:50%;top:-25px;transform:translateX(-50%);width:50px;height:50px;display:grid;place-items:center;border:1px solid var(--wish-accent);border-radius:50%;background:var(--wish-surface);color:var(--wish-ink);box-shadow:0 8px 20px var(--wish-shadow),0 0 16px var(--wish-accent-soft);z-index:2; }
+    #intentionPanel .intention-emblem::after { content:'';position:absolute;inset:5px;border:1px solid var(--wish-accent-soft);border-radius:50%; }
+    #intentionPanel .intention-emblem svg { width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px var(--wish-accent-soft)); }
+    #intentionPanel .panel-title { margin:0 34px 20px;padding:0 0 16px;border:0;border-bottom:1px solid var(--wish-accent-soft);color:var(--wish-ink);font-size:14px;letter-spacing:6px;text-shadow:none; }
+    #intentionInput { min-height:176px;padding:18px;border:1px solid var(--wish-accent-soft);border-radius:16px;background:var(--wish-input);color:var(--wish-ink);font-size:13px;line-height:1.9;box-shadow:inset 0 0 18px rgba(0,0,0,.07),inset 0 0 0 5px rgba(255,255,255,.018);resize:none; }
+    #intentionInput:focus { border-color:var(--wish-accent);box-shadow:0 0 0 3px var(--wish-accent-soft),inset 0 0 18px rgba(0,0,0,.06); }
+    #intentionInput::placeholder { color:color-mix(in srgb,var(--wish-ink) 46%,transparent); }
+    #wishGenerateBtn { height:50px;margin-top:18px;border:1px solid var(--wish-accent);border-radius:25px;background:transparent;color:var(--wish-ink);letter-spacing:6px;box-shadow:inset 0 0 12px var(--wish-accent-soft); }
+    #wishGenerateBtn:hover { border-color:var(--wish-ink);background:var(--wish-accent-soft);color:var(--wish-ink);box-shadow:0 8px 22px var(--wish-accent-soft),inset 0 0 12px rgba(255,255,255,.06);transform:translateY(-1px); }
+    #intentionCloseBtn { top:15px;right:15px;width:27px;height:27px;border-color:var(--wish-accent-soft);color:var(--wish-ink); }
+    #intentionCloseBtn:hover { border-color:var(--wish-accent);color:var(--wish-ink);box-shadow:0 0 10px var(--wish-accent-soft); }
+    body[data-theme="noir"] #intentionPanel { --wish-accent:#29292d;--wish-accent-soft:rgba(41,41,45,.17);--wish-ink:#29292d;--wish-surface:linear-gradient(155deg,rgba(255,255,255,.98),rgba(247,246,242,.96));--wish-input:rgba(255,255,255,.7);--wish-shadow:rgba(20,20,24,.15); }
+    body[data-theme="parchment"] #intentionPanel { --wish-accent:#c09a50;--wish-accent-soft:rgba(203,167,92,.23);--wish-ink:#f1d994;--wish-surface:linear-gradient(155deg,rgba(74,26,38,.98),rgba(22,55,48,.97));--wish-input:rgba(19,19,19,.28);--wish-shadow:rgba(0,0,0,.42); }
+    body[data-theme="dopamine"] #intentionPanel { --wish-accent:#91cbe6;--wish-accent-soft:rgba(145,203,230,.24);--wish-ink:#607c91;--wish-surface:linear-gradient(155deg,rgba(255,255,255,.96),rgba(247,251,252,.9));--wish-input:rgba(255,255,255,.62);--wish-shadow:rgba(112,129,151,.18); }
+    body[data-theme="dopamine"] #intentionPanel .intention-emblem { border-color:#e598b8;color:#c77499;box-shadow:0 8px 20px rgba(112,129,151,.14),0 0 16px rgba(229,152,184,.2); }
+    #intentionBackdrop { position:fixed;inset:0;z-index:419;opacity:0;visibility:hidden;pointer-events:none;background:rgba(8,4,18,.28);backdrop-filter:blur(3px);transition:opacity .28s,visibility .28s; }
+    #intentionBackdrop.open { opacity:1;visibility:visible;pointer-events:auto; }
+    body:has(#intentionPanel.open) #altar { opacity:.22;filter:blur(2px);transition:opacity .3s,filter .3s,transform .3s; }
+    body[data-theme="noir"] #intentionBackdrop { background:rgba(248,247,243,.48); }
+    body[data-theme="parchment"] #intentionBackdrop { background:rgba(28,10,14,.38); }
+    body[data-theme="dopamine"] #intentionBackdrop { background:rgba(250,251,251,.46); }
+
+    /* ===== 许愿瓶：星露滴瓶 ===== */
+    .wish-bottle {
+      --bottle-line:#e2c77f;--bottle-line-soft:rgba(226,199,127,.42);--bottle-glass:rgba(126,82,177,.24);
+      --bottle-depth:rgba(35,19,62,.5);--bottle-glint:rgba(255,248,224,.72);--bottle-star:#f5d98f;
+      --note-bg:linear-gradient(145deg,rgba(46,25,75,.88),rgba(16,9,35,.84));--note-line:rgba(231,202,143,.78);--note-ink:#f3e7c8;
+      width:78px;height:118px;filter:drop-shadow(0 9px 12px rgba(0,0,0,.3)) drop-shadow(0 0 8px var(--bottle-line-soft));
+    }
+    .wish-bottle .bottle-aura { inset:16px 0 0;background:radial-gradient(ellipse,var(--bottle-line-soft),rgba(150,100,210,.07) 48%,transparent 72%); }
+    .wish-bottle .bottle-cork { top:0;width:19px;height:17px;border:1px solid var(--bottle-line);border-radius:50% 50% 5px 5px;background:radial-gradient(circle at 38% 28%,var(--bottle-glint),var(--bottle-line) 45%,var(--bottle-depth));box-shadow:inset 0 1px rgba(255,255,255,.5),0 0 8px var(--bottle-line-soft); }
+    .wish-bottle .bottle-neck { top:14px;width:18px;height:24px;border-left:1.5px solid var(--bottle-line);border-right:1.5px solid var(--bottle-line);background:linear-gradient(90deg,var(--bottle-depth),rgba(255,255,255,.16) 47% 57%,var(--bottle-depth)); }
+    .wish-bottle .bottle-neck::after { bottom:0;width:28px;height:7px;border:1px solid var(--bottle-line);border-radius:7px;background:linear-gradient(180deg,var(--bottle-glint),var(--bottle-line) 40%,var(--bottle-depth));box-shadow:0 0 7px var(--bottle-line-soft); }
+    .wish-bottle .bottle-body { top:34px;width:64px;height:74px;border:1.5px solid var(--bottle-line);border-radius:21px 21px 29px 29px / 15px 15px 35px 35px;background:radial-gradient(ellipse at 50% 86%,var(--bottle-line-soft),transparent 42%),radial-gradient(circle at 70% 30%,rgba(255,255,255,.14),transparent 31%),linear-gradient(145deg,var(--bottle-glass),var(--bottle-depth));box-shadow:inset 5px 2px 10px rgba(255,255,255,.1),inset -7px -8px 15px rgba(20,10,35,.18),0 0 16px var(--bottle-line-soft); }
+    .wish-bottle .bottle-body::before { content:'☾';top:25px;width:23px;height:23px;border-color:var(--bottle-line-soft);color:var(--bottle-star);font-size:16px;text-shadow:0 0 7px var(--bottle-line-soft);box-shadow:0 0 9px var(--bottle-line-soft),inset 0 0 7px rgba(255,255,255,.06); }
+    .wish-bottle .bottle-body::after { top:9px;left:10px;width:6px;height:35px;background:linear-gradient(180deg,var(--bottle-glint),rgba(255,255,255,.04));border-radius:8px;transform:rotate(8deg); }
+    .wish-bottle .bottle-stars::before,.wish-bottle .bottle-stars::after { color:var(--bottle-star);text-shadow:0 0 6px var(--bottle-line-soft); }
+    .wish-bottle .bottle-star-fill span { color:var(--bottle-star);text-shadow:0 0 5px var(--bottle-line-soft),0 0 9px var(--bottle-line-soft); }
+    .wish-bottle .bottle-star-fill::before { filter:drop-shadow(0 0 4px var(--bottle-line-soft)); }
+    .wish-bottle.open .rolled-note { border-color:var(--note-line);background:var(--note-bg);box-shadow:0 12px 28px rgba(0,0,0,.28),0 0 20px var(--bottle-line-soft),inset 0 0 18px rgba(255,255,255,.08);outline-color:var(--bottle-line-soft); }
+    .wish-bottle.open .rolled-note .note-wish { border-color:var(--bottle-line-soft); }
+    .wish-bottle.open .note-moon { border-color:var(--note-line);background:var(--note-bg);color:var(--bottle-star);text-shadow:0 0 6px var(--bottle-line-soft);box-shadow:0 3px 8px rgba(0,0,0,.22),0 0 10px var(--bottle-line-soft); }
+    .wish-bottle.open .note-sparkles { color:var(--bottle-star);text-shadow:0 0 5px var(--bottle-line-soft); }
+    body[data-theme="noir"] .wish-bottle { --bottle-line:#33343a;--bottle-line-soft:rgba(51,52,58,.28);--bottle-glass:rgba(255,255,255,.72);--bottle-depth:rgba(168,169,174,.2);--bottle-glint:#fff;--bottle-star:#383940;--note-bg:linear-gradient(155deg,rgba(255,255,255,.96),rgba(236,236,233,.92));--note-line:rgba(51,52,58,.55);--note-ink:#2c2d32;filter:drop-shadow(0 8px 10px rgba(20,20,24,.16)); }
+    body[data-theme="parchment"] .wish-bottle { --bottle-line:#c09a50;--bottle-line-soft:rgba(203,167,92,.42);--bottle-glass:rgba(75,25,36,.66);--bottle-depth:rgba(17,58,49,.64);--bottle-glint:#f0d990;--bottle-star:#f1d994;--note-bg:linear-gradient(145deg,rgba(74,26,38,.94),rgba(20,53,46,.92));--note-line:rgba(203,167,92,.72);--note-ink:#f1d994; }
+    body[data-theme="dopamine"] .wish-bottle { --bottle-line:#91cbe6;--bottle-line-soft:rgba(145,203,230,.38);--bottle-glass:rgba(242,168,197,.22);--bottle-depth:rgba(191,228,210,.3);--bottle-glint:#fff;--bottle-star:#df72a5;--note-bg:linear-gradient(155deg,rgba(255,255,255,.94),rgba(240,248,250,.9));--note-line:rgba(145,203,230,.7);--note-ink:#607c91;filter:drop-shadow(0 8px 11px rgba(112,129,151,.14)) drop-shadow(0 0 8px rgba(145,203,230,.2)); }
+  </style>
+  <link rel="stylesheet" href="world_switch.css">
+</head>
+<body data-world="west">
+<script src="world_switch.js"></script>
+
+<div id="themeSwitcher" role="group" aria-label="页面配色">
+  <button class="theme-dot active" data-theme="mystic" title="紫金神秘梦幻风" aria-label="紫金神秘梦幻风" aria-pressed="true"></button>
+  <button class="theme-dot" data-theme="noir" title="黑白赫本优雅风" aria-label="黑白赫本优雅风" aria-pressed="false"></button>
+  <button class="theme-dot" data-theme="parchment" title="苏丹古铜珐琅风" aria-label="苏丹古铜珐琅风" aria-pressed="false"></button>
+  <button class="theme-dot" data-theme="dopamine" title="雾糖贴纸梦" aria-label="雾糖贴纸梦" aria-pressed="false"></button>
+</div>
+
+<!-- 星空 -->
+<div id="starfield"></div>
+
+<!-- 桌面 -->
+<div id="desktop"></div>
+
+<!-- 显化圆阵 -->
+<div id="altar">
+  <div class="altar-ring"></div>
+  <div class="altar-ring"></div>
+  <div class="altar-ring"></div>
+  <div class="altar-ring"></div>
+  <div class="rune-ring"></div>
+  <div class="rune-ring"></div>
+  <div class="rune-ring"></div>
+  <div class="altar-glow"></div>
+</div>
+
+<div id="intentionBackdrop" aria-hidden="true"></div>
+
+<!-- 意图面板（许愿瓶） -->
+<div id="intentionPanel">
+  <button id="intentionCloseBtn" type="button" title="关闭星愿笺" aria-label="关闭星愿笺"></button>
+  <div class="intention-emblem" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16.8 3.8A8.4 8.4 0 1 0 20.2 16 7.2 7.2 0 0 1 16.8 3.8Z"/><path d="m8 6 .35.85.85.35-.85.35L8 8.4l-.35-.85-.85-.35.85-.35L8 6Zm9.4 9.2.3.72.72.3-.72.3-.3.72-.3-.72-.72-.3.72-.3.3-.72Z"/></svg></div>
+  <div class="panel-title">星 愿 笺</div>
+  <textarea id="intentionInput" placeholder="写下你的愿望，投入许愿瓶...
+
+例如：
+• 吸引丰盛与机遇
+• 提升灵性能量
+• 实现内心平静
+• 召唤理想伴侣"></textarea>
+  <button id="wishGenerateBtn">生 成 许 愿 瓶</button>
+</div>
+
+<!-- 星愿笺开关 -->
+<button id="intentionTab" type="button" title="打开星愿笺" aria-label="打开星愿笺" aria-expanded="false">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4.5h10.5A1.5 1.5 0 0 1 18 6v13H7.5A1.5 1.5 0 0 1 6 17.5z"/><path d="M6 17.5A1.5 1.5 0 0 1 7.5 16H18M9 8h6M9 11h4.5"/><path d="m15.5 3 .45 1.05L17 4.5l-1.05.45L15.5 6l-.45-1.05L14 4.5l1.05-.45z"/></svg>
+</button>
+
+<!-- 左侧标签（固定常显，不随抽屉移动） -->
+<div class="side-tab drawer-bookmark" id="divTab"><span class="tab-text">圣物</span></div>
+<div class="side-tab drawer-bookmark" id="recTab"><span class="tab-text">记录</span></div>
+
+<!-- 右侧占卜抽屉 -->
+<div id="divinationDrawer" class="closed">
+  <div class="drawer-panel">
+    <div class="panel-title">✦ 圣 物 库 ✦</div>
+    <div class="divination-grid" id="divinationGrid"></div>
+    <div class="potion-sec-title">✦ 工 坊 圣 物 ✦</div>
+    <div class="potion-list" id="potionGrid"></div>
+  </div>
+</div>
+
+<!-- 记录抽屉 -->
+<div id="recordDrawer" class="closed">
+  <div class="drawer-panel">
+    <div class="panel-title">✦ 记 录 库 ✦</div>
+    <div class="record-grid" id="recGrid"></div>
+  </div>
+</div>
+
+<!-- 激活按钮 -->
+<button id="activateBtn"><span class="btn-star btn-star-l">✦</span><span class="btn-text">显 化</span><span class="btn-star btn-star-r">✦</span></button>
+
+<!-- 清空圆阵按钮 -->
+<button id="altarClearBtn" title="清空圆阵">
+  <span class="clear-rune r1">✦</span>
+  <span class="clear-rune r2">✦</span>
+  <span class="clear-rune r3">✦</span>
+  <span class="clear-rune r4">✦</span>
+  <svg class="clear-icon" viewBox="0 0 24 24" aria-hidden="true">
+    <path class="magic-broom-handle" d="M8.25 14.55C12.35 12.75 16.7 9.75 20.7 5.65"/>
+    <path class="magic-broom-handle-highlight" d="M8.65 14.2C12.55 12.5 16.65 9.62 20.35 5.85"/>
+    <path class="magic-broom-band" d="M7.1 13.65c.72.42 1.43.93 2.12 1.55l-1.05 1.55a14 14 0 0 0-2.18-1.55l1.11-1.55Z"/>
+    <path class="magic-broom-brush" d="M6.1 14.9c.82.32 1.6.78 2.35 1.38-.62 1.02-1.17 2.16-1.65 3.4-1.65.2-3.25.05-4.8-.48 1-1.76 2.36-3.2 4.1-4.3Z"/>
+    <path class="magic-broom-detail" d="M2.85 18.95c1.55-.28 2.9-.95 4.3-2.45M4.2 19.38c1.25-.35 2.25-1.02 3.35-2.28M5.62 19.55c.78-.42 1.45-1.02 2.18-1.88"/>
+    <path class="magic-broom-ribbon" d="M7.35 15.85c.18 1.18.92 1.58.66 2.7-.15.62-.62 1.02-.28 1.78"/>
+    <path class="magic-broom-star" d="M18.2 9.3l.42 1.15 1.15.42-1.15.42-.42 1.15-.42-1.15-1.15-.42 1.15-.42.42-1.15ZM13.7 6.2l.28.72.72.28-.72.28-.28.72-.28-.72-.72-.28.72-.28.28-.72Z"/>
+  </svg>
+</button>
+
+<!-- 记录按钮 -->
+<button id="manifestRecordBtn" title="保存当前布置" aria-label="保存当前布置">
+  <span class="clear-rune r1">✦</span>
+  <span class="clear-rune r2">✦</span>
+  <span class="clear-rune r3">✦</span>
+  <span class="clear-rune r4">✦</span>
+  <svg class="layout-icon" viewBox="0 0 24 24" aria-hidden="true">
+    <path class="layout-frame" d="M5 4.5h11.5L20 8v11.5H5zM8 4.5v5h8v-5M8 16h8"/>
+    <path class="layout-line" d="m9 13 3-1.8 3 1.8"/>
+    <circle class="layout-node" cx="9" cy="13" r="1.15"/><circle class="layout-node" cx="12" cy="11.2" r="1.15"/><circle class="layout-node" cx="15" cy="13" r="1.15"/>
+  </svg>
+</button>
+
+<!-- 引导文字 -->
+<div id="guidance">将水晶、蜡烛与许愿瓶放入圆阵 · 点击显化</div>
+
+<!-- 状态提示 -->
+<div class="status-toast" id="statusToast"></div>
+
+<!-- 初始爆发 -->
+<div class="energy-burst" id="energyBurst"></div>
+
+<!-- 连续能量波 -->
+<div class="energy-wave" id="energyWave">
+  <div class="ring"></div>
+  <div class="ring"></div>
+  <div class="ring"></div>
+</div>
+
+<!-- 选区截图工具 -->
+<div id="layoutSaveDialog" aria-hidden="true">
+  <div class="layout-save-card">
+    <div class="layout-save-title">✦ 保 存 布 置 ✦</div>
+    <input id="layoutNameInput" type="text" maxlength="24" placeholder="给这次布置起一个名字">
+    <div class="layout-save-actions">
+      <button id="layoutSaveCancel">取消</button>
+      <button class="primary" id="layoutSaveConfirm">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 旧截图工具保留但不再由记录按钮触发 -->
+<div id="captureOverlay">
+  <div id="captureTip">拖拽选择要保存的区域</div>
+  <div id="captureRect"></div>
+  <button class="capture-btn" id="captureConfirm">保存</button>
+  <button class="capture-btn" id="captureCancel">✕</button>
+</div>
+
+<!-- 记录页 -->
+<div id="recordPage">
+  <div class="rp-title" id="rpTitle">✦ 记 录 ✦</div>
+  <div class="rp-photo" id="rpPhoto"></div>
+  <div class="rp-field">
+    <label>愿望：</label>
+    <input id="rpQuestion" type="text" placeholder="写下你的愿望...">
+  </div>
+  <div class="rp-field">
+    <label>显化日记：</label>
+    <textarea id="rpInterp" placeholder="记录显化历程..."></textarea>
+  </div>
+  <div class="rp-actions">
+    <button class="rp-btn primary" id="rpSave">保存</button>
+    <button class="rp-btn danger" id="rpDelete" style="display:none;">删除</button>
+    <button class="rp-btn" id="rpCancel">✕</button>
+  </div>
+</div>
+
+<!-- 顶部导航 -->
+<div style="position:fixed;top:12px;right:12px;z-index:999;display:flex;gap:10px;">
+  <a class="ui-nav-link" href="reading_web.html" style="padding:6px 14px;font-size:12px;cursor:pointer;font-family:inherit;letter-spacing:2px;text-decoration:none;transition:all 0.3s;">黑猫占卜桌</a>
+  <a class="ui-nav-link" href="magic_web.html" style="padding:6px 14px;font-size:12px;cursor:pointer;font-family:inherit;letter-spacing:2px;text-decoration:none;transition:all 0.3s;">魔法工坊</a>
+</div>
+
+<script src="html2canvas.min.js"></script>
+<script>
+const MANIFEST_THEME_KEY = 'magiccat_reading_theme';
+const MANIFEST_THEMES = new Set(['mystic', 'noir', 'parchment', 'dopamine']);
+const manifestThemeDots = [...document.querySelectorAll('#themeSwitcher .theme-dot')];
+
+function applyManifestTheme(theme, persist = true) {
+  const nextTheme = MANIFEST_THEMES.has(theme) ? theme : 'mystic';
+  if (nextTheme === 'mystic') document.body.removeAttribute('data-theme');
+  else document.body.dataset.theme = nextTheme;
+  manifestThemeDots.forEach(dot => {
+    const active = dot.dataset.theme === nextTheme;
+    dot.classList.toggle('active', active);
+    dot.setAttribute('aria-pressed', String(active));
+  });
+  if (persist) localStorage.setItem(MANIFEST_THEME_KEY, nextTheme);
+}
+
+manifestThemeDots.forEach(dot => dot.addEventListener('click', () => applyManifestTheme(dot.dataset.theme)));
+applyManifestTheme(localStorage.getItem(MANIFEST_THEME_KEY) || 'mystic', false);
+
+// ============================================================
+//  1. 星空粒子
+// ============================================================
+const starfield = document.getElementById('starfield');
+for (let i = 0; i < 120; i++) {
+  const star = document.createElement('div');
+  star.className = 'star';
+  const size = 1 + Math.random() * 2.5;
+  star.style.cssText = `
+    left: ${Math.random() * 100}%;
+    top: ${Math.random() * 100}%;
+    width: ${size}px;
+    height: ${size}px;
+    --dur: ${2 + Math.random() * 4}s;
+    animation-delay: ${Math.random() * 5}s;
+    opacity: ${0.15 + Math.random() * 0.4};
+  `;
+  starfield.appendChild(star);
+}
+
+// ============================================================
+//  2. 显化物品数据
+// ============================================================
+const DIVINATION_ITEMS = [
+  { id: 'crystal1', type: 'crystal', name: '紫水晶', image: '图片/布袋/crystal1.png', glow: '174,112,255' },
+  { id: 'crystal2', type: 'crystal', name: '蓝水晶', image: '图片/布袋/csystal2.png', glow: '125,184,255' },
+  { id: 'crystal3', type: 'crystal', name: '绿水晶', image: '图片/布袋/crystal3.png', glow: '100,235,142' },
+  { id: 'crystal4', type: 'crystal', name: '黄水晶', image: '图片/布袋/crystal4.png', glow: '244,190,82' },
+  { id: 'crystal5', type: 'crystal', name: '粉水晶', image: '图片/布袋/crystal5.png', glow: '255,126,190' },
+  { id: 'crystal6', type: 'crystal', name: '红水晶', image: '图片/布袋/crystal6.png', glow: '255,105,112' },
+  { id: 'crystal7', type: 'crystal', name: '黑曜石', image: '图片/布袋/crystal7.png', glow: '145,148,168' },
+  { id: 'crystal8', type: 'crystal', name: '白水晶', image: '图片/布袋/crystal8.png', glow: '225,238,255' },
+  { id: 'moon-candle', type: 'candle', name: '月光蜡烛', image: '图片/蜡烛/candle.png' },
+];
+
+// ============================================================
+//  3. 状态
+// ============================================================
+let altarItems = []; // { id, type, cls, el }
+let isActivated = false;
+
+// ============================================================
+//  4. 意图输入自动保存
+// ============================================================
+const intentionInput = document.getElementById('intentionInput');
+const savedIntention = localStorage.getItem('manifest_intention');
+if (savedIntention) intentionInput.value = savedIntention;
+intentionInput.addEventListener('input', () => {
+  localStorage.setItem('manifest_intention', intentionInput.value);
+});
+
+// ============================================================
+//  5. 右侧抽屉
+// ============================================================
+const divDrawer = document.getElementById('divinationDrawer');
+const divTab = document.getElementById('divTab');
+
+divTab.addEventListener('click', () => {
+  const willOpen = !divDrawer.classList.contains('open');
+  recDrawer.classList.remove('open');
+  recDrawer.classList.add('closed');
+  setIntentionPanel(false);
+  divDrawer.classList.toggle('open', willOpen);
+  divDrawer.classList.toggle('closed', !willOpen);
+  renderPotions();
+});
+
+// 意图面板呼出按钮（手机端）：点「许愿瓶」呼出/收起输入框
+const intentionTab = document.getElementById('intentionTab');
+const intentionPanel = document.getElementById('intentionPanel');
+const intentionCloseBtn = document.getElementById('intentionCloseBtn');
+const intentionBackdrop = document.getElementById('intentionBackdrop');
+
+function setIntentionPanel(open) {
+  intentionPanel.classList.toggle('open', open);
+  intentionBackdrop.classList.toggle('open', open);
+  intentionTab.classList.toggle('active', open);
+  intentionTab.title = open ? '关闭星愿笺' : '打开星愿笺';
+  intentionTab.setAttribute('aria-label', intentionTab.title);
+  intentionTab.setAttribute('aria-expanded', String(open));
+  if (open) setTimeout(() => intentionInput.focus(), 180);
+}
+
+intentionTab.addEventListener('click', () => {
+  const willOpen = !intentionPanel.classList.contains('open');
+  divDrawer.classList.remove('open');
+  divDrawer.classList.add('closed');
+  recDrawer.classList.remove('open');
+  recDrawer.classList.add('closed');
+  setIntentionPanel(willOpen);
+});
+intentionCloseBtn.addEventListener('click', () => setIntentionPanel(false));
+intentionBackdrop.addEventListener('click', () => setIntentionPanel(false));
+
+// ============================================================
+//  5.5 生成许愿瓶（愿望写入瓶内纸条，瓶子出现在圆阵中央）
+// ============================================================
+const wishGenerateBtn = document.getElementById('wishGenerateBtn');
+let wishBottleEl = null;
+
+// 把愿望文字用浏览器原生 canvas 预渲染成图片（避免 html2canvas 截图时中文宽度测量错误）
+function renderWishNoteDataURL(wish) {
+  const W = 120, H = 42;          // 打开的纸条内尺寸
+  const scale = 3;                // 高清倍数
+  const canvas = document.createElement('canvas');
+  canvas.width = W * scale;
+  canvas.height = H * scale;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(scale, scale);
+  ctx.font = '9px "PingFang SC","Microsoft YaHei","Noto Sans CJK SC","Hiragino Sans GB",sans-serif';
+  ctx.textBaseline = 'middle';
+  const theme = document.body.dataset.theme || 'mystic';
+  ctx.fillStyle = theme === 'noir' ? '#2c2d32' : theme === 'dopamine' ? '#607c91' : theme === 'parchment' ? '#f1d994' : '#f3e7c8';
+  // 按字符宽度换行
+  const lines = [];
+  let cur = '';
+  for (const ch of wish) {
+    if (cur && ctx.measureText(cur + ch).width > W) { lines.push(cur); cur = ch; }
+    else cur += ch;
+  }
+  if (cur) lines.push(cur);
+  const lineH = 11;
+  let y = (H - lines.length * lineH) / 2 + lineH / 2;
+  for (const ln of lines) {
+    const tw = ctx.measureText(ln).width;
+    ctx.fillText(ln, (W - tw) / 2, y);
+    y += lineH;
+  }
+  return canvas.toDataURL('image/png');
+}
+
+function refreshWishNoteTheme() {
+  if (!wishBottleEl) return;
+  const note = wishBottleEl.querySelector('.note-wish');
+  if (note) note.style.backgroundImage = `url(${renderWishNoteDataURL(wishBottleEl.title || '')})`;
+}
+manifestThemeDots.forEach(dot => dot.addEventListener('click', () => requestAnimationFrame(refreshWishNoteTheme)));
+
+// 把圆阵物品底下的文字标签预渲染成图片（同样规避 html2canvas 中文截图问题）
+function rasterizeAltarLabel(el) {
+  const label = el.querySelector('.altar-item-label');
+  if (!label || !label.textContent) return;
+  const text = label.textContent;
+  const scale = 3;
+  const fontPx = 8, ls = 1;   // 与 .altar-item-label CSS 一致
+  const font = `${fontPx}px "PingFang SC","Microsoft YaHei","Noto Sans CJK SC","Hiragino Sans GB",sans-serif`;
+  const m = document.createElement('canvas').getContext('2d');
+  m.font = font;
+  let w = 0;
+  for (const ch of text) w += m.measureText(ch).width + ls;
+  w = Math.max(1, w - ls);
+  const h = fontPx + 2;
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.ceil(w * scale);
+  canvas.height = Math.ceil(h * scale);
+  const ctx = canvas.getContext('2d');
+  ctx.scale(scale, scale);
+  ctx.font = font;
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'rgba(200,160,255,0.5)';
+  let x = 0;
+  for (const ch of text) { ctx.fillText(ch, x, h / 2); x += ctx.measureText(ch).width + ls; }
+  label.textContent = '';
+  label.style.width = Math.round(w) + 'px';
+  label.style.height = h + 'px';
+  label.style.backgroundImage = `url(${canvas.toDataURL('image/png')})`;
+  label.style.backgroundSize = `${w}px ${h}px`;
+  label.style.backgroundRepeat = 'no-repeat';
+}
+
+wishGenerateBtn.addEventListener('click', () => {
+  const wish = intentionInput.value.trim();
+  if (!wish) { showToast('✦ 请先写下愿望，再生成许愿瓶'); return; }
+
+  // 已有许愿瓶则替换（移除旧的）
+  if (wishBottleEl) {
+    const oldIdx = altarItems.findIndex(a => a.el === wishBottleEl);
+    if (oldIdx >= 0) altarItems.splice(oldIdx, 1);
+    wishBottleEl.remove();
+  }
+
+  const el = document.createElement('div');
+  el.className = 'altar-item wish-bottle';
+  el.dataset.type = 'bottle';
+  el.innerHTML = `
+    <div class="bottle-aura"></div>
+    <div class="bottle-cork"></div>
+    <div class="bottle-neck"></div>
+    <div class="bottle-body">
+      <div class="bottle-stars"></div>
+      <div class="rolled-note">
+        <span class="note-moon">☾</span>
+        <span class="note-sparkles"></span>
+        <span class="note-shimmer"></span>
+        <span class="note-wish"></span>
+      </div>
+      <div class="bottle-star-fill" aria-hidden="true">
+        <span style="--x:8%;--y:66%;--dx:-34px;--dy:-98px;--s:7px;--delay:.02s">✦</span>
+        <span style="--x:23%;--y:48%;--dx:-22px;--dy:-116px;--s:5px;--delay:.12s">✧</span>
+        <span style="--x:38%;--y:72%;--dx:-9px;--dy:-105px;--s:8px;--delay:.2s">✦</span>
+        <span style="--x:52%;--y:52%;--dx:5px;--dy:-126px;--s:6px;--delay:.3s">✧</span>
+        <span style="--x:68%;--y:69%;--dx:20px;--dy:-108px;--s:7px;--delay:.16s">✦</span>
+        <span style="--x:82%;--y:44%;--dx:34px;--dy:-120px;--s:5px;--delay:.38s">✧</span>
+        <span style="--x:15%;--y:82%;--dx:-42px;--dy:-82px;--s:5px;--delay:.28s">✧</span>
+        <span style="--x:31%;--y:87%;--dx:-18px;--dy:-93px;--s:6px;--delay:.42s">✦</span>
+        <span style="--x:48%;--y:86%;--dx:0px;--dy:-112px;--s:5px;--delay:.08s">✧</span>
+        <span style="--x:64%;--y:86%;--dx:17px;--dy:-96px;--s:8px;--delay:.34s">✦</span>
+        <span style="--x:79%;--y:79%;--dx:39px;--dy:-88px;--s:6px;--delay:.22s">✧</span>
+      </div>
+    </div>
+  `;
+  el.title = wish;
+  // 愿望文字预渲染为图片作为纸条背景，保证 html2canvas 截图正确
+  const noteWishEl = el.querySelector('.note-wish');
+  noteWishEl.style.backgroundImage = `url(${renderWishNoteDataURL(wish)})`;
+  noteWishEl.style.backgroundSize = '100% 100%';
+  noteWishEl.style.backgroundRepeat = 'no-repeat';
+
+  // 放在圆阵中央
+  const hw = altar.offsetWidth / 2, hh = altar.offsetHeight / 2;
+  el.style.left = (hw - 36) + 'px';
+  el.style.top  = (hh - 55) + 'px';
+  altar.appendChild(el);
+  setupBottleInteractions(el);
+
+  altarItems.push({ id: 'wish', type: 'bottle', cls: '', data: { id: 'wish', type: 'bottle', wish }, el });
+  wishBottleEl = el;
+  updateCount();
+  if (isActivated) el.classList.add('activated');
+  showToast('✦ 许愿瓶已投入圆阵');
+  setIntentionPanel(false);   // 生成后收起面板
+});
+
+// 许愿瓶点击交互：单击直接打开（纸条上浮看愿望），再单击塞回
+function setupBottleInteractions(el) {
+  setupAltarItemDrag(el, () => {
+    el.classList.toggle('open');
+  });
+}
+
+function renderDivinationItems() {
+  const grid = document.getElementById('divinationGrid');
+  grid.innerHTML = DIVINATION_ITEMS.map(item => `
+    <div class="divination-item" data-item-id="${item.id}" style="--item-glow:${item.glow || '255,190,118'}">
+      ${item.type === 'candle'
+        ? `<span class="di-candle-preview"><img src="${item.image}" alt="${item.name}" draggable="false"></span>`
+        : `<img class="di-image" src="${item.image}" alt="${item.name}" draggable="false">`}
+      <span class="di-label">${item.name}</span>
+    </div>
+  `).join('');
+
+  grid.querySelectorAll('.divination-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const id = el.dataset.itemId;
+      const data = DIVINATION_ITEMS.find(d => d.id === id);
+      if (!data) return;
+      addToAltar(data);
+      divDrawer.classList.remove('open');
+      divDrawer.classList.add('closed');
+    });
+  });
+}
+renderDivinationItems();
+
+// 圣物柜：读取魔法工坊存入的香薰、魔法油与蜡烛
+const SANCTUM_KEY = 'magiccat_sanctum';
+function loadSanctum() {
+  try { return JSON.parse(localStorage.getItem(SANCTUM_KEY)) || []; } catch (e) { return []; }
+}
+function persistSanctum(list) {
+  try { localStorage.setItem(SANCTUM_KEY, JSON.stringify(list)); return true; }
+  catch (e) { showToast('物品库更新失败'); return false; }
+}
+function getPotionAppearance(potion) {
+  return potion?.appearance || {
+    level: 48,
+    mixed: [148, 82, 220],
+    top: 'rgba(185,111,245,.72)',
+    bottom: 'rgba(73,24,143,.94)',
+    surface: 'rgba(226,175,255,.62)',
+    glow: 'rgba(148,82,220,.5)'
+  };
+}
+function applyAltarPotionAppearance(bottle, appearance) {
+  if (!bottle) return;
+  bottle.style.setProperty('--potion-top', appearance.top);
+  bottle.style.setProperty('--potion-bottom', appearance.bottom);
+  bottle.style.setProperty('--potion-surface', appearance.surface);
+  bottle.style.setProperty('--potion-glow', appearance.glow);
+  const liquid = bottle.querySelector('.ap-liquid');
+  if (liquid) liquid.style.height = `${appearance.level ?? 48}%`;
+}
+function renderPotions() {
+  const grid = document.getElementById('potionGrid');
+  const list = loadSanctum();
+  if (!list.length) {
+    grid.innerHTML = '<div class="potion-empty">暂无工坊圣物<br>前往魔法工坊制作并移入</div>';
+    return;
+  }
+  const escapePotionText = value => String(value).replace(/[&<>"']/g, ch => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[ch]);
+  grid.innerHTML = list.map(p => `
+    <div class="potion-item" data-id="${escapePotionText(p.id)}" data-type="${escapePotionText(p.type || 'potion')}" title="${escapePotionText((p.ingredients || []).join('、'))}">
+      <span class="potion-name">${escapePotionText(p.name)}</span>
+      <button class="potion-delete" type="button" title="删除圣物" aria-label="删除圣物">×</button>
+    </div>
+  `).join('');
+  grid.querySelectorAll('.potion-item').forEach(item => {
+    const previewPotion = list.find(x => x.id === item.dataset.id);
+    const previewAppearance = getPotionAppearance(previewPotion);
+    item.style.setProperty('--potion-swatch', `rgb(${(previewAppearance.mixed || [148,82,220]).join(',')})`);
+    item.style.setProperty('--potion-glow', previewAppearance.glow);
+    item.addEventListener('click', () => {
+      const pot = loadSanctum().find(x => x.id === item.dataset.id);
+      if (!pot) return;
+      addToAltar({ id: (pot.type || 'magic_oil') + '_' + pot.id, icon: pot.type === 'incense' ? '香' : (pot.type==='candle'||pot.type==='magic_candle')?'烛':'油', name: pot.name, type: pot.type || 'magic_oil', purpose:pot.purpose, ingredients: pot.ingredients, recipe: pot.recipe, appearance: pot.appearance || getPotionAppearance(pot) });
+      divDrawer.classList.remove('open');
+      divDrawer.classList.add('closed');
+    });
+    item.querySelector('.potion-delete').addEventListener('click', event => {
+      event.stopPropagation();
+      const potion = loadSanctum().find(x => x.id === item.dataset.id);
+      if (!potion || !confirm(`确定删除圣物「${potion.name || '未命名圣物'}」吗？`)) return;
+      if (persistSanctum(loadSanctum().filter(x => x.id !== item.dataset.id))) {
+        renderPotions();
+        showToast(`已删除「${potion.name || '未命名圣物'}」`);
+      }
+    });
+  });
+}
+renderPotions();
+
+// ============================================================
+//  6. 添加到圆阵
+// ============================================================
+const altar = document.getElementById('altar');
+
+function addToAltar(data) {
+  // 限制数量
+  if (altarItems.length >= 7) {
+    showToast('✦ 圆阵已满（最多 7 件物品）');
+    return;
+  }
+
+  const el = document.createElement('div');
+  el.className = 'altar-item';
+
+  // 随机位置在圆阵内（按圆阵实际尺寸缩放）
+  const angle = Math.random() * Math.PI * 2;
+  const hw = altar.offsetWidth / 2;
+  const dist = 40 + Math.random() * Math.max(60, hw * 0.5);
+  const cx = hw + Math.cos(angle) * dist;
+  const cy = hw + Math.sin(angle) * dist;
+
+  if (data.type === 'crystal') {
+    el.style.setProperty('--item-glow', data.glow);
+    el.innerHTML = `<img class="altar-item-image" src="${data.image}" alt="${data.name}" draggable="false"><span class="altar-item-label">${data.name}</span>`;
+    el.style.left = (cx - 29) + 'px';
+    el.style.top = (cy - 46) + 'px';
+  } else if (data.type === 'candle') {
+    el.innerHTML = `<div class="altar-candle"><div class="altar-candle-crop"><img src="${data.image}" alt="${data.name}" draggable="false"></div><span class="altar-candle-flame"></span></div><span class="altar-item-label">${data.name}</span>`;
+    el.style.left = (cx - 14) + 'px';
+    el.style.top = (cy - 66) + 'px';
+  } else if (data.type === 'magic_candle') {
+    const rgb=data.appearance?.color||[232,137,174],light=rgb.map(value=>Math.round(value+(255-value)*.48));
+    el.style.setProperty('--crafted-wax',`rgb(${rgb.join(',')})`);el.style.setProperty('--crafted-light',`rgb(${light.join(',')})`);el.style.setProperty('--crafted-glow',`rgba(${rgb.join(',')},.55)`);
+    el.innerHTML = `<div class="altar-crafted-candle"><span class="altar-candle-flame"></span></div><span class="altar-item-label">${data.name}</span>`;
+    el.style.left=(cx-20)+'px';el.style.top=(cy-45)+'px';
+  } else if (data.type === 'potion' || data.type === 'magic_oil') {
+    // 魔法工坊调配的魔法油；旧 potion 类型继续兼容
+    el.innerHTML = `
+      <div class="altar-potion">
+        <div class="ap-cork"></div>
+        <div class="ap-neck"></div>
+        <div class="ap-collar"></div>
+        <div class="ap-body"><div class="ap-liquid"></div></div>
+        <div class="ap-emblem">☾</div>
+      </div>
+      <span class="altar-item-label">${data.name}</span>`;
+    el.title = (data.ingredients || []).join('、');
+    applyAltarPotionAppearance(el.querySelector('.altar-potion'), getPotionAppearance(data));
+    el.style.left = (cx - 26) + 'px';
+    el.style.top = (cy - 40) + 'px';
+  } else if (data.type === 'incense') {
+    el.innerHTML = `<div class="altar-incense" aria-hidden="true"></div><span class="altar-item-label">${data.name}</span>`;
+    el.title = `${data.purpose || '熏香'} · ${(data.ingredients || []).join('、')}`;
+    el.style.left = (cx - 29) + 'px';
+    el.style.top = (cy - 40) + 'px';
+  }
+
+  altar.appendChild(el);
+  rasterizeAltarLabel(el);
+  setupAltarItemDrag(el);
+
+  altarItems.push({
+    id: data.id,
+    type: data.type,
+    image: data.image,
+    data: JSON.parse(JSON.stringify(data)),
+    el
+  });
+  updateCount();
+  showToast(`✦ ${data.name} 已加入圆阵`);
+
+  // 如果已激活，新加入物品自动激活
+  if (isActivated) {
+    el.classList.add('activated');
+  }
+}
+
+// ============================================================
+//  7. 圆阵内物品拖拽（Pointer Events：鼠标 + 触摸通用）
+// ============================================================
+function setupAltarItemDrag(el, onTap) {
+  let isDragging = false, offX = 0, offY = 0, sx = 0, sy = 0, tDist = 0, lpTimer = null;
+
+  el.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0) return;
+    isDragging = true; sx = e.clientX; sy = e.clientY; tDist = 0;
+    const r = el.getBoundingClientRect();
+    offX = e.clientX - r.left;
+    offY = e.clientY - r.top;
+    el.style.zIndex = 50;
+    el.style.cursor = 'grabbing';
+    el.style.transition = 'none';
+    try { el.setPointerCapture(e.pointerId); } catch (_) {}
+    e.preventDefault();
+    // 长按 600ms 移除（替代右键，鼠标/触摸通用）
+    lpTimer = setTimeout(() => {
+      removeFromAltar(el);
+      isDragging = false;
+      el.style.zIndex = '';
+      el.style.cursor = 'grab';
+      el.style.transition = '';
+    }, 600);
+  });
+
+  el.addEventListener('pointermove', (e) => {
+    if (!isDragging) return;
+    // 用起点距离判断是否拖动（client 坐标可靠）
+    tDist = Math.max(tDist, Math.hypot(e.clientX - sx, e.clientY - sy));
+    if (tDist > 8 && lpTimer) { clearTimeout(lpTimer); lpTimer = null; }   // 拖动则取消长按
+    const altarRect = altar.getBoundingClientRect();
+    let nx = e.clientX - altarRect.left - offX;
+    let ny = e.clientY - altarRect.top - offY;
+    // 约束在圆阵内（按元素实际尺寸）
+    const rw = altar.offsetWidth, rh = altar.offsetHeight;
+    const ew = el.offsetWidth, eh = el.offsetHeight;
+    nx = Math.max(0, Math.min(nx, rw - ew));
+    ny = Math.max(0, Math.min(ny, rh - eh));
+    el.style.left = nx + 'px';
+    el.style.top = ny + 'px';
+    e.preventDefault();
+  }, { passive: false });
+
+  function endDrag() {
+    if (lpTimer) { clearTimeout(lpTimer); lpTimer = null; }
+    if (!isDragging) return;
+    isDragging = false;
+    el.style.zIndex = '';
+    el.style.cursor = 'grab';
+    el.style.transition = '';
+    if (onTap && tDist <= 8) onTap();   // 轻点（非拖拽）触发回调
+  }
+  el.addEventListener('pointerup', endDrag);
+  el.addEventListener('pointercancel', endDrag);
+
+  // 屏蔽原生右键菜单（长按移除取代右键移除）
+  el.addEventListener('contextmenu', (e) => e.preventDefault());
+}
+
+// ============================================================
+//  8. 从圆阵移除
+// ============================================================
+function removeFromAltar(el) {
+  const idx = altarItems.findIndex(a => a.el === el);
+  if (idx >= 0) {
+    if (wishBottleEl === el) wishBottleEl = null;
+    const name = el.dataset.type === 'bottle'
+      ? '许愿瓶'
+      : (DIVINATION_ITEMS.find(d => d.id === altarItems[idx].id)?.name || '物品');
+    altarItems.splice(idx, 1);
+    el.remove();
+    updateCount();
+    showToast(`✦ ${name} 已移出圆阵`);
+  }
+}
+
+// ============================================================
+//  9. 更新计数器
+// ============================================================
+function updateCount() {
+  const counter = document.getElementById('manifestCount');
+  if (counter) counter.textContent = `圆阵中的物品：${altarItems.length}`;
+}
+
+// ============================================================
+//  9.5 清空圆阵按钮
+// ============================================================
+const altarClearBtn = document.getElementById('altarClearBtn');
+altarClearBtn.addEventListener('click', () => {
+  if (altarItems.length === 0) { showToast('✦ 圆阵空空如也'); return; }
+  const n = altarItems.length;
+  altarItems.forEach(a => a.el.remove());
+  altarItems = [];
+  wishBottleEl = null;
+  updateCount();
+  showToast(`✦ 已清空圆阵（${n} 件物品）`);
+});
+
+// ============================================================
+//  10. 激活显化
+// ============================================================
+const activateBtn = document.getElementById('activateBtn');
+const guidance = document.getElementById('guidance');
+const energyWave = document.getElementById('energyWave');
+const energyBurst = document.getElementById('energyBurst');
+
+activateBtn.addEventListener('click', () => {
+  if (altarItems.length === 0) {
+    showToast('✦ 圆阵空空如也，请先放入物品');
+    return;
+  }
+
+  isActivated = !isActivated;
+
+  if (isActivated) {
+    // 激活
+    activateBtn.querySelector('.btn-text').textContent = '显 化 中';
+    activateBtn.classList.add('active');
+    guidance.textContent = '✦ 能量流转于圆阵之中 ✦';
+    guidance.classList.add('active');
+
+    // 所有物品获得激活光晕
+    altarItems.forEach(a => a.el.classList.add('activated'));
+
+    // 初始能量爆发
+    energyBurst.classList.remove('burst');
+    void energyBurst.offsetWidth;
+    energyBurst.classList.add('burst');
+
+    // 开启连续能量波
+    energyWave.classList.add('active');
+
+    // 星星闪烁增强
+    document.querySelectorAll('.star').forEach(s => {
+      s.style.animationDuration = (1 + Math.random() * 2) + 's';
+      s.style.opacity = '0.6';
+    });
+
+  } else {
+    // 解除
+    activateBtn.querySelector('.btn-text').textContent = '显 化';
+    activateBtn.classList.remove('active');
+    guidance.textContent = '将水晶、蜡烛与许愿瓶放入圆阵 · 点击显化';
+    guidance.classList.remove('active');
+
+    altarItems.forEach(a => a.el.classList.remove('activated'));
+
+    // 关闭连续能量波
+    energyWave.classList.remove('active');
+
+    document.querySelectorAll('.star').forEach(s => {
+      s.style.animationDuration = s.style.getPropertyValue('--dur') || '3s';
+      s.style.opacity = '';
+    });
+  }
+});
+
+// ============================================================
+//  11. Toast 提示
+// ============================================================
+const toast = document.getElementById('statusToast');
+let toastTimer = null;
+
+function showToast(text) {
+  toast.textContent = text;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// ============================================================
+//  12. 导航
+// ============================================================
+// 顶部导航已移至 HTML，此处不再需要
+
+// ============================================================
+//  13. 桌面点击取消选中
+// ============================================================
+const desktop = document.getElementById('desktop');
+desktop.addEventListener('click', (e) => {
+  if (e.target === desktop) {
+    divDrawer.classList.remove('open');
+    divDrawer.classList.add('closed');
+    recDrawer.classList.remove('open');
+    recDrawer.classList.add('closed');
+  }
+});
+
+// 点击空白处关闭星愿笺（许愿瓶面板）
+document.addEventListener('click', (e) => {
+  if (!intentionPanel.classList.contains('open')) return;
+  if (!e.target.closest('#intentionPanel') && !e.target.closest('#intentionTab')) {
+    setIntentionPanel(false);
+  }
+});
+
+// ============================================================
+//  记录功能：选区截图 + 记录页 + 持久化存储
+// ============================================================
+const manifestRecordBtn = document.getElementById('manifestRecordBtn');
+const captureOverlay = document.getElementById('captureOverlay');
+const captureRect    = document.getElementById('captureRect');
+const captureTip     = document.getElementById('captureTip');
+const captureConfirm = document.getElementById('captureConfirm');
+const captureCancel  = document.getElementById('captureCancel');
+
+const recordPage  = document.getElementById('recordPage');
+const rpTitle     = document.getElementById('rpTitle');
+const rpPhoto     = document.getElementById('rpPhoto');
+const rpQuestion  = document.getElementById('rpQuestion');
+const rpInterp    = document.getElementById('rpInterp');
+const rpSave      = document.getElementById('rpSave');
+const rpDelete    = document.getElementById('rpDelete');
+const rpCancel    = document.getElementById('rpCancel');
+
+const RECORDS_KEY = 'manifest_layouts_v1';
+let _selStart = null;
+let _captureDataUrl = null;
+let _viewingRecordId = null;
+
+function loadRecords() {
+  try { return JSON.parse(localStorage.getItem(RECORDS_KEY)) || []; } catch (e) { return []; }
+}
+function persistRecords(records) {
+  try { localStorage.setItem(RECORDS_KEY, JSON.stringify(records)); } catch (e) { alert('保存失败：存储空间不足'); }
+}
+
+const layoutSaveDialog = document.getElementById('layoutSaveDialog');
+const layoutNameInput = document.getElementById('layoutNameInput');
+const layoutSaveConfirm = document.getElementById('layoutSaveConfirm');
+const layoutSaveCancel = document.getElementById('layoutSaveCancel');
+
+function closeLayoutSaveDialog() {
+  layoutSaveDialog.classList.remove('open');
+  layoutSaveDialog.setAttribute('aria-hidden', 'true');
+}
+
+function defaultLayoutName() {
+  const d = new Date();
+  return `星愿布置 ${d.getMonth() + 1}月${d.getDate()}日`;
+}
+
+function serializeCurrentLayout(name) {
+  const aw = Math.max(1, altar.offsetWidth);
+  const ah = Math.max(1, altar.offsetHeight);
+  return {
+    id: 'layout_' + Date.now(),
+    name,
+    ts: Date.now(),
+    activated: isActivated,
+    items: altarItems.map(item => ({
+      id: item.id,
+      type: item.type,
+      left: (parseFloat(item.el.style.left) || 0) / aw,
+      top: (parseFloat(item.el.style.top) || 0) / ah,
+      data: item.data || { id: item.id, type: item.type, image: item.image }
+    }))
+  };
+}
+
+function clearAltarForRestore() {
+  altarItems.forEach(item => item.el.remove());
+  altarItems = [];
+  wishBottleEl = null;
+  isActivated = false;
+  activateBtn.classList.remove('active');
+  activateBtn.querySelector('.btn-text').textContent = '显 化';
+  guidance.textContent = '将水晶、蜡烛与许愿瓶放入圆阵 · 点击显化';
+  guidance.classList.remove('active');
+  energyWave.classList.remove('active');
+  updateCount();
+}
+
+function restoreLayout(layout) {
+  clearAltarForRestore();
+  const aw = Math.max(1, altar.offsetWidth);
+  const ah = Math.max(1, altar.offsetHeight);
+
+  layout.items.forEach(saved => {
+    let restoredEl = null;
+    if (saved.type === 'bottle') {
+      intentionInput.value = (saved.data && saved.data.wish) || '';
+      wishGenerateBtn.click();
+      restoredEl = wishBottleEl;
+    } else {
+      const fallback = DIVINATION_ITEMS.find(item => item.id === saved.id);
+      addToAltar(saved.data || fallback || { id: saved.id, type: saved.type, image: saved.image, name: '魔法物品' });
+      restoredEl = altarItems.length ? altarItems[altarItems.length - 1].el : null;
+    }
+    if (restoredEl) {
+      restoredEl.style.left = (saved.left * aw) + 'px';
+      restoredEl.style.top = (saved.top * ah) + 'px';
+    }
+  });
+
+  isActivated = !!layout.activated;
+  activateBtn.classList.toggle('active', isActivated);
+  activateBtn.querySelector('.btn-text').textContent = isActivated ? '显 化 中' : '显 化';
+  guidance.textContent = isActivated ? '✦ 能量流转于圆阵之中 ✦' : '将水晶、蜡烛与许愿瓶放入圆阵 · 点击显化';
+  guidance.classList.toggle('active', isActivated);
+  energyWave.classList.toggle('active', isActivated);
+  altarItems.forEach(item => item.el.classList.toggle('activated', isActivated));
+  recDrawer.classList.remove('open');
+  recDrawer.classList.add('closed');
+  showToast(`✦ 已还原「${layout.name}」`);
+}
+
+// 记录按钮：保存圆阵物品与位置，不再截图。
+manifestRecordBtn.addEventListener('click', () => {
+  if (!altarItems.length) { showToast('✦ 圆阵空空如也，请先放入物品'); return; }
+  layoutNameInput.value = defaultLayoutName();
+  layoutSaveDialog.classList.add('open');
+  layoutSaveDialog.setAttribute('aria-hidden', 'false');
+  setTimeout(() => { layoutNameInput.focus(); layoutNameInput.select(); }, 0);
+});
+
+layoutSaveConfirm.addEventListener('click', () => {
+  const name = layoutNameInput.value.trim();
+  if (!name) { layoutNameInput.focus(); return; }
+  const records = loadRecords();
+  records.unshift(serializeCurrentLayout(name));
+  persistRecords(records);
+  closeLayoutSaveDialog();
+  renderRecords();
+  showToast(`✦ 已保存布置「${name}」`);
+});
+layoutSaveCancel.addEventListener('click', closeLayoutSaveDialog);
+layoutSaveDialog.addEventListener('click', e => { if (e.target === layoutSaveDialog) closeLayoutSaveDialog(); });
+layoutNameInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') layoutSaveConfirm.click();
+  if (e.key === 'Escape') closeLayoutSaveDialog();
+});
+
+captureOverlay.addEventListener('pointerdown', (e) => {
+  if (e.target !== captureOverlay) return;
+  _selStart = { x: e.clientX, y: e.clientY };
+  captureRect.style.display = 'block';
+  captureRect.style.left = e.clientX + 'px';
+  captureRect.style.top  = e.clientY + 'px';
+  captureRect.style.width  = '0px';
+  captureRect.style.height = '0px';
+});
+captureOverlay.addEventListener('pointermove', (e) => {
+  if (!_selStart) return;
+  const x = Math.min(_selStart.x, e.clientX);
+  const y = Math.min(_selStart.y, e.clientY);
+  const w = Math.abs(e.clientX - _selStart.x);
+  const h = Math.abs(e.clientY - _selStart.y);
+  captureRect.style.left = x + 'px';
+  captureRect.style.top  = y + 'px';
+  captureRect.style.width  = w + 'px';
+  captureRect.style.height = h + 'px';
+});
+captureOverlay.addEventListener('pointerup', (e) => {
+  if (!_selStart) return;
+  _selStart = null;
+  const r = captureRect.getBoundingClientRect();
+  if (r.width < 20 || r.height < 20) {
+    captureRect.style.display = 'none';
+    return;
+  }
+  captureTip.textContent = '已选择区域，点下方保存';
+  captureConfirm.classList.add('show');
+  captureCancel.classList.add('show');
+});
+
+captureCancel.addEventListener('click', () => {
+  captureOverlay.classList.remove('active');
+  captureRect.style.display = 'none';
+  captureConfirm.classList.remove('show');
+  captureCancel.classList.remove('show');
+});
+
+captureConfirm.addEventListener('click', async () => {
+  const r = captureRect.getBoundingClientRect();
+  captureOverlay.style.display = 'none';   // 截图时隐藏选区工具
+  try {
+    const canvas = await html2canvas(document.body, {
+      backgroundColor: '#0d001a',
+      scale: Math.min(window.devicePixelRatio || 2, 2),
+      useCORS: true,
+      logging: false,
+    });
+    const s = Math.min(window.devicePixelRatio || 2, 2);
+    const sw = Math.max(1, Math.round(r.width * s));
+    const sh = Math.max(1, Math.round(r.height * s));
+    const sx = Math.max(0, Math.round(r.left * s));
+    const sy = Math.max(0, Math.round(r.top * s));
+    const crop = document.createElement('canvas');
+    crop.width = sw; crop.height = sh;
+    crop.getContext('2d').drawImage(canvas, sx, sy, sw, sh, 0, 0, sw, sh);
+    // 压缩到最大宽 900，存 JPEG
+    const maxW = 900;
+    const sc = Math.min(1, maxW / crop.width);
+    const cw = Math.round(crop.width * sc);
+    const ch = Math.round(crop.height * sc);
+    const small = document.createElement('canvas');
+    small.width = cw; small.height = ch;
+    small.getContext('2d').drawImage(crop, 0, 0, cw, ch);
+    _captureDataUrl = small.toDataURL('image/jpeg', 0.85);
+  } catch (err) {
+    console.error('截图失败', err);
+    _captureDataUrl = null;
+  } finally {
+    captureOverlay.style.display = '';
+    captureOverlay.classList.remove('active');
+    captureRect.style.display = 'none';
+    captureConfirm.classList.remove('show');
+    captureCancel.classList.remove('show');
+  }
+  if (_captureDataUrl) {
+    openRecordPage(null);
+  } else {
+    captureTip.textContent = '截图失败，请重试';
+    captureOverlay.classList.add('active');
+  }
+});
+
+// —— 记录页 ——
+function openRecordPage(record) {
+  if (record) {
+    _viewingRecordId = record.id;
+    rpTitle.textContent = '✦ 记 录 详 情 ✦';
+    rpPhoto.innerHTML = `<img src="${record.img}" alt="记录">`;
+    rpQuestion.value = record.question || '';
+    rpInterp.value = record.interp || '';
+    rpSave.textContent = '更新';
+    rpDelete.style.display = 'flex';
+  } else {
+    _viewingRecordId = null;
+    rpTitle.textContent = '✦ 新 记 录 ✦';
+    rpPhoto.innerHTML = _captureDataUrl ? `<img src="${_captureDataUrl}" alt="截图">` : '';
+    rpQuestion.value = '';
+    rpInterp.value = '';
+    rpSave.textContent = '保存';
+    rpDelete.style.display = 'none';
+  }
+  recordPage.classList.add('active');
+}
+
+function closeRecordPage() {
+  recordPage.classList.remove('active');
+  _captureDataUrl = null;
+  _viewingRecordId = null;
+}
+
+rpSave.addEventListener('click', () => {
+  const question = rpQuestion.value.trim();
+  const interp = rpInterp.value.trim();
+  const records = loadRecords();
+  if (_viewingRecordId) {
+    const idx = records.findIndex(r => r.id === _viewingRecordId);
+    if (idx >= 0) {
+      records[idx].question = question;
+      records[idx].interp = interp;
+      records[idx].ts = Date.now();
+    }
+  } else {
+    if (!_captureDataUrl) { alert('请先截图再保存'); return; }
+    records.unshift({
+      id: 'rec_' + Date.now(),
+      img: _captureDataUrl,
+      question, interp, ts: Date.now(),
+    });
+  }
+  persistRecords(records);
+  renderRecords();
+  closeRecordPage();
+});
+
+rpDelete.addEventListener('click', () => {
+  if (!_viewingRecordId) return;
+  if (!confirm('确定删除这条记录？')) return;
+  const records = loadRecords().filter(r => r.id !== _viewingRecordId);
+  persistRecords(records);
+  renderRecords();
+  closeRecordPage();
+});
+
+rpCancel.addEventListener('click', closeRecordPage);
+
+// —— 记录抽屉 ——
+const recDrawer = document.getElementById('recordDrawer');
+const recTab = document.getElementById('recTab');
+recTab.addEventListener('click', () => {
+  const willOpen = !recDrawer.classList.contains('open');
+  divDrawer.classList.remove('open');
+  divDrawer.classList.add('closed');
+  setIntentionPanel(false);
+  recDrawer.classList.toggle('open', willOpen);
+  recDrawer.classList.toggle('closed', !willOpen);
+  renderRecords();
+});
+
+function renderRecords() {
+  const grid = document.getElementById('recGrid');
+  const records = loadRecords();
+  if (!records.length) {
+    grid.innerHTML = '<div class="record-empty">暂无布置存档<br>点击右下角按钮保存当前圆阵</div>';
+    return;
+  }
+  const escapeText = value => String(value).replace(/[&<>"']/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[ch]);
+  grid.innerHTML = records.map(r => `
+    <div class="record-item" data-id="${r.id}">
+      <div class="layout-record-glyph" aria-hidden="true">✦</div>
+      <div class="ri-info">
+        <div class="ri-q">${escapeText(r.name || '未命名布置')}</div>
+        <div class="ri-date">${new Date(r.ts).toLocaleString()}</div>
+        <div class="ri-count">${(r.items || []).length} 件物品 · 点击还原</div>
+      </div>
+      <button class="layout-delete" type="button" title="删除存档" aria-label="删除存档">×</button>
+    </div>
+  `).join('');
+  grid.querySelectorAll('.record-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const rec = loadRecords().find(x => x.id === item.dataset.id);
+      if (rec) restoreLayout(rec);
+    });
+    item.querySelector('.layout-delete').addEventListener('click', e => {
+      e.stopPropagation();
+      const rec = loadRecords().find(x => x.id === item.dataset.id);
+      if (!rec || !confirm(`确定删除布置「${rec.name || '未命名布置'}」吗？`)) return;
+      persistRecords(loadRecords().filter(x => x.id !== item.dataset.id));
+      renderRecords();
+    });
+  });
+}
+
+console.log('显化之境已开启');
+</script>
+</body>
+</html>

@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>魔法工坊 · 魔法油手札</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 100vw; height: 100vh;
+      overflow: hidden;
+      background: radial-gradient(ellipse at 50% 30%, #1a0a2e, #0d001a);
+      font-family: 'Courier New', Courier, monospace;
+      color: #d4b0ff;
+      user-select: none;
+    }
+
+    /* ===== 桌面底纹 ===== */
+    #desktop {
+      position: fixed; inset: 0; z-index: 1;
+      background:
+        repeating-conic-gradient(rgba(120,60,180,0.06) 0% 25%, transparent 0% 50%) 0 0 / 60px 60px,
+        radial-gradient(ellipse at 50% 40%, #1e0a34, #0a0218);
+    }
+    #desktop::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='104' viewBox='0 0 120 104'%3E%3Cpath d='M60 0 L75 34 L112 34 L83 58 L95 92 L60 72 L25 92 L37 58 L8 34 L45 34 Z' fill='none' stroke='rgba(150,80,220,0.08)' stroke-width='1.5'/%3E%3Cpath d='M60 8 L70 30 L95 30 L75 46 L82 70 L60 56 L38 70 L45 46 L25 30 L50 30 Z' fill='none' stroke='rgba(180,100,255,0.05)' stroke-width='1'/%3E%3C/svg%3E");
+      background-repeat: repeat; background-size: 140px 120px; opacity: 0.6; pointer-events: none;
+    }
+    #desktop::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: 0;
+      height: 60px; background: linear-gradient(to top, rgba(30,10,52,0.6), transparent); pointer-events: none;
+    }
+
+    /* ===== 桌面物品（撕页、材料） ===== */
+    .desktop-item {
+      position: absolute; z-index: 10; cursor: grab;
+      min-width: 60px; min-height: 40px;
+    }
+    .desktop-item:active { cursor: grabbing; }
+
+    .torn-page {
+      width: 160px; min-height: 140px;
+      background: linear-gradient(135deg, #f5e8c8, #e8d8b0);
+      border: 2px solid #c8a870;
+      padding: 10px;
+      font-size: 11px; color: #3a2a1a; font-family: 'Courier New', monospace;
+      cursor: grab; position: relative;
+      box-shadow: 2px 3px 10px rgba(0,0,0,0.3);
+      transform: rotate(var(--rot, 0deg));
+      line-height: 1.5;
+      outline: none;
+      user-select: text;
+    }
+    .torn-page:active { cursor: grabbing; }
+    .torn-page .page-label {
+      font-size: 8px; color: #8a7050; letter-spacing: 2px;
+      border-bottom: 1px dashed #c8a870; padding-bottom: 4px; margin-bottom: 6px;
+    }
+    .torn-page .close-btn {
+      position: absolute; top: -8px; right: -8px;
+      width: 18px; height: 18px;
+      background: #6b3fa0; border: 1px solid #b080ff;
+      color: #fff; font-size: 10px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; border-radius: 50%;
+    }
+    .torn-page .note-title { font-size:13px;font-weight:700;letter-spacing:2px;color:#563747;margin:2px 0 8px; }
+    .torn-page .note-section { margin-top:7px;font-size:9px;color:#8a6470;letter-spacing:2px;font-weight:700; }
+    .torn-page .note-check { display:flex;align-items:flex-start;gap:6px;margin-top:4px;font-size:10px;line-height:1.45;cursor:pointer; }
+    .torn-page .note-check::before { content:'';flex:0 0 11px;width:11px;height:11px;margin-top:1px;border:1px solid #a37b66;border-radius:2px;background:rgba(255,251,229,.5); }
+    .torn-page .note-check.done { color:#9a8979;text-decoration:line-through; }
+    .torn-page .note-check.done::before { content:'✓';display:grid;place-items:center;color:#6f4b68;font-size:9px;text-decoration:none; }
+    .torn-page .note-tools,.torn-page .note-warning { margin-top:4px;font-size:9px;line-height:1.45; }
+    .torn-page .note-warning { margin-top:8px;padding-top:6px;border-top:1px dashed #c8a870;color:#76515b; }
+
+    /* ===== 材料元素 ===== */
+    .ingredient {
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; cursor: grab;
+      border-radius: 6px;
+      transition: box-shadow 0.3s;
+    }
+    .ingredient:hover { box-shadow: 0 0 14px rgba(180,100,255,0.3); }
+
+    /* ===== 书本 ===== */
+    #book {
+      position: fixed;
+      right: 20px; top: 50%; transform: translateY(-50%);
+      z-index: 50;
+      transition: all 0.6s cubic-bezier(0.25,1,0.5,1);
+    }
+    /* 闭合状态 */
+    #book.closed { width: 40px; height: 260px; cursor: pointer; }
+    #book.closed .book-spine {
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, #3a1a20, #5a2a30, #3a1a20);
+      border: 2px solid #8a6040;
+      border-radius: 4px 8px 8px 4px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 2px 4px 16px rgba(0,0,0,0.5);
+    }
+    #book.closed .book-spine::after {
+      content: '书'; font-size: 16px; color: #d8c1f4; letter-spacing: 2px;
+    }
+    #book.closed:hover { right: 24px; }
+
+    /* 展开状态 */
+    #book.open {
+      right: 20px; width: 520px; height: 440px;
+      cursor: default;
+      transform: translateY(-50%);
+    }
+    .book-container {
+      width: 100%; height: 100%;
+      position: relative;
+      perspective: 1600px;
+    }
+
+    /* ===== 书封 ===== */
+    .book-cover {
+      position: absolute; inset: 0;
+      background: linear-gradient(160deg, #4a2828, #2a1015);
+      border: 3px solid #8a6040;
+      border-radius: 6px 16px 16px 6px;
+      box-shadow: 4px 6px 30px rgba(0,0,0,0.6), inset 0 0 40px rgba(80,30,20,0.3);
+      pointer-events: none;
+    }
+    .book-cover::before {
+      content: '';
+      position: absolute; inset: 6px;
+      border: 1px solid rgba(180,140,80,0.2);
+      border-radius: 3px 12px 12px 3px;
+    }
+    /* 装饰角 */
+    .book-corner { position: absolute; width: 24px; height: 24px; border: 2px solid #c8a050; }
+    .book-corner.tl { top: 8px; left: 8px; border-right: none; border-bottom: none; }
+    .book-corner.tr { top: 8px; right: 8px; border-left: none; border-bottom: none; }
+    .book-corner.bl { bottom: 8px; left: 8px; border-right: none; border-top: none; }
+    .book-corner.br { bottom: 8px; right: 8px; border-left: none; border-top: none; }
+    /* 书脊装饰 */
+    .book-spine-deco {
+      position: absolute; left: 6px; top: 20%; bottom: 20%; width: 8px;
+      background: linear-gradient(180deg, transparent, rgba(180,140,80,0.15), transparent);
+      border-radius: 4px;
+    }
+    /* 书名 */
+    .book-title {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-90deg);
+      font-size: 18px; color: #c8a050; letter-spacing: 6px;
+      white-space: nowrap;
+      text-shadow: 0 0 10px rgba(200,160,80,0.2);
+    }
+
+    /* ===== 书页区域 ===== */
+    .book-pages {
+      position: absolute; inset: 8px 8px 8px 12px;
+      background: linear-gradient(135deg, #f5e8c8, #e8d8b0);
+      border-radius: 0 10px 10px 0;
+      overflow: hidden;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+    }
+    .page-inner {
+      position: absolute; inset: 0;
+      padding: 20px 24px;
+      display: flex; flex-direction: column;
+    }
+    .page-header {
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 2px solid #c8a870; padding-bottom: 8px; margin-bottom: 10px;
+    }
+    .page-title {
+      font-size: 14px; color: #5a3a2a; font-weight: bold; letter-spacing: 2px;
+    }
+    .page-number {
+      font-size: 10px; color: #a08060;
+    }
+
+    /* ===== 标签页（Tab）系统 ===== */
+    .page-tabs {
+      display: flex; gap: 4px; margin-bottom: 8px;
+    }
+    .page-tab {
+      padding: 4px 12px; font-size: 10px; letter-spacing: 1px;
+      background: rgba(200,168,112,0.25);
+      border: 1px solid #c8a870;
+      border-bottom: none;
+      border-radius: 4px 4px 0 0;
+      color: #6a4a2a; cursor: pointer;
+      transition: all 0.3s;
+    }
+    .page-tab.active {
+      background: #f0dcc0;
+      border-color: #b89060;
+      color: #3a2a1a;
+      font-weight: bold;
+    }
+    .page-tab:hover:not(.active) { background: rgba(200,168,112,0.4); }
+
+    /* ===== 页面内容 ===== */
+    .page-content {
+      flex: 1; overflow-y: auto;
+      font-size: 11px; color: #3a2a1a; line-height: 1.8;
+      padding: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: #c8a870 transparent;
+    }
+    .page-content::-webkit-scrollbar { width: 4px; }
+    .page-content::-webkit-scrollbar-thumb { background: #c8a870; border-radius: 2px; }
+
+    .page-content [contenteditable] {
+      outline: none;
+      border-bottom: 1px dashed rgba(200,168,112,0.3);
+      transition: border-color 0.3s;
+    }
+    .page-content [contenteditable]:focus {
+      border-bottom-color: #b080ff;
+      background: rgba(180,100,255,0.04);
+    }
+    .page-content .recipe-step {
+      display: flex; align-items: center; gap: 6px;
+      padding: 3px 0;
+      border-bottom: 1px solid rgba(200,168,112,0.15);
+    }
+    .page-content .recipe-step .checkbox {
+      width: 12px; height: 12px;
+      border: 1.5px solid #a08060;
+      border-radius: 2px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 8px; color: #6a4a2a;
+      transition: all 0.2s;
+    }
+    .page-content .recipe-step .checkbox.checked {
+      background: #6b3fa0; border-color: #6b3fa0;
+      color: #fff;
+    }
+    .page-content .recipe-step .step-text {
+      flex: 1;
+    }
+    .page-content .recipe-step .step-text[contenteditable]:focus {
+      background: transparent;
+    }
+    .ingredient-tag {
+      display: inline-block;
+      padding: 1px 8px; margin: 1px 2px;
+      background: rgba(180,100,255,0.12);
+      border: 1px solid rgba(180,100,255,0.25);
+      border-radius: 10px;
+      font-size: 10px; color: #7a4aaa;
+      cursor: pointer;
+    }
+    .ingredient-tag:hover { background: rgba(180,100,255,0.2); }
+    .left-page-content { margin-top:12px;overflow:auto;line-height:1.75;font-size:13px;color:#543c46; }
+    .left-page-content:empty { display:none; }
+    .book-section-kicker { color:#8b6a4e;font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:5px; }
+    .book-lead { font-size:14px;line-height:1.8;margin:5px 0 12px; }
+    .book-card-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:9px; }
+    .book-card { border:1px solid rgba(143,103,70,.36);border-radius:9px;padding:8px;background:rgba(255,248,221,.3);cursor:pointer;color:#593f45;text-align:left;font:inherit; }
+    .book-card:hover { border-color:#8d667d;background:rgba(153,111,149,.09); }
+    .book-card strong { display:block;font-size:12px;letter-spacing:1px; }
+    .book-card small { display:block;margin-top:2px;color:#8c715f;font-size:9px; }
+    .book-rule-title { margin:12px 0 6px;color:#76506d;font-weight:700;letter-spacing:2px;font-size:12px; }
+    .book-list { margin:0;padding-left:18px;line-height:1.8; }
+    .recipe-category-strip { display:flex;gap:5px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none; }
+    .recipe-category-chip { flex:0 0 auto;border:1px solid rgba(136,93,113,.42);border-radius:999px;padding:4px 9px;font-size:9px;background:rgba(255,249,229,.38); }
+    .source-note,.safety-note { border-left:2px solid #b78d5a;padding:6px 8px;margin-top:9px;background:rgba(183,141,90,.08);font-size:10px;line-height:1.6; }
+    .safety-note { border-left-color:#9c6370;background:rgba(156,99,112,.08); }
+    .book-jump { cursor:pointer;text-decoration:none; }
+    .book-empty { min-height:170px;display:grid;place-items:center;text-align:center;color:#8d766d;line-height:1.8; }
+    .purpose-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:8px; }
+    .purpose-card { min-height:56px;border:1px solid rgba(143,103,70,.36);border-radius:10px;padding:8px;background:rgba(255,248,221,.3);color:#593f45;text-align:left;font:inherit;cursor:pointer; }
+    .purpose-card:hover { border-color:#8d667d;background:rgba(153,111,149,.09); }
+    .purpose-card strong,.purpose-card small { display:block; }.purpose-card small{margin-top:3px;color:#8c715f;font-size:9px;}
+    .craft-start { width:100%;margin-top:12px;padding:9px 12px;border:1px solid #8d667d;border-radius:999px;background:rgba(111,70,128,.07);color:#67465f;font:inherit;letter-spacing:2px;cursor:pointer; }
+    .craft-start:hover { background:rgba(111,70,128,.14);box-shadow:0 4px 12px rgba(83,50,69,.1); }
+
+    #incenseCraftOverlay { position:fixed;inset:0;z-index:900;display:none;place-items:center;padding:18px;background:rgba(7,2,15,.68);backdrop-filter:blur(5px); }
+    #incenseCraftOverlay.open { display:grid; }
+    .incense-craft-card { position:relative;width:min(660px,calc(100vw - 28px));min-height:390px;padding:28px;border:1px solid #d5a553;border-radius:24px;background:linear-gradient(145deg,rgba(35,17,52,.98),rgba(14,6,26,.98));box-shadow:0 24px 70px rgba(0,0,0,.55),0 0 30px rgba(213,165,83,.15);color:#ead9ff; }
+    .incense-craft-close { position:absolute;right:16px;top:15px;width:30px;height:30px;border:1px solid rgba(213,165,83,.6);border-radius:50%;background:transparent;color:#f1d49a;font-size:18px;cursor:pointer; }
+    .craft-eyebrow { color:#f1d49a;font-size:10px;letter-spacing:4px;text-align:center; }
+    .craft-title { margin:8px 40px 6px;text-align:center;font-size:21px;letter-spacing:4px;color:#f5e8ff; }
+    .craft-progress { display:flex;justify-content:center;gap:8px;margin:18px 0 24px; }
+    .craft-progress span { width:34px;height:5px;border-radius:9px;background:rgba(159,114,223,.2); }
+    .craft-progress span.done,.craft-progress span.active { background:#d5a553;box-shadow:0 0 8px rgba(213,165,83,.45); }
+    .craft-stage { display:grid;grid-template-columns:190px 1fr;gap:25px;align-items:center;min-height:220px; }
+    .craft-visual { min-height:190px;display:grid;place-items:center;position:relative; }
+    .craft-bowl { width:145px;height:92px;border:2px solid #d6b36d;border-radius:14px 14px 70px 70px;background:linear-gradient(150deg,rgba(103,63,119,.58),rgba(35,18,51,.9));box-shadow:inset 0 -18px 24px rgba(8,2,16,.38),0 12px 22px rgba(0,0,0,.25);position:relative;overflow:hidden; }
+    .craft-bowl::before { content:'';position:absolute;left:13px;right:13px;top:13px;height:33px;border-radius:50%;background:radial-gradient(ellipse,#c6a86e 0 5%,#806948 16%,#49364f 59%,#24142f 72%);box-shadow:0 0 13px rgba(213,165,83,.16); }
+    .craft-bowl.mixed::before { background:radial-gradient(ellipse,#d5bd7d 0 4%,#8c7049 14%,#735b4e 45%,#322039 72%);animation:incensePulse 1.8s ease-in-out infinite; }
+    @keyframes incensePulse { 50%{filter:brightness(1.2);transform:scale(.97)} }
+    .craft-jar { width:86px;height:142px;position:relative;filter:drop-shadow(0 10px 14px rgba(0,0,0,.3)); }
+    .craft-jar::before { content:'';position:absolute;left:19px;right:19px;top:0;height:18px;border:1px solid #d6b36d;border-radius:7px 7px 3px 3px;background:linear-gradient(90deg,#6c4a2b,#cda761,#644223);z-index:2; }
+    .craft-jar::before { transition:transform .42s cubic-bezier(.2,.8,.2,1),box-shadow .3s;transform-origin:right center; }
+    .craft-jar.jar-open::before { transform:translate(18px,-15px) rotate(28deg);box-shadow:0 6px 10px rgba(0,0,0,.3); }
+    .controlled-incense-spoon { position:absolute;z-index:560;width:92px;height:15px;border:2px solid #d5b36e;border-radius:50% 9px 9px 50%;background:linear-gradient(180deg,#f5dfa6,#7e5835);transform:rotate(-18deg);box-shadow:0 5px 10px rgba(0,0,0,.3);cursor:grab;touch-action:none;transition:filter .2s,transform .22s; }
+    .controlled-incense-spoon::before { content:'';position:absolute;left:4px;top:2px;width:25px;height:8px;border-radius:50%;background:#533e33;transition:background .2s,box-shadow .2s; }
+    .controlled-incense-spoon.loaded::before { background:var(--powder-top,#92704e);box-shadow:0 0 7px var(--powder-glow,transparent); }
+    .controlled-incense-spoon.dragging { cursor:grabbing;filter:brightness(1.12);transition:none; }
+    .controlled-incense-spoon.pouring { transform:rotate(34deg);pointer-events:none; }
+    .craft-jar.spoon-dipping::after { filter:brightness(1.12); }
+    .powder-shower { position:absolute;z-index:9;left:50%;top:21px;width:54px;height:72px;transform:translateX(-50%);pointer-events:none; }
+    .powder-shower span { position:absolute;top:0;width:5px;height:5px;border-radius:50%;background:var(--powder-top,#b99569);box-shadow:0 0 5px var(--powder-glow,transparent);animation:powderDrop .7s ease-in forwards; }
+    .powder-shower span:nth-child(1){left:7px}.powder-shower span:nth-child(2){left:16px;animation-delay:.08s}.powder-shower span:nth-child(3){left:26px;animation-delay:.15s}.powder-shower span:nth-child(4){left:36px;animation-delay:.04s}.powder-shower span:nth-child(5){left:44px;animation-delay:.19s}.powder-shower span:nth-child(6){left:21px;animation-delay:.26s}
+    @keyframes powderDrop { 0%{opacity:0;transform:translateY(0) scale(.6)}20%{opacity:1}100%{opacity:0;transform:translateY(58px) translateX(5px) scale(.25)} }
+    .craft-jar::after { content:'';position:absolute;inset:14px 5px 0;border:1.5px solid rgba(230,209,239,.75);border-radius:22px 22px 32px 32px;background:linear-gradient(120deg,rgba(255,255,255,.18),rgba(117,75,143,.08)),linear-gradient(to top,var(--powder-bottom,#584135) 0 var(--powder-level,48%),var(--powder-top,#876c52) var(--powder-level,48%) calc(var(--powder-level,48%) + 3%),transparent calc(var(--powder-level,48%) + 4%));box-shadow:inset 9px 2px 12px rgba(255,255,255,.09),0 0 14px var(--powder-glow,rgba(159,114,223,.12)); }
+    .incense-workbench { width:230px;height:220px;display:grid;place-items:center;position:absolute;z-index:18;cursor:pointer; }
+    .incense-mortar { width:155px;height:98px;border:2px solid #d6b36d;border-radius:18px 18px 75px 75px;background:linear-gradient(150deg,#63436f,#2a1939 72%);box-shadow:inset 0 -24px 28px rgba(6,2,14,.45),0 16px 24px rgba(0,0,0,.32);position:relative; }
+    .incense-mortar::before { content:'';position:absolute;left:14px;right:14px;top:11px;height:39px;border-radius:50%;background:radial-gradient(ellipse,#b18e61 0 4%,#745b43 18%,#382944 63%,#1a1024 73%);box-shadow:0 0 11px rgba(213,165,83,.18); }
+    .incense-mortar::after { content:'';position:absolute;width:118px;height:15px;right:-46px;top:-25px;border:2px solid #d6b36d;border-radius:12px;background:linear-gradient(180deg,#85637e,#392642);transform:rotate(-35deg);transform-origin:left center;transition:transform .35s; }
+    .incense-workbench.grinding .incense-mortar::after { animation:grindPestle .55s ease-in-out 3; }
+    .incense-workbench.mixed .incense-mortar::before { background:radial-gradient(ellipse,#d8bd80 0 5%,#98794f 16%,#765746 45%,#302039 72%);box-shadow:0 0 18px rgba(213,165,83,.28); }
+    @keyframes grindPestle { 50%{transform:rotate(-18deg) translate(-10px,8px)} }
+    .incense-work-label { position:absolute;bottom:2px;left:0;right:0;text-align:center;color:#f1d49a;font-size:11px;letter-spacing:2px;text-shadow:0 0 8px rgba(213,165,83,.32); }
+    .incense-pour-jar { position:absolute;right:-4px;bottom:18px;transform:scale(.58);transform-origin:center bottom;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s; }
+    .incense-workbench.ready .incense-pour-jar { opacity:1;pointer-events:auto;transform:scale(.68); }
+    .craft-copy h3 { margin-bottom:8px;color:#f1d49a;font-size:16px;letter-spacing:2px; }.craft-copy p{font-size:12px;line-height:1.8;color:#d8c1f4;}
+    .craft-options { display:flex;flex-wrap:wrap;gap:9px;margin-top:14px; }
+    .craft-option { padding:8px 12px;border:1px solid rgba(159,114,223,.55);border-radius:999px;background:rgba(159,114,223,.08);color:#ead9ff;font:inherit;font-size:11px;cursor:pointer; }
+    .craft-option.selected { border-color:#d5a553;color:#f1d49a;background:rgba(213,165,83,.12);box-shadow:0 0 10px rgba(213,165,83,.15); }
+    .craft-name-input { width:100%;margin-top:14px;padding:11px 13px;border:1px solid rgba(213,165,83,.55);border-radius:12px;background:rgba(6,2,14,.48);color:#fff0cf;font:inherit;outline:none; }
+    .craft-actions { display:flex;justify-content:flex-end;gap:10px;margin-top:19px; }
+    .craft-actions button { min-width:112px;padding:9px 16px;border:1px solid #9f72df;border-radius:999px;background:transparent;color:#ead9ff;font:inherit;letter-spacing:2px;cursor:pointer; }
+    .craft-actions .primary { border-color:#d5a553;color:#f1d49a;background:rgba(213,165,83,.08); }
+    @media(max-width:600px){.incense-craft-card{padding:23px 18px}.craft-stage{grid-template-columns:1fr;gap:8px;text-align:center}.craft-visual{min-height:130px}.craft-bowl{transform:scale(.82)}.craft-actions{justify-content:center}.craft-title{font-size:17px}}
+
+    /* ===== 翻页按钮 ===== */
+    .page-nav {
+      display: flex; justify-content: space-between; margin-top: 8px;
+      padding-top: 8px; border-top: 1px solid #c8a870;
+    }
+    .page-nav button {
+      background: rgba(60,30,10,0.8);
+      border: 1px solid #8a6040;
+      color: #d4b0a0;
+      padding: 4px 14px; font-size: 11px;
+      cursor: pointer; font-family: inherit;
+      transition: all 0.3s;
+    }
+    .page-nav button:hover { background: rgba(80,40,20,0.9); border-color: #c8a050; }
+
+    /* ===== 撕页按钮 ===== */
+    .tear-btn {
+      position: absolute; bottom: 50px; right: 14px;
+      background: rgba(180,80,60,0.8);
+      border: 1px solid #c06040;
+      color: #fff; font-size: 10px; padding: 3px 10px;
+      cursor: pointer; font-family: inherit;
+      transition: all 0.3s; z-index: 5;
+    }
+    .tear-btn:hover { background: rgba(200,100,70,0.9); }
+
+    /* ===== 左侧材料抽屉 ===== */
+    #ingredientDrawer {
+      position: fixed; left: 0; top: 50%; transform: translateY(-50%);
+      z-index: 40;
+      transition: all 0.4s cubic-bezier(0.25,1,0.5,1);
+    }
+    #ingredientDrawer.closed { width: 0; }
+    #ingredientDrawer.closed .drawer-panel { display: none; }
+    #ingredientDrawer.open { width: 200px; }
+
+    .drawer-tab {
+      position: absolute; right: -36px; top: 50%; transform: translateY(-50%);
+      width: 36px; height: 80px;
+      background: rgba(20,8,40,0.85);
+      border: 2px solid #5a307a; border-left: none;
+      border-radius: 0 6px 6px 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; cursor: pointer; z-index: 5;
+      writing-mode: vertical-rl; letter-spacing: 2px;
+      transition: all 0.3s;
+    }
+    .drawer-tab:hover { border-color: #b080ff; }
+
+    .drawer-panel {
+      width: 100%; height: 420px;
+      background: rgba(10,4,22,0.92);
+      border: 2px solid #5a307a; border-left: none;
+      backdrop-filter: blur(8px);
+      padding: 16px 12px;
+      overflow-y: auto;
+    }
+    .drawer-title {
+      font-size: 13px; letter-spacing: 3px; color: #c9a0ff;
+      text-align: center; padding-bottom: 10px;
+      border-bottom: 2px solid #3a1e5e; margin-bottom: 10px;
+    }
+    .ingredient-grid {
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .material-tabs { display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:12px; }
+    .material-tab { min-width:0;padding:7px 3px;border:1px solid rgba(159,114,223,.42);border-radius:8px;background:rgba(29,14,51,.55);color:#aa88c9;font:inherit;font-size:10px;letter-spacing:1px;cursor:pointer; }
+    .material-tab.active { border-color:#d5a553;color:#f1d49a;background:rgba(213,165,83,.1);box-shadow:0 0 10px rgba(213,165,83,.13); }
+    .oil-safety-note { margin:0 0 9px;padding:7px;border-left:2px solid #b78958;color:#a98e78;font-size:9px;line-height:1.5; }
+    #workshopInventoryTab { top:calc(50% + 68px);border-color:#d5a553;color:#f1d49a; }
+    #workshopInventoryDrawer { position:fixed;left:0;top:0;bottom:0;z-index:295;width:280px;transform:translateX(-100%);transition:transform .4s cubic-bezier(.25,1,.5,1); }
+    #workshopInventoryDrawer.open { transform:translateX(0); }
+    #workshopInventoryDrawer .drawer-panel { padding-left:38px; }
+    .workshop-item-list { display:flex;flex-direction:column;gap:9px; }
+    .workshop-item-card { padding:10px;border:1px solid rgba(213,165,83,.38);border-radius:12px;background:rgba(35,20,49,.76); }
+    .workshop-item-name { color:#f0dcac;font-size:12px;letter-spacing:1px; }.workshop-item-meta{margin-top:4px;color:#a98bbc;font-size:9px;line-height:1.5;}
+    .workshop-item-actions { display:flex;justify-content:flex-end;margin-top:8px; }
+    .workshop-to-relic { padding:6px 10px;border:1px solid #579fc9;border-radius:999px;background:transparent;color:#b9def1;font:inherit;font-size:9px;letter-spacing:1px;cursor:pointer; }
+    .workshop-empty { padding:28px 8px;text-align:center;color:#806b91;font-size:11px;line-height:1.8; }
+    .workshop-item-card { cursor:pointer;transition:border-color .2s,background .2s; }.workshop-item-card:hover{border-color:#d5a553;background:rgba(49,28,66,.9)}
+    .desktop-workshop-item { width:130px;min-height:176px;display:grid;place-items:center;position:absolute;z-index:19;cursor:grab; }
+    .desktop-workshop-item .item-caption { margin-top:8px;color:#f1d49a;font-size:10px;letter-spacing:2px;text-align:center;text-shadow:0 0 7px rgba(213,165,83,.3); }
+    .incense-burner { width:190px;height:215px;position:absolute;z-index:18;cursor:pointer; }
+    .burner-cup { position:absolute;left:25px;bottom:61px;width:140px;height:76px;border:2px solid #d5a553;border-radius:15px 15px 72px 72px;background:linear-gradient(150deg,#765579,#281735);box-shadow:inset 0 -20px 24px rgba(5,2,12,.4),0 12px 21px rgba(0,0,0,.3);z-index:4; }
+    .burner-cup::before { content:'';position:absolute;left:14px;right:14px;top:var(--powder-depth,10px);height:29px;border-radius:50%;background:radial-gradient(ellipse,var(--powder-top,#987653) 0 14%,var(--powder-bottom,#493749) 48%,#1a1022 72%);box-shadow:0 0 8px var(--powder-glow,transparent);transition:top .35s,height .35s; }
+    .burner-cup::after { content:'☾';position:absolute;left:50%;bottom:7px;transform:translateX(-50%);color:#e8c77f;font-size:19px; }
+    .incense-smoke { position:absolute;left:50%;bottom:72px;width:60px;height:80px;transform:translateX(-50%);opacity:0;pointer-events:none; }
+    .incense-smoke span { position:absolute;left:50%;bottom:0;width:18px;height:58px;border-left:3px solid rgba(226,211,239,.58);border-radius:50%;filter:blur(1px);transform-origin:bottom; }
+    .incense-smoke span:nth-child(2){margin-left:9px;height:68px;animation-delay:.55s}.incense-smoke span:nth-child(3){margin-left:-11px;height:50px;animation-delay:1.05s}
+    .incense-burner.active .incense-smoke { opacity:1; }.incense-burner.active .incense-smoke span{animation:smokeRise 2.8s ease-in-out infinite;}
+    @keyframes smokeRise{0%{opacity:0;transform:translateY(8px) scale(.75) rotate(-9deg)}35%{opacity:.75}100%{opacity:0;transform:translateY(-30px) scale(1.35) rotate(14deg)}}
+    .burner-stand { position:absolute;left:53px;bottom:28px;width:84px;height:47px;border:2px solid #b98a4c;border-top:0;border-radius:9px 9px 35px 35px;background:linear-gradient(90deg,#211225,#56324b 48%,#1b1021);box-shadow:0 8px 12px rgba(0,0,0,.28); }
+    .burner-stand::before { content:'';position:absolute;left:15px;right:15px;top:9px;height:18px;border-radius:50%;background:radial-gradient(circle,#fff1a0 0 8%,#ff9d35 28%,#bd3d20 52%,transparent 68%);filter:drop-shadow(0 0 7px #ff7b32);opacity:.42; }
+    .incense-burner.active .burner-stand::before { opacity:1;animation:heaterBreath 1.4s ease-in-out infinite; }
+    @keyframes heaterBreath{50%{filter:drop-shadow(0 0 12px #ffb44c);transform:scale(.9)}}
+    .burner-label { position:absolute;left:0;right:0;bottom:0;text-align:center;color:#c9afd8;font-size:9px;letter-spacing:1px;white-space:nowrap; }
+    .ingredient-item {
+      background: rgba(10,4,22,0.6);
+      border: 2px solid #3a1e5e;
+      border-radius: 8px;
+      padding: 6px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      cursor: grab;
+      transition: all 0.25s;
+    }
+    .ingredient-item:hover {
+      border-color: #8a4dff; background: rgba(20,8,40,0.8);
+    }
+    .ingredient-item .ingredient-label { font-size: 12px; color: #c9a0ff; letter-spacing: 1px; flex: 1; text-align: center; }
+    .ingredient-item:hover .ingredient-label { color: #e0ccff; }
+    .ingredient-item .bi-count { min-width: 22px; text-align: center; color: #5a3a7a; font-weight: bold; }
+    .ingredient-item .bi-count.has { color: #50d090; }
+    .ingredient-item .bi-btn {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      border: 1px solid #5a307a;
+      background: rgba(30,12,60,0.9);
+      color: #d4b0ff;
+      cursor: pointer;
+      font-size: 13px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .ingredient-item .bi-btn:hover { border-color:#b080ff; color:#fff; }
+
+    /* ===== 合成通知 ===== */
+    .craft-notification {
+      position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+      z-index: 9999;
+      background: rgba(10,4,22,0.9);
+      border: 2px solid #c8a050;
+      padding: 12px 24px;
+      font-size: 14px; color: #f0d080;
+      letter-spacing: 2px;
+      opacity: 0;
+      transition: opacity 0.5s, transform 0.5s;
+      pointer-events: none;
+    }
+    .craft-notification.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-10px);
+    }
+
+    /* ===== 炼金之瓶按钮（书下方） ===== */
+    #bottleBtn {
+      position: fixed;
+      right: 20px; top: calc(50% + 70px);
+      transform: translateY(-50%);
+      z-index: 50;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(160deg, #2a2840, #12101f);
+      border: 2px solid #6b5a8a;
+      color: #a8b8ff;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 2px 4px 16px rgba(0,0,0,0.5);
+      transition: all 0.3s;
+    }
+    #bottleBtn:hover { right: 24px; border-color: #8a7ab8; color: #ccd8ff; }
+
+    /* ===== 炼金之瓶（放到桌面，可拖动） ===== */
+    .bottle-on-desktop {
+      display: flex; flex-direction: column; align-items: center;
+      cursor: grab;
+      user-select: none;
+    }
+    .potion-bottle {
+      position: relative;
+      width: 90px; height: 150px;
+      margin: 0 auto 12px;
+    }
+    .potion-bottle .p-cork { position:absolute; top:0; left:50%; transform:translateX(-50%); width:30px; height:16px; background:linear-gradient(180deg,#d0a070,#8a5a30); border-radius:4px; }
+    .potion-bottle .p-neck { position:absolute; top:16px; left:50%; transform:translateX(-50%); width:26px; height:26px; background:linear-gradient(90deg, rgba(180,120,255,0.35), rgba(220,180,255,0.15), rgba(180,120,255,0.35)); border-left:2px solid rgba(200,150,255,0.5); border-right:2px solid rgba(200,150,255,0.5); }
+    .potion-bottle .p-body { position:absolute; top:42px; left:50%; transform:translateX(-50%); width:84px; height:100px; background:linear-gradient(160deg, rgba(180,120,255,0.35), rgba(120,60,200,0.12)); border:2px solid rgba(200,150,255,0.5); border-radius:12px 12px 24px 24px; overflow:hidden; box-shadow:inset 0 0 20px rgba(180,120,255,0.2), 0 6px 20px rgba(120,60,200,0.25); }
+    .potion-bottle .p-body::after { content:''; position:absolute; top:8px; left:10px; width:14px; height:40px; background:linear-gradient(180deg, rgba(255,255,255,0.4), transparent); border-radius:8px; transform:rotate(8deg); pointer-events:none; }
+    .potion-bottle .p-liquid { position:absolute; left:0; right:0; bottom:0; height:18%; background:linear-gradient(180deg, rgba(150,80,255,0.55), rgba(80,30,150,0.75)); border-radius:0 0 22px 22px; transition: height 0.4s; }
+    .potion-bottle .p-bubble { position:absolute; border-radius:50%; background:rgba(255,255,255,0.35); }
+    .bottle-added { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 12px; min-height:24px; justify-content:center; width:180px; }
+    .bottle-added .ba-tag { background:rgba(180,100,255,0.15); border:1px solid rgba(180,100,255,0.3); border-radius:12px; padding:2px 10px; font-size:11px; color:#d4b0ff; }
+    .bottle-added .ba-hint { font-size:11px; color:#5a3a7a; letter-spacing:1px; }
+    /* ===== 存入圣物柜（底部金色标签） ===== */
+    #storeToSanctum {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      z-index: 80;
+      height: 44px; padding: 0 24px; border-radius: 22px;
+      background: linear-gradient(160deg, #e0b64c, #b8842a);
+      border: 2px solid #f4d070;
+      color: #2a1a05;
+      font-family: inherit; font-size: 13px; letter-spacing: 3px;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 0 20px rgba(240,200,96,0.4);
+    }
+    #storeToSanctum:hover { background: linear-gradient(160deg, #ecc358, #c89430); }
+    #sendToManifest { display:none; }
+    #sendToManifest:disabled { opacity:.34;cursor:not-allowed;box-shadow:none; }
+    #sendToManifest:not(:disabled):hover { transform:translateY(-2px);box-shadow:0 0 25px rgba(87,159,201,.45); }
+
+    /* ===== 命名弹窗 ===== */
+    #potionNameOverlay {
+      position: fixed; inset: 0;
+      z-index: 2500;
+      background: rgba(5,2,12,0.7);
+      display: none;
+      align-items: center; justify-content: center;
+    }
+    #potionNameOverlay.active { display: flex; }
+    .name-box {
+      background: linear-gradient(160deg, #1a0a2e, #0d001a);
+      border: 2px solid #6b3fa0;
+      border-radius: 16px;
+      padding: 22px;
+      width: min(80vw, 320px);
+      box-sizing: border-box;
+      box-shadow: 0 0 40px rgba(180,100,255,0.25);
+    }
+    .name-title { text-align:center; color:#c9a0ff; font-size:15px; letter-spacing:5px; margin-bottom:14px; }
+    .name-box input { width:100%; box-sizing:border-box; background:rgba(20,8,40,0.7); border:2px solid #5a307a; color:#e0ccff; font-family:inherit; font-size:13px; padding:10px 12px; border-radius:8px; margin-bottom:14px; outline:none; }
+    .name-box input:focus { border-color:#b080ff; }
+    .name-box button { width:100%; height:42px; border-radius:21px; background:rgba(60,160,90,0.85); border:2px solid #50d090; color:#e0ffe8; font-family:inherit; font-size:14px; letter-spacing:3px; cursor:pointer; }
+    .name-box button:hover { background:rgba(70,180,100,0.9); }
+
+    /* ===== 2026 统一视觉：与占卜桌／显化之境共用紫金魔法控件 ===== */
+    :root { --ui-bg:rgba(24,13,44,.94); --purple:#9f72df; --purple-text:#d8c1f4; --gold:#d5a553; --gold-text:#f1d49a; --blue:#579fc9; }
+    #desktop { background:radial-gradient(circle at 50% 48%,rgba(70,32,108,.34) 0 16%,transparent 42%),repeating-conic-gradient(rgba(120,60,180,.035) 0 25%,transparent 0 50%) 0 0/80px 80px,radial-gradient(ellipse at 50% 38%,#1d0a34,#090116 76%); }
+    #desktop::after { height:34%; background:linear-gradient(to top,rgba(11,2,25,.75),transparent); }
+    .ui-nav-link { background:var(--ui-bg);border:0;color:var(--purple-text);box-shadow:0 0 15px rgba(159,114,223,.2); }
+    .ui-nav-link:hover { background:rgba(35,19,61,.96);color:#f0e4ff;box-shadow:0 0 25px rgba(159,114,223,.4); }
+    #ingredientDrawer { top:0;bottom:0;width:280px;transform:translateX(-100%);z-index:300;transition:transform .4s cubic-bezier(.25,1,.5,1); }
+    #ingredientDrawer.closed { width:280px;transform:translateX(-100%); }
+    #ingredientDrawer.closed .drawer-panel { display:block; }
+    #ingredientDrawer.open { width:280px;transform:translateX(0); }
+    .drawer-panel { width:280px;height:100%;padding:82px 18px 24px 38px;background:linear-gradient(180deg,rgba(20,10,39,.97),rgba(11,4,24,.98));border:1px solid rgba(159,114,223,.72);border-left:0;box-shadow:12px 0 34px rgba(4,0,12,.42),inset -1px 0 rgba(216,193,244,.08);scrollbar-color:#7951ad transparent; }
+    .drawer-tab { position:fixed;left:0;right:auto;top:calc(50% - 28px);transform:translateY(-50%);z-index:310;width:36px;height:86px;padding:0;background:linear-gradient(90deg,rgba(30,16,52,.97),rgba(24,13,44,.93));border:2px solid var(--purple);border-left:0;border-radius:0 10px 10px 0;color:#ead9ff;font-size:14px;box-shadow:0 0 15px rgba(159,114,223,.2);display:grid;place-items:center;overflow:hidden;isolation:isolate;backdrop-filter:blur(8px);writing-mode:horizontal-tb;letter-spacing:0; }
+    .drawer-tab::before { content:'';position:absolute;inset:4px 4px 4px 0;border:1px solid color-mix(in srgb,currentColor 32%,transparent);border-left:0;border-radius:0 9px 9px 0;pointer-events:none; }
+    .drawer-tab .tab-text { writing-mode:vertical-rl;letter-spacing:4px;line-height:1;transform:translateX(1px);text-shadow:0 0 6px color-mix(in srgb,currentColor 35%,transparent); }
+    .drawer-tab:hover { width:41px;border-color:#c19aee;color:#fff;box-shadow:0 0 25px rgba(159,114,223,.45); }
+    .drawer-title { color:#e4cdfb;border-bottom:1px solid rgba(159,114,223,.38);padding-bottom:14px;margin-bottom:14px; }
+    .ingredient-grid { gap:9px; }
+    .ingredient-item { min-height:42px;padding:7px 9px;background:rgba(29,14,51,.72);border:1px solid rgba(159,114,223,.42);border-radius:12px;box-shadow:inset 0 0 12px rgba(159,114,223,.035);cursor:pointer; }
+    .ingredient-item:hover { border-color:#bd91ed;background:rgba(46,24,76,.9);box-shadow:0 0 15px rgba(159,114,223,.2); }
+    .ingredient-item .bi-btn { border-color:rgba(159,114,223,.65);background:rgba(17,7,33,.8); }
+    .ingredient-item .bi-count.has { color:#f1d49a; }
+    #book.closed { width:0;height:0;pointer-events:none; }
+    #bookToggleBtn { position:fixed;right:20px;top:calc(50% - 38px);transform:translateY(-50%);z-index:80;width:58px;height:58px;display:grid;place-items:center;background:radial-gradient(circle at 50% 38%,rgba(65,42,82,.98),var(--ui-bg));border:2px solid var(--gold);border-radius:50%;color:var(--gold-text);cursor:pointer;box-shadow:0 0 18px rgba(213,165,83,.3),inset 0 0 10px rgba(241,212,154,.08);transition:transform .3s,box-shadow .3s,border-color .3s; }
+    #bookToggleBtn svg { width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 4px rgba(241,212,154,.5));pointer-events:none; }
+    #bookToggleBtn:hover,#bookToggleBtn.active { transform:translateY(-50%) scale(1.08);border-color:#edc879;box-shadow:0 0 28px rgba(213,165,83,.5),inset 0 0 12px rgba(241,212,154,.12); }
+    #book.open { left:50%;right:auto;top:50%;transform:translate(-50%,-50%);width:min(760px,calc(100vw - 80px));height:min(500px,calc(100vh - 110px)); }
+    .book-close-btn { position:absolute;z-index:40;top:17px;right:18px;width:30px;height:30px;padding:0;display:grid;place-items:center;border:1px solid rgba(130,88,74,.52);border-radius:50%;background:rgba(250,237,205,.62);color:#65424d;cursor:pointer;box-shadow:0 2px 9px rgba(75,42,31,.12),inset 0 0 0 3px rgba(255,250,226,.3);transition:transform .22s,border-color .22s,color .22s,background .22s,box-shadow .22s; }
+    .book-close-btn::before,.book-close-btn::after { content:'';position:absolute;width:13px;height:1.4px;border-radius:2px;background:currentColor; }
+    .book-close-btn::before { transform:rotate(45deg); }
+    .book-close-btn::after { transform:rotate(-45deg); }
+    .book-close-btn:hover { transform:scale(1.08) rotate(4deg);border-color:#9b6c58;color:#432a38;background:rgba(255,245,215,.92);box-shadow:0 3px 12px rgba(75,42,31,.19),0 0 9px rgba(213,165,83,.2); }
+    .book-close-btn:focus-visible { outline:2px solid #b98a4e;outline-offset:2px; }
+    .book-cover { background:linear-gradient(145deg,#351644,#170a25);border-color:#c69a50;border-radius:14px 24px 24px 14px;box-shadow:0 12px 45px rgba(0,0,0,.62),0 0 24px rgba(213,165,83,.12),inset 0 0 42px rgba(125,70,165,.18); }
+    .book-pages { inset:9px 10px 9px 16px;background:linear-gradient(135deg,#f8edcf,#ead8af);border-radius:4px 17px 17px 4px; }
+    .book-pages::before { content:'';position:absolute;z-index:8;left:50%;top:0;bottom:0;width:26px;transform:translateX(-50%);background:linear-gradient(90deg,rgba(88,52,30,.13),rgba(255,248,220,.2) 42%,rgba(70,38,26,.2) 52%,rgba(255,248,220,.18) 62%,rgba(88,52,30,.12));box-shadow:inset 0 0 8px rgba(65,35,20,.14);pointer-events:none; }
+    .book-pages::after { content:'';position:absolute;inset:7px;border:1px solid rgba(151,111,57,.28);border-radius:3px 13px 13px 3px;pointer-events:none;z-index:9; }
+    .book-pages .page-inner { inset:0;padding:0;display:grid;grid-template-columns:1fr 1fr;overflow:hidden; }
+    .book-page { position:relative;min-width:0;padding:23px 27px 20px;display:flex;flex-direction:column;background:linear-gradient(105deg,rgba(255,251,228,.15),transparent 48%,rgba(121,80,42,.035)); }
+    .book-page-left { padding-right:34px;border-right:1px solid rgba(122,80,43,.18); }
+    .book-page-right { padding-left:34px;background:linear-gradient(75deg,rgba(117,74,38,.035),transparent 48%,rgba(255,252,232,.16)); }
+    .page-header { align-items:flex-start;gap:12px; }
+    .page-tabs { position:absolute;z-index:32;left:42px;top:-29px;display:flex;align-items:flex-end;gap:3px;margin:0;white-space:nowrap; }
+    .page-tab { position:relative;width:38px;height:31px;padding:0;display:grid;place-items:center;border:1px solid #a9824f;border-bottom:0;border-radius:5px 5px 0 0;background:linear-gradient(180deg,#ecd7aa,#d9bc82);color:#684b3f;box-shadow:0 -2px 5px rgba(63,37,23,.12),inset 0 1px rgba(255,250,220,.72);transition:height .2s,transform .2s,background .2s,color .2s; }
+    .page-tab::after { content:'';position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:5px solid #d9bc82;opacity:.98; }
+    .page-tab svg { width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round;pointer-events:none; }
+    .page-tab.active { height:36px;transform:translateY(-1px);background:linear-gradient(180deg,#7a5068,#54364f);border-color:#805567;color:#f3dfb0;box-shadow:0 -3px 8px rgba(81,42,65,.25),inset 0 1px rgba(255,236,191,.22); }
+    .page-tab.active::after { border-top-color:#54364f; }
+    .page-tab:hover:not(.active) { height:34px;background:linear-gradient(180deg,#f2dfb8,#dfc38d); }
+    .page-sigil { flex:1;display:grid;place-items:center;color:rgba(104,66,69,.34);font-size:62px;text-shadow:0 0 12px rgba(158,105,125,.12); }
+    .page-sigil::before { content:'☾';width:108px;height:108px;display:grid;place-items:center;border:1px solid rgba(137,94,69,.22);border-radius:50%;box-shadow:0 0 0 9px rgba(137,94,69,.035),inset 0 0 20px rgba(137,94,69,.06); }
+    .page-whisper { text-align:center;color:rgba(96,64,52,.55);font-size:9px;letter-spacing:3px;margin-bottom:12px; }
+    .book-page-right .page-content { padding:8px 4px 48px; }
+    .book-page .page-nav { display:none; }
+    .book-page { cursor:default; }
+    #book.can-turn-left .book-page-left,#book.can-turn-right .book-page-right { cursor:pointer; }
+    .book-page-left::after,.book-page-right::after { position:absolute;top:50%;transform:translateY(-50%);color:rgba(116,76,80,.3);font-size:28px;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none; }
+    .book-page-left::after { content:'‹';left:10px; }
+    .book-page-right::after { content:'›';right:10px; }
+    #book.can-turn-left .book-page-left:hover::after,#book.can-turn-right .book-page-right:hover::after { opacity:1;transform:translateY(-50%) scale(1.12); }
+    .tear-btn { width:30px;height:30px;padding:0!important;display:grid;place-items:center;border-radius:50%!important;bottom:19px;background:transparent!important;border:1px solid rgba(111,70,128,.62)!important;color:#76517e!important;box-shadow:none!important; }
+    .tear-btn svg { width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round;pointer-events:none; }
+    .book-page-left .tear-btn { left:26px;right:auto; }
+    .book-page-right .tear-btn { right:26px;left:auto; }
+    .book-page-right .tear-btn svg { transform:scaleX(-1); }
+    .tear-btn:hover { background:rgba(111,70,128,.06)!important;border-color:#8d6999!important;color:#5f3d70!important;box-shadow:0 0 10px rgba(111,70,128,.12)!important; }
+    #pageTurn { position:absolute;z-index:20;top:0;bottom:0;left:50%;width:50%;transform-style:preserve-3d;transform-origin:left center;pointer-events:none;opacity:0; }
+    #pageTurn::before,#pageTurn::after { content:'';position:absolute;inset:0;backface-visibility:hidden;background:linear-gradient(90deg,#ead8af,#fbefd0 12%,#f3e4c1 78%,#d1b889);box-shadow:-8px 0 18px rgba(55,28,18,.18); }
+    #pageTurn::after { transform:rotateY(180deg);background:linear-gradient(90deg,#d1b889,#f3e4c1 22%,#fbefd0 88%,#ead8af); }
+    #pageTurn.turning-next { opacity:1;animation:turnNext .72s cubic-bezier(.55,.05,.35,1) forwards; }
+    #pageTurn.turning-prev { left:0;transform-origin:right center;opacity:1;animation:turnPrev .72s cubic-bezier(.55,.05,.35,1) forwards; }
+    @keyframes turnNext { 0%{transform:rotateY(0)} 48%{box-shadow:-20px 4px 28px rgba(25,10,8,.3)} 100%{transform:rotateY(-180deg)} }
+    @keyframes turnPrev { 0%{transform:rotateY(0)} 48%{box-shadow:20px 4px 28px rgba(25,10,8,.3)} 100%{transform:rotateY(180deg)} }
+    .page-header { border-bottom-color:#c9a45f; }.page-title{color:#4a2f38}
+    .page-nav button,.tear-btn { border-radius:12px;background:rgba(55,27,63,.88);border:1px solid #9f72df;color:#ead7f7;padding:6px 15px; }
+    .page-nav button:hover,.tear-btn:hover { background:#432252;border-color:#d5a553;color:#fff0c8; }
+    #bottleBtn { right:20px;top:calc(50% + 38px);width:58px;height:58px;background:radial-gradient(circle at 50% 38%,rgba(62,35,91,.98),var(--ui-bg));border-color:var(--purple);color:var(--purple-text);box-shadow:0 0 18px rgba(159,114,223,.3),inset 0 0 10px rgba(216,193,244,.08); }
+    #bottleBtn svg { width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 4px rgba(193,154,238,.55)); }
+    #bottleBtn:hover { right:20px;transform:translateY(-50%) scale(1.08);border-color:#c19aee;color:#f4eaff;box-shadow:0 0 26px rgba(159,114,223,.48); }
+    #bottleBtn.active { border-color:#cfaff5;color:#fff5ff;box-shadow:0 0 29px rgba(159,114,223,.58),inset 0 0 14px rgba(216,193,244,.14); }
+    #mortarBtn { position:fixed;right:20px;top:calc(50% + 114px);transform:translateY(-50%);z-index:80;width:58px;height:58px;display:grid;place-items:center;border:2px solid #b78d5a;border-radius:50%;background:radial-gradient(circle at 50% 38%,rgba(70,46,74,.98),var(--ui-bg));color:#e6c58c;box-shadow:0 0 18px rgba(183,141,90,.25),inset 0 0 10px rgba(241,212,154,.06);cursor:pointer;transition:transform .3s,box-shadow .3s,border-color .3s; }
+    #mortarBtn svg { width:29px;height:29px;fill:none;stroke:currentColor;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;filter:drop-shadow(0 0 4px rgba(213,165,83,.4)); }
+    #mortarBtn:hover,#mortarBtn.active { transform:translateY(-50%) scale(1.08);border-color:#e0b96f;color:#ffe4aa;box-shadow:0 0 27px rgba(213,165,83,.42); }
+    #burnerBtn { position:fixed;right:20px;top:calc(50% + 190px);transform:translateY(-50%);z-index:80;width:58px;height:58px;display:grid;place-items:center;border:2px solid #c57a62;border-radius:50%;background:radial-gradient(circle at 50% 38%,rgba(72,38,55,.98),var(--ui-bg));color:#efb28d;box-shadow:0 0 18px rgba(197,122,98,.25);cursor:pointer;transition:transform .3s,box-shadow .3s,border-color .3s; }
+    #burnerBtn svg { width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round;pointer-events:none; }
+    #burnerBtn:hover,#burnerBtn.active { transform:translateY(-50%) scale(1.08);border-color:#f0ad7e;color:#ffe0bd;box-shadow:0 0 27px rgba(225,130,91,.4); }
+    #candleBtn { position:fixed;right:20px;top:calc(50% + 266px);transform:translateY(-50%);z-index:80;width:58px;height:58px;display:grid;place-items:center;border:2px solid #d6a45d;border-radius:50%;background:radial-gradient(circle at 50% 36%,rgba(76,47,65,.98),var(--ui-bg));color:#f5cf88;box-shadow:0 0 18px rgba(214,164,93,.25);cursor:pointer;transition:transform .3s,box-shadow .3s,border-color .3s; }
+    #candleBtn svg { width:29px;height:29px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;pointer-events:none; }
+    #candleBtn:hover,#candleBtn.active { transform:translateY(-50%) scale(1.08);border-color:#ffe0a0;color:#fff0c4;box-shadow:0 0 28px rgba(235,178,87,.45); }
+    .candle-workbench { position:absolute;left:50%;top:47%;width:390px;height:285px;transform:translate(-50%,-50%);z-index:38;border:1px solid rgba(213,165,83,.55);border-radius:30px;background:radial-gradient(circle at 50% 42%,rgba(113,66,130,.35),rgba(22,6,42,.9) 72%);box-shadow:0 20px 55px rgba(5,0,14,.48),inset 0 0 32px rgba(213,165,83,.06);display:grid;grid-template-columns:1fr 1fr;align-items:center;justify-items:center;color:#ecd9b2; }
+    .candle-workbench::before { content:'';position:absolute;left:34px;right:34px;bottom:42px;height:1px;background:linear-gradient(90deg,transparent,#bc8756,transparent); }
+    .wax-station,.candle-vessel { position:relative;width:130px;height:160px;display:grid;place-items:center;cursor:pointer; }
+    .wax-pot { position:absolute;top:46px;width:94px;height:65px;border:2px solid #d9ad68;border-radius:12px 12px 38px 38px;background:linear-gradient(135deg,#4d2b50,#24102f);box-shadow:inset 0 8px 12px rgba(255,223,163,.08),0 8px 17px rgba(0,0,0,.3);overflow:hidden; }
+    .wax-pot::after { content:'';position:absolute;left:8px;right:8px;bottom:7px;height:0;border-radius:50% 50% 20px 20px;background:var(--candle-wax,#efc8d6);box-shadow:0 0 14px var(--candle-glow,#eaa0bb);transition:height .55s; }
+    .wax-station::after { content:'';position:absolute;top:111px;width:74px;height:25px;border:2px solid #a76e4d;border-radius:8px 8px 22px 22px;background:#431c31;box-shadow:0 9px 18px rgba(231,124,73,.1); }
+    .candle-workbench.stage-2 .wax-pot::after,.candle-workbench.stage-3 .wax-pot::after { height:38px;animation:candleWaxGlow 2.2s ease-in-out infinite; }
+    .candle-workbench.stage-3 .wax-pot::after { filter:saturate(1.35); }
+    .candle-vessel .vessel-glass { position:absolute;bottom:28px;width:82px;height:104px;border:2px solid rgba(232,214,237,.75);border-radius:12px 12px 25px 25px;background:linear-gradient(100deg,rgba(255,255,255,.1),rgba(95,55,117,.12));overflow:hidden;box-shadow:inset 8px 2px 12px rgba(255,255,255,.06); }
+    .vessel-wick { position:absolute;left:50%;bottom:18px;width:2px;height:0;transform:translateX(-50%);background:#eadbc4;transition:height .45s;z-index:2; }
+    .vessel-wax { position:absolute;left:4px;right:4px;bottom:4px;height:0;border-radius:5px 5px 20px 20px;background:linear-gradient(180deg,var(--candle-wax-light,#f8dce5),var(--candle-wax,#efb7ca));box-shadow:0 -3px 12px var(--candle-glow,#eaa0bb);transition:height .75s; }
+    .candle-workbench.stage-1 .vessel-wick,.candle-workbench.stage-2 .vessel-wick,.candle-workbench.stage-3 .vessel-wick,.candle-workbench.stage-4 .vessel-wick { height:83px; }
+    .candle-workbench.stage-4 .vessel-wax { height:76px; }
+    .candle-workbench.stage-4 .wax-pot::after { height:5px; }
+    .candle-step-label { position:absolute;left:25px;right:25px;bottom:13px;text-align:center;font-size:11px;letter-spacing:2px;color:#e8c986; }
+    .candle-work-title { position:absolute;top:17px;left:0;right:0;text-align:center;font-size:12px;letter-spacing:4px;color:#f1d49a; }
+    @keyframes candleWaxGlow{50%{filter:brightness(1.2);box-shadow:0 0 22px var(--candle-glow,#eaa0bb)}}
+    .crafted-candle-mini { position:relative;width:70px;height:112px;margin:0 auto; }
+    .crafted-candle-mini::before { content:'';position:absolute;left:14px;right:14px;bottom:6px;height:82px;border:1.5px solid rgba(236,220,240,.8);border-radius:8px 8px 20px 20px;background:linear-gradient(180deg,var(--candle-wax-light,#f8dce5),var(--candle-wax,#efb7ca));box-shadow:0 0 16px var(--candle-glow,#eaa0bb); }
+    .crafted-candle-mini::after { content:'';position:absolute;left:32px;top:6px;width:8px;height:18px;border-radius:55% 45% 58% 42%;background:#ffd975;box-shadow:0 0 13px #f6a34c;transform:rotate(4deg); }
+    .desktop-workshop-item:not(.candle-lit) .crafted-candle-mini::after { opacity:0; }
+    .desktop-workshop-item.candle-lit .crafted-candle-mini::after { animation:candleFlame 1.45s ease-in-out infinite alternate; }
+    @keyframes candleFlame{to{transform:translateY(-1px) rotate(-4deg) scale(.92,1.08);filter:brightness(1.18)}}
+    .potion-bottle { width:108px;height:190px;margin-bottom:8px;filter:drop-shadow(0 14px 18px rgba(16,3,33,.42)); }
+    .potion-bottle::after { content:'';position:absolute;left:50%;bottom:0;width:92px;height:12px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse,rgba(168,117,216,.22),transparent 72%);filter:blur(3px);z-index:-1; }
+    .potion-bottle .p-cork { top:0;width:22px;height:18px;border:1px solid #d9bd7a;border-radius:7px 7px 3px 3px;background:linear-gradient(90deg,#76572f,#d2aa66 48%,#664522);box-shadow:inset 3px 0 rgba(255,238,180,.2),0 0 7px rgba(213,165,83,.25); }
+    .potion-bottle .p-neck { top:17px;width:24px;height:44px;border:1.3px solid rgba(221,200,235,.7);border-top:0;border-radius:0 0 10px 10px;background:linear-gradient(90deg,rgba(91,52,121,.12),rgba(255,255,255,.2) 42%,rgba(77,41,108,.1));box-shadow:inset 5px 0 8px rgba(255,255,255,.07); }
+    .potion-bottle .p-collar { position:absolute;z-index:4;top:54px;left:50%;width:35px;height:7px;transform:translateX(-50%);border:1px solid #cfa55a;border-radius:50%;background:linear-gradient(180deg,#f0d18a,#80582e);box-shadow:0 0 6px rgba(213,165,83,.22); }
+    .potion-bottle .p-body { top:58px;width:96px;height:126px;border:1.35px solid rgba(226,207,238,.72);border-radius:47% 47% 49% 49%/27% 27% 68% 68%;background:linear-gradient(116deg,rgba(255,255,255,.11),rgba(133,87,158,.065) 27%,rgba(255,255,255,.025) 55%,rgba(68,32,93,.1));box-shadow:inset 13px 3px 18px rgba(255,255,255,.075),inset -12px -5px 20px rgba(38,13,57,.14),0 0 16px rgba(151,83,214,.1); }
+    .potion-bottle .p-body::after { top:15px;left:17px;width:10px;height:46px;background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,.04));transform:rotate(12deg); }
+    .potion-bottle .p-emblem { position:absolute;z-index:5;left:50%;top:96px;width:24px;height:32px;transform:translateX(-50%);display:grid;place-items:center;border:1px solid rgba(207,165,90,.5);border-radius:50%;color:#d9b96f;font-size:14px;text-shadow:0 0 5px rgba(245,218,151,.3);box-shadow:inset 0 0 7px rgba(213,165,83,.05);pointer-events:none; }
+    .potion-bottle .p-liquid { height:0;background:linear-gradient(180deg,var(--potion-top,rgba(226,188,92,.86)),var(--potion-bottom,rgba(133,79,40,.96)));border-radius:18% 18% 34px 34px;box-shadow:inset 0 5px 8px rgba(255,245,190,.28),0 -3px 11px var(--potion-glow,rgba(230,174,74,.42));animation:potionBreath 3.2s ease-in-out infinite;opacity:.94; }
+    .potion-bottle.has-liquid .p-liquid { min-height:28px; }
+    .potion-bottle .p-liquid::before { content:'';position:absolute;left:0;right:0;top:-3px;height:7px;border-radius:50%;background:var(--potion-surface,rgba(220,169,255,.58));box-shadow:0 0 7px var(--potion-glow,rgba(202,130,255,.65)); }
+    .potion-bottle .p-bubble { background:rgba(255,239,255,.5);box-shadow:0 0 5px rgba(235,190,255,.55);animation:potionBubble 2.8s ease-in-out infinite alternate; }
+    .potion-bottle:not(.has-liquid) .p-bubble { opacity:0;animation:none; }
+    .potion-bottle .p-bubble:nth-child(3){animation-delay:.5s}.potion-bottle .p-bubble:nth-child(4){animation-delay:1s}
+    @keyframes potionBreath { 50%{filter:brightness(1.18) saturate(1.12);box-shadow:inset 0 5px 10px rgba(255,225,255,.24),0 -4px 13px rgba(190,110,255,.46)} }
+    @keyframes potionBubble { to{transform:translateY(-8px);opacity:.5} }
+    #storeToSanctum { bottom:20px;background:var(--ui-bg);border:2px solid var(--purple);color:var(--purple-text);box-shadow:0 0 22px rgba(159,114,223,.3),inset 0 0 10px rgba(216,193,244,.07); }
+    #storeToSanctum:hover { background:rgba(43,24,70,.96);border-color:#c19aee;color:#f4eaff;box-shadow:0 0 29px rgba(159,114,223,.5); }
+    #sendToManifest { background:var(--ui-bg);border-color:var(--blue);color:#b9def1; }
+    .name-box { background:linear-gradient(160deg,#211037,#0c0318);border-color:var(--gold);box-shadow:0 0 45px rgba(213,165,83,.2); }.name-title{color:var(--gold-text)}.name-box input{border-color:#7e5aaa}.name-box button{background:var(--ui-bg);border-color:var(--gold);color:var(--gold-text)}.name-box button:hover{background:rgba(51,37,26,.96)}
+    .craft-notification { border-radius:15px;background:var(--ui-bg);border-color:var(--gold);box-shadow:0 0 24px rgba(213,165,83,.25); }
+    @media(max-width:760px){#book.open{left:50%;right:auto;width:calc(100vw - 24px);height:62vh;top:52%;transform:translate(-50%,-50%)}.book-page{padding:16px 17px}.book-page-left{padding-right:24px}.book-page-right{padding-left:24px}.page-sigil{font-size:42px}.page-sigil::before{width:72px;height:72px}.page-tabs{left:24px;top:-26px;gap:2px}.page-tab{width:32px;height:28px}.page-tab.active{height:32px}.page-tab svg{width:15px;height:15px}.drawer-panel{width:240px}#ingredientDrawer,#ingredientDrawer.closed,#ingredientDrawer.open{width:240px}.ui-nav-link{padding:5px 9px!important;font-size:10px!important}#storeToSanctum{bottom:12px;left:36%;padding:0 14px}#sendToManifest{bottom:12px;left:52%;padding:0 13px;font-size:10px}}
+  </style>
+  <link rel="stylesheet" href="world_switch.css">
+</head>
+<body data-world="west">
+<script src="world_switch.js"></script>
+
+<!-- 顶部导航 -->
+<div style="position:fixed;top:12px;right:12px;z-index:999;display:flex;gap:10px;">
+  <a class="ui-nav-link" href="reading_web.html" style="padding:6px 14px;font-size:12px;cursor:pointer;font-family:inherit;letter-spacing:2px;text-decoration:none;transition:all .3s;">黑猫占卜桌</a>
+  <a class="ui-nav-link" href="manifest_web.html" style="padding:6px 14px;font-size:12px;cursor:pointer;font-family:inherit;letter-spacing:2px;text-decoration:none;transition:all .3s;">显化之境</a>
+</div>
+
+<!-- 桌面 -->
+<div id="desktop"></div>
+
+<!-- 合成通知 -->
+<div class="craft-notification" id="craftNotify"></div>
+
+<!-- 左侧材料抽屉 -->
+<div class="drawer-tab" id="drawerTab"><span class="tab-text">材料</span></div>
+<div class="drawer-tab" id="workshopInventoryTab"><span class="tab-text">成品</span></div>
+<div id="ingredientDrawer" class="closed">
+  <div class="drawer-panel">
+    <div class="drawer-title">✦ 材 料 库 ✦</div>
+    <div class="material-tabs" role="tablist" aria-label="材料分类">
+      <button class="material-tab active" type="button" data-material-category="potion">魔法油</button>
+      <button class="material-tab" type="button" data-material-category="incense">熏香</button>
+      <button class="material-tab" type="button" data-material-category="candle">蜡烛</button>
+    </div>
+    <div class="ingredient-grid" id="ingredientGrid"></div>
+  </div>
+</div>
+
+<!-- 书本 -->
+<button id="bookToggleBtn" title="打开魔法书" aria-label="打开魔法书" aria-expanded="false">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.8 5.2c2.8-.8 5.5-.2 8.2 1.7v12c-2.7-1.9-5.4-2.5-8.2-1.7zM20.2 5.2c-2.8-.8-5.5-.2-8.2 1.7v12c2.7-1.9 5.4-2.5 8.2-1.7zM12 6.9v12"/><path d="M6.2 8.2c1.3-.2 2.4.1 3.5.7M14.3 8.9c1.1-.6 2.2-.9 3.5-.7"/></svg>
+</button>
+<div id="book" class="closed">
+  <div class="book-container" style="display:none;">
+    <button class="book-close-btn" id="bookCloseBtn" type="button" title="关闭魔法书" aria-label="关闭魔法书"></button>
+    <div class="book-cover">
+      <div class="book-corner tl"></div>
+      <div class="book-corner tr"></div>
+      <div class="book-corner bl"></div>
+      <div class="book-corner br"></div>
+      <div class="book-spine-deco"></div>
+      <div class="book-title">魔 法 工 坊</div>
+    </div>
+    <div class="page-tabs" id="pageTabs" aria-label="魔法书目录"></div>
+    <div class="book-pages">
+      <div class="page-inner">
+        <section class="book-page book-page-left" id="leftBookPage" aria-label="点击向前翻页">
+          <div class="page-header">
+            <span class="page-title" id="pageTitle">魔法油基础</span>
+            <span class="page-number" id="pageNumber">第 1 页</span>
+          </div>
+          <div class="left-page-content" id="leftPageContent"></div>
+          <div class="page-sigil" aria-hidden="true"></div>
+          <div class="page-whisper">以月为引 · 以愿为契</div>
+          <div class="page-nav"><button id="prevPage">‹ 上一页</button></div>
+          <button class="tear-btn" id="tearBtnLeft" title="撕下当前页" aria-label="撕下当前页"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="7" r="2.7"/><circle cx="6" cy="17" r="2.7"/><path d="m8.2 8.6 11.2 7.1M8.2 15.4 19.4 8.3M11.5 12l7.9-5"/></svg></button>
+        </section>
+        <section class="book-page book-page-right" id="rightBookPage" aria-label="点击向后翻页">
+          <div class="page-content" id="pageContent"></div>
+          <div class="page-nav"><button id="nextPage">下一页 ›</button></div>
+          <button class="tear-btn" id="tearBtn" title="撕下当前页" aria-label="撕下当前页"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="7" r="2.7"/><circle cx="6" cy="17" r="2.7"/><path d="m8.2 8.6 11.2 7.1M8.2 15.4 19.4 8.3M11.5 12l7.9-5"/></svg></button>
+        </section>
+      </div>
+      <div id="pageTurn" aria-hidden="true"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 魔法油调配瓶按钮（书下方） -->
+<button id="bottleBtn" title="打开魔法油调配瓶" aria-label="打开魔法油调配瓶" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v5l-4.7 8.1A3.2 3.2 0 0 0 8.1 21h7.8a3.2 3.2 0 0 0 2.8-4.9L14 8V3M7.2 15h9.6M8.4 18.2c2.4-1.1 4.8 1.1 7.2 0"/></svg></button>
+<button id="mortarBtn" title="打开熏香研钵" aria-label="打开熏香研钵" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16c-.4 5.8-3.2 9-8 9s-7.6-3.2-8-9Z"/><path d="M7 19h10M6 10c2.2-1.2 9.8-1.2 12 0M13.8 8.8 20 3.2M15.8 10.1 21.5 5"/></svg></button>
+<button id="burnerBtn" title="摆放熏香炉" aria-label="摆放熏香炉" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9h14c-.4 4.3-2.9 6.4-7 6.4S5.4 13.3 5 9Z"/><path d="M7.5 15.5h9l1.5 4H6l1.5-4Z"/><path d="M9 6c-1.2-1.4.5-2.4 0-3.5M13 6c-1.2-1.4.5-2.4 0-3.5"/></svg></button>
+<button id="candleBtn" title="打开魔法蜡烛制作台" aria-label="打开魔法蜡烛制作台" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8M9 21V9h6v12M9 11c2 .8 4-.8 6 0"/><path d="M12 8c-2-1.8-.8-4.2.5-5.5 1.5 2 2.1 3.8-.5 5.5Z"/></svg></button>
+
+<!-- 存入圣物柜（底部金色标签） -->
+<button id="storeToSanctum">✦ 存入工坊 ✦</button>
+<button id="sendToManifest" type="button" disabled>移入显化之境</button>
+
+<!-- 命名弹窗 -->
+<div id="potionNameOverlay">
+  <div class="name-box">
+    <div class="name-title">✦ 命 名 ✦</div>
+    <input id="potionName" type="text" placeholder="为这瓶魔法油命名...">
+    <button id="potionNameOk">保 存</button>
+  </div>
+</div>
+<div id="workshopInventoryDrawer" class="closed">
+  <div class="drawer-panel">
+    <div class="drawer-title">✦ 工 坊 成 品 柜 ✦</div>
+    <div class="workshop-item-list" id="workshopItemList"></div>
+  </div>
+</div>
+
+<!-- 散装熏香制作台 -->
+<div id="incenseCraftOverlay" aria-hidden="true">
+  <div class="incense-craft-card" role="dialog" aria-modal="true" aria-labelledby="incenseCraftTitle">
+    <button class="incense-craft-close" id="incenseCraftClose" type="button" aria-label="关闭制作台">×</button>
+    <div class="craft-eyebrow">LOOSE INCENSE WORKBENCH</div>
+    <div class="craft-title" id="incenseCraftTitle">净 化 熏 香</div>
+    <div class="craft-progress" id="incenseCraftProgress" aria-label="制作进度"></div>
+    <div id="incenseCraftStage"></div>
+    <div class="craft-actions">
+      <button id="incenseCraftBack" type="button">上一步</button>
+      <button class="primary" id="incenseCraftNext" type="button">下一步</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  1. 书本数据
+// ============================================================
+const BOOK_DATA = [
+  { id:'overview', icon:'目', title:'总览', pages:[{
+    title:'魔法书目录', tearable:false,
+    leftContent:`<div class="book-section-kicker">Magical Crafting Grimoire</div><div class="book-lead">这本书将配方、材料与制作工艺分开整理。先选择知识类型，再沿书页外缘寻找具体分类。</div><div class="book-rule-title">三类制作</div><div class="recipe-category-strip"><span class="recipe-category-chip">香薰</span><span class="recipe-category-chip">魔法油</span><span class="recipe-category-chip">魔法蜡烛</span></div>`,
+    content:`<div class="book-card-grid"><button class="book-card book-jump" data-tab="recipes" data-page="0"><strong>配方录</strong><small>按类型查找制作配方</small></button><button class="book-card book-jump" data-tab="ingredients" data-page="0"><strong>材料志</strong><small>查询材料属性与安全信息</small></button><button class="book-card book-jump" data-tab="techniques" data-page="0"><strong>制作法</strong><small>工艺、工具与故障排查</small></button><button class="book-card book-jump" data-tab="collection" data-page="0"><strong>我的书页</strong><small>收藏、撕页与个人笔记</small></button></div><div class="source-note">英文原书用于来源核对；界面内容以中文重写，并保留章节与版本定位。</div>`
+  }]},
+  { id:'recipes', icon:'方', title:'配方录', pages:[
+    { title:'配方分类', tearable:false,
+      leftContent:`<div class="book-section-kicker">Choose a craft</div><div class="book-lead">先选择要制作的成品，再进入对应配方目录。香薰、魔法油与魔法蜡烛均已开放。</div><div class="recipe-category-strip"><span class="recipe-category-chip">香薰</span><span class="recipe-category-chip">魔法油</span><span class="recipe-category-chip">魔法蜡烛</span></div>`,
+      content:`<div class="book-rule-title">三类配方</div><div class="book-card-grid"><button class="book-card book-jump" data-tab="recipes" data-page="1"><strong>香薰配方</strong><small>六种目的 · 散装非自燃香</small></button><button class="book-card book-jump" data-tab="recipes" data-page="8"><strong>魔法油配方</strong><small>六种来源配方 · 荷荷巴基础油</small></button><button class="book-card book-jump" data-tab="recipes" data-page="15"><strong>魔法蜡烛</strong><small>制作流程准备中</small></button></div>` },
+    { title:'香薰配方目录', tearable:false,
+      leftContent:`<div class="book-section-kicker">Loose Incense</div><div class="book-lead">按目的选择一款香薰，再进入配方详情。六款均采用同一种散装非自燃香制作流程。</div>`,
+      content:`<div class="book-rule-title">按目的选择</div><div class="purpose-grid"><button class="purpose-card book-jump" data-tab="recipes" data-page="2"><strong>净化</strong><small>清理空间</small></button><button class="purpose-card book-jump" data-tab="recipes" data-page="3"><strong>爱情</strong><small>玫瑰与柔和木香</small></button><button class="purpose-card book-jump" data-tab="recipes" data-page="4"><strong>金钱</strong><small>温暖辛香与树脂</small></button><button class="purpose-card book-jump" data-tab="recipes" data-page="5"><strong>保护</strong><small>深色树脂香调</small></button><button class="purpose-card book-jump" data-tab="recipes" data-page="6"><strong>放松</strong><small>安静、低甜木香</small></button><button class="purpose-card book-jump" data-tab="recipes" data-page="7"><strong>纯香气</strong><small>经典树脂与草本</small></button></div>` },
+    { title:'净化熏香', tearable:true,
+      note:{title:'净化熏香',materials:['3 份乳香','3 份柯巴脂','2 份没药','1 份檀香'],tools:'研钵、密封罐、量匙；使用时另备耐热香炉与香炭',steps:['分别研磨材料','按 3∶3∶2∶1 混合','装罐并写下名称与日期'],warning:'不可食用 · 燃熏时保持通风并看管火源'},
+      leftContent:`<div class="book-section-kicker">Clearing Incense</div><div class="book-rule-title">用途</div><div class="book-lead">用于空间与仪式前的象征性清理。此用途属于传统文化记录，不是现实功效承诺。</div><div class="book-rule-title">材料与份量</div><ul class="book-list"><li>3 份乳香</li><li>3 份柯巴脂</li><li>2 份没药</li><li>1 份檀香</li></ul><div class="book-rule-title">香气轮廓</div><div>温暖树脂、微甜木香与轻微烟熏感。</div>`,
+      content:`<div class="book-rule-title">散装熏香工艺</div><div class="recipe-step"><span class="checkbox"></span><span class="step-text">分别量取并研磨材料。</span></div><div class="recipe-step"><span class="checkbox"></span><span class="step-text">按比例均匀混合后装入密封罐。</span></div><div class="recipe-step"><span class="checkbox"></span><span class="step-text">少量测试，记录自己喜欢的香气强度。</span></div><button class="craft-start" type="button" data-start-incense data-recipe-id="clearing">开始制作</button><div class="safety-note"><b>现实使用：</b>不可食用；燃熏时保持通风，远离儿童、宠物与易燃物，并全程看管火源。</div><div class="source-note">来源：Clearing Incense · Cunningham 配方索引；中文名与现实安全仍需逐项复核。</div>` },
+    { title:'爱情熏香', tearable:false,leftContent:`<div class="book-section-kicker">Love Incense</div><div class="book-rule-title">材料</div><ul class="book-list"><li>2 份檀香</li><li>½ 份罗勒</li><li>½ 份香柠檬</li><li>少量玫瑰油与薰衣草油</li></ul>`,content:`<div class="book-rule-title">香气与目的</div><div class="book-lead">柔和木香、花香与明亮柑橘气息。用于爱情主题的传统象征性制作。</div><button class="craft-start" type="button" data-start-incense data-recipe-id="love">开始制作</button><div class="source-note">网页量取按等比整数份呈现；现实液体香料比例仍需复核。</div>` },
+    { title:'丰盛熏香', tearable:false,leftContent:`<div class="book-section-kicker">Prosperity Incense</div><div class="book-rule-title">材料</div><ul class="book-list"><li>2 份乳香</li><li>肉桂、肉豆蔻、香蜂草、香橼各 1 份</li></ul>`,content:`<div class="book-rule-title">香气与目的</div><div class="book-lead">温暖辛香、清亮柑橘和树脂底香。用于金钱与丰盛主题的传统象征性制作。</div><button class="craft-start" type="button" data-start-incense data-recipe-id="prosperity">开始制作</button><div class="source-note">材料身份与现实燃熏刺激性仍需复核。</div>` },
+    { title:'保护熏香', tearable:false,leftContent:`<div class="book-section-kicker">Protection Incense</div><div class="book-rule-title">材料</div><ul class="book-list"><li>2 份乳香</li><li>1 份龙血树脂</li><li>½ 份药水苏</li></ul>`,content:`<div class="book-rule-title">香气与目的</div><div class="book-lead">深沉树脂香与干燥草本气息。用于保护主题的传统象征性制作。</div><button class="craft-start" type="button" data-start-incense data-recipe-id="protection">开始制作</button><div class="source-note">网页按 4∶2∶1 等比量取；药水苏中文名仍需复核。</div>` },
+    { title:'静心熏香', tearable:false,leftContent:`<div class="book-section-kicker">Meditation Incense</div><div class="book-rule-title">材料</div><ul class="book-list"><li>1 份阿拉伯胶</li><li>1 份檀香</li></ul>`,content:`<div class="book-rule-title">香气与目的</div><div class="book-lead">简单、低甜而安静的木香。适合作为放松与静心主题的小样。</div><button class="craft-start" type="button" data-start-incense data-recipe-id="meditation">开始制作</button><div class="source-note">“放松”是界面分类，不构成医疗或情绪疗效承诺。</div>` },
+    { title:'经典树脂香', tearable:false,leftContent:`<div class="book-section-kicker">Universal Incense</div><div class="book-rule-title">材料</div><ul class="book-list"><li>3 份乳香</li><li>2 份安息香</li><li>没药、檀香、迷迭香各 1 份</li></ul>`,content:`<div class="book-rule-title">香气与目的</div><div class="book-lead">以树脂和木香为主体，带一点草本清新感。这里按“单纯喜欢香气”收录，不绑定愿望目的。</div><button class="craft-start" type="button" data-start-incense data-recipe-id="universal">开始制作</button><div class="source-note">实际燃熏前仍需完成材料与安全复核。</div>` },
+    { title:'魔法油配方目录', tearable:false,
+      leftContent:`<div class="book-section-kicker">Magical Oils</div><div class="book-lead">六款配方均以约 1/8 杯荷荷巴油为载体，再按原书滴数加入精油。选择目的后可直接进入调配。</div><div class="safety-note">仅限外用；天然精油也可能刺激或致敏。实际使用前应核对具体产品说明并进行局部测试。</div>`,
+      content:`<div class="book-rule-title">按目的选择</div><div class="purpose-grid"><button class="purpose-card book-jump" data-tab="recipes" data-page="9"><strong>爱情</strong><small>玫瑰草与依兰</small></button><button class="purpose-card book-jump" data-tab="recipes" data-page="10"><strong>丰盛</strong><small>广藿香与雪松</small></button><button class="purpose-card book-jump" data-tab="recipes" data-page="11"><strong>保护</strong><small>苦橙叶与黑胡椒</small></button><button class="purpose-card book-jump" data-tab="recipes" data-page="12"><strong>净化</strong><small>乳香、没药与檀香</small></button><button class="purpose-card book-jump" data-tab="recipes" data-page="13"><strong>静心</strong><small>依兰与薰衣草</small></button><button class="purpose-card book-jump" data-tab="recipes" data-page="14"><strong>月亮</strong><small>茉莉与檀香</small></button></div>` },
+    { title:'爱情魔法油',tearable:false,leftContent:`<div class="book-section-kicker">Love Oil</div><div class="book-rule-title">精油滴数</div><ul class="book-list"><li>玫瑰草 7 滴</li><li>依兰 5 滴</li><li>姜 1 滴</li><li>迷迭香 2 滴</li><li>豆蔻 1 滴</li></ul>`,content:`<div class="book-rule-title">调配</div><div class="book-lead">加入约 1/8 杯荷荷巴基础油，轻轻旋转混匀。</div><button class="craft-start" type="button" data-start-oil="love">开始调配</button><div class="source-note">来源：Love Oil · cunningham-oil-178</div>`},
+    { title:'丰盛魔法油',tearable:false,leftContent:`<div class="book-section-kicker">Fast Money Oil</div><div class="book-rule-title">精油滴数</div><ul class="book-list"><li>广藿香 7 滴</li><li>雪松 5 滴</li><li>岩兰草 4 滴</li><li>姜 2 滴</li></ul>`,content:`<div class="book-rule-title">调配</div><div class="book-lead">加入约 1/8 杯荷荷巴基础油，轻轻旋转混匀。</div><button class="craft-start" type="button" data-start-oil="prosperity">开始调配</button><div class="source-note">来源：Fast Money Oil · cunningham-oil-166</div>`},
+    { title:'保护魔法油',tearable:false,leftContent:`<div class="book-section-kicker">Protection Oil</div><div class="book-rule-title">精油滴数</div><ul class="book-list"><li>苦橙叶 5 滴</li><li>黑胡椒 5 滴</li></ul>`,content:`<div class="book-rule-title">调配</div><div class="book-lead">加入约 1/8 杯荷荷巴基础油，轻轻旋转混匀。</div><button class="craft-start" type="button" data-start-oil="protection">开始调配</button><div class="source-note">来源：Protection Oil · cunningham-oil-187</div>`},
+    { title:'净化魔法油',tearable:false,leftContent:`<div class="book-section-kicker">Purification Oil</div><div class="book-rule-title">精油滴数</div><ul class="book-list"><li>乳香 4 滴</li><li>没药 3 滴</li><li>檀香 1 滴</li></ul>`,content:`<div class="book-rule-title">调配</div><div class="book-lead">加入约 1/8 杯荷荷巴基础油，轻轻旋转混匀。</div><button class="craft-start" type="button" data-start-oil="purification">开始调配</button><div class="source-note">来源：Purification Oil · cunningham-oil-190</div>`},
+    { title:'静心魔法油',tearable:false,leftContent:`<div class="book-section-kicker">Peace Oil</div><div class="book-rule-title">精油滴数</div><ul class="book-list"><li>依兰 3 滴</li><li>薰衣草 3 滴</li><li>洋甘菊 2 滴</li><li>玫瑰原精 1 滴</li></ul>`,content:`<div class="book-rule-title">调配</div><div class="book-lead">加入约 1/8 杯荷荷巴基础油，轻轻旋转混匀。</div><button class="craft-start" type="button" data-start-oil="peace">开始调配</button><div class="source-note">来源：Peace Oil · cunningham-oil-184</div>`},
+    { title:'月亮魔法油',tearable:false,leftContent:`<div class="book-section-kicker">Moon Oil</div><div class="book-rule-title">精油滴数</div><ul class="book-list"><li>茉莉 1 滴</li><li>檀香 1 滴</li></ul>`,content:`<div class="book-rule-title">调配</div><div class="book-lead">加入约 1/8 杯荷荷巴基础油，轻轻旋转混匀。</div><button class="craft-start" type="button" data-start-oil="moon">开始调配</button><div class="source-note">来源：Moon Oil · cunningham-oil-182</div>`},
+    { title:'魔法蜡烛配方目录',tearable:false,leftContent:`<div class="book-section-kicker">Container Candles</div><div class="book-lead">六款均采用最常见的单芯容器蜡烛工艺：固定烛芯、融蜡、调色调香、注入耐热容器并完全冷却。</div><div class="safety-note">基础小样：容器蜡 100g、匹配烛芯 1 根、蜡烛专用香精约 2g。实际比例、温度和烛芯尺寸必须服从材料供应商说明并完成燃烧测试。</div>`,content:`<div class="book-rule-title">按目的选择</div><div class="purpose-grid"><button class="purpose-card book-jump" data-tab="recipes" data-page="16"><strong>爱情</strong><small>玫瑰粉 · 花香</small></button><button class="purpose-card book-jump" data-tab="recipes" data-page="17"><strong>丰盛</strong><small>蜂蜜金 · 木质辛香</small></button><button class="purpose-card book-jump" data-tab="recipes" data-page="18"><strong>保护</strong><small>酒红 · 深木香</small></button><button class="purpose-card book-jump" data-tab="recipes" data-page="19"><strong>净化</strong><small>乳白 · 树脂木香</small></button><button class="purpose-card book-jump" data-tab="recipes" data-page="20"><strong>静心</strong><small>雾紫 · 薰衣草</small></button><button class="purpose-card book-jump" data-tab="recipes" data-page="21"><strong>月亮</strong><small>月白蓝 · 茉莉</small></button></div>`},
+    { title:'爱情魔法蜡烛',tearable:false,leftContent:`<div class="book-section-kicker">Love Candle</div><ul class="book-list"><li>容器蜡 100g</li><li>匹配烛芯 1 根</li><li>蜡烛专用玫瑰花香 2g</li><li>粉红蜡用色片 · 少量</li></ul>`,content:`<div class="book-lead">柔和玫瑰粉与花香，用于爱情主题的象征性创作。</div><button class="craft-start" data-start-candle="love">准备材料</button><div class="source-note">工艺来源：The Candlemaker's Companion · Container Candle；主题配色为网页设计。</div>`},
+    { title:'丰盛魔法蜡烛',tearable:false,leftContent:`<div class="book-section-kicker">Prosperity Candle</div><ul class="book-list"><li>容器蜡 100g</li><li>匹配烛芯 1 根</li><li>蜡烛专用雪松辛香 2g</li><li>金黄色蜡用色片 · 少量</li></ul>`,content:`<div class="book-lead">蜂蜜金与温暖木质辛香，用于丰盛主题的象征性创作。</div><button class="craft-start" data-start-candle="prosperity">准备材料</button><div class="source-note">容器蜡烛基础工艺原型。</div>`},
+    { title:'保护魔法蜡烛',tearable:false,leftContent:`<div class="book-section-kicker">Protection Candle</div><ul class="book-list"><li>容器蜡 100g</li><li>匹配烛芯 1 根</li><li>蜡烛专用雪松树脂香 2g</li><li>酒红蜡用色片 · 少量</li></ul>`,content:`<div class="book-lead">深酒红与木质树脂香，用于保护主题的象征性创作。</div><button class="craft-start" data-start-candle="protection">准备材料</button><div class="source-note">容器蜡烛基础工艺原型。</div>`},
+    { title:'净化魔法蜡烛',tearable:false,leftContent:`<div class="book-section-kicker">Purification Candle</div><ul class="book-list"><li>容器蜡 100g</li><li>匹配烛芯 1 根</li><li>蜡烛专用乳香檀香 2g</li><li>白色蜡用色片 · 可选</li></ul>`,content:`<div class="book-lead">乳白与清淡树脂木香，用于净化主题的象征性创作。</div><button class="craft-start" data-start-candle="purification">准备材料</button><div class="source-note">容器蜡烛基础工艺原型。</div>`},
+    { title:'静心魔法蜡烛',tearable:false,leftContent:`<div class="book-section-kicker">Peace Candle</div><ul class="book-list"><li>容器蜡 100g</li><li>匹配烛芯 1 根</li><li>蜡烛专用薰衣草香 2g</li><li>雾紫蜡用色片 · 少量</li></ul>`,content:`<div class="book-lead">低饱和雾紫与薰衣草香，用于静心主题的象征性创作。</div><button class="craft-start" data-start-candle="peace">准备材料</button><div class="source-note">“静心”为界面分类，不构成功效承诺。</div>`},
+    { title:'月亮魔法蜡烛',tearable:false,leftContent:`<div class="book-section-kicker">Moon Candle</div><ul class="book-list"><li>容器蜡 100g</li><li>匹配烛芯 1 根</li><li>蜡烛专用茉莉檀香 2g</li><li>月白蓝蜡用色片 · 少量</li></ul>`,content:`<div class="book-lead">月白蓝与柔和茉莉木香，用于月亮主题的象征性创作。</div><button class="craft-start" data-start-candle="moon">准备材料</button><div class="source-note">容器蜡烛基础工艺原型。</div>`}
+  ]},
+  { id:'ingredients', icon:'材', title:'材料志', pages:[
+    { title:'材料目录', tearable:false,
+      leftContent:`<div class="book-section-kicker">Ingredient Codex</div><div class="book-lead">材料档案独立于配方保存，避免同一知识被重复抄写。中英文名、现实安全与民俗象征分别记录。</div>`,
+      content:`<div class="book-card-grid"><button class="book-card book-jump" data-tab="ingredients" data-page="1"><strong>乳香</strong><small>Frankincense · 树脂</small></button><button class="book-card book-jump" data-tab="ingredients" data-page="2"><strong>迷迭香</strong><small>Rosemary · 草本</small></button></div>` },
+    { title:'乳香', tearable:false,
+      leftContent:`<div class="book-section-kicker">Frankincense</div><div class="book-rule-title">身份</div><div class="book-lead"><b>中文名：</b>乳香<br><b>英文名：</b>Frankincense<br><b>类别：</b>芳香树脂</div><div class="source-note">拉丁名、别名及书中页码待材料清洗阶段补齐。</div>`,
+      content:`<div class="book-rule-title">配方作用</div><div class="book-lead">作为熏香的树脂基材与香气主体之一。</div><div class="book-rule-title">象征资料</div><div>净化、祝圣等民俗对应需要从草药百科逐项核验。</div><div class="safety-note"><b>现实安全：</b>燃烧会产生烟雾，应保持通风并注意火源。</div><div class="book-rule-title">相关配方</div><button class="book-card book-jump" data-tab="recipes" data-page="2"><strong>净化熏香 · 原型</strong></button>` },
+    { title:'迷迭香', tearable:false,
+      leftContent:`<div class="book-section-kicker">Rosemary</div><div class="book-rule-title">身份</div><div class="book-lead"><b>中文名：</b>迷迭香<br><b>英文名：</b>Rosemary<br><b>类别：</b>芳香草本</div><div class="source-note">拉丁名、别名及书中页码待材料清洗阶段补齐。</div>`,
+      content:`<div class="book-rule-title">配方作用</div><div class="book-lead">为混合熏香提供草本香气与辅助结构。</div><div class="book-rule-title">象征资料</div><div>净化、记忆等民俗对应需要从草药百科逐项核验。</div><div class="safety-note"><b>现实安全：</b>本页面不提供食用或医疗建议；烟熏时保持通风。</div><div class="book-rule-title">相关配方</div><button class="book-card book-jump" data-tab="recipes" data-page="2"><strong>净化熏香 · 原型</strong></button>` }
+  ]},
+  { id:'techniques', icon:'法', title:'制作法', pages:[{
+    title:'散装熏香基础', tearable:false,
+    leftContent:`<div class="book-section-kicker">Craft Methods</div><div class="book-rule-title">基本工具</div><ul class="book-list"><li>研钵与研杵</li><li>独立量匙</li><li>耐热香炉</li><li>适用香炭</li></ul>`,
+    content:`<div class="book-rule-title">基本流程</div><ol class="book-list"><li>确认材料身份与安全等级。</li><li>分别研磨，再按比例混合。</li><li>贴上名称、日期和不可食用标签。</li><li>少量测试并记录燃烧表现。</li></ol><div class="safety-note">制作法页面只讲通用工艺；具体材料风险仍以材料档案为准。</div>`
+  }]},
+  { id:'collection', icon:'藏', title:'我的书页', pages:[{
+    title:'我的书页', tearable:false,
+    leftContent:`<div class="book-section-kicker">Personal Grimoire</div><div class="book-lead">收藏的配方、撕下的配方笺和个人实验记录将集中在这里。</div>`,
+    content:`<div class="book-empty">目前还没有收藏。<br>进入配方详情后，可用页角剪刀撕下一张配方笺。</div>`
+  }]}
+];
+
+// ============================================================
+//  2. 材料数据
+// ============================================================
+const INGREDIENTS = [
+  { id: 'frankincense',  icon: '脂', name: '乳香',   category:'incense', color: [184, 145, 91] },
+  { id: 'copal',         icon: '脂', name: '柯巴脂', category:'incense', color: [214, 179, 104] },
+  { id: 'myrrh',         icon: '脂', name: '没药',   category:'incense', color: [132, 86, 58] },
+  { id: 'sandalwood',    icon: '木', name: '檀香',   category:'incense', color: [177, 113, 78] },
+  { id: 'basil',         icon: '叶', name: '罗勒',   category:'incense', color: [89, 151, 76] },
+  { id: 'bergamot',      icon: '柑', name: '香柠檬', category:'incense', color: [210, 178, 68] },
+  { id: 'rose_oil',      icon: '油', name: '玫瑰油', category:'incense', color: [211, 79, 122] },
+  { id: 'lavender_incense',icon:'油',name:'薰衣草油',category:'incense', color: [145, 105, 205] },
+  { id: 'nutmeg',        icon: '辛', name: '肉豆蔻', category:'incense', color: [148, 91, 54] },
+  { id: 'lemon_balm',    icon: '叶', name: '香蜂草', category:'incense', color: [105, 171, 91] },
+  { id: 'citron',        icon: '柑', name: '香橼',   category:'incense', color: [223, 188, 62] },
+  { id: 'dragons_blood', icon: '脂', name: '龙血树脂',category:'incense', color: [151, 39, 43] },
+  { id: 'horehound',     icon: '叶', name: '药水苏', category:'incense', color: [112, 132, 91] },
+  { id: 'gum_arabic',    icon: '脂', name: '阿拉伯胶',category:'incense', color: [224, 194, 135] },
+  { id: 'benzoin',       icon: '脂', name: '安息香', category:'incense', color: [193, 126, 70] },
+  { id: 'rosemary_incense',icon:'叶',name:'迷迭香', category:'incense', color: [70, 145, 105] },
+  { id: 'cinnamon_incense',icon:'辛',name:'肉桂',   category:'incense', color: [213, 104, 59] },
+  { id: 'jojoba',        icon: '基', name: '荷荷巴基础油', category:'potion', color: [224, 194, 105] },
+  { id: 'palmarosa_oil', icon: '滴', name: '玫瑰草精油', category:'potion', color: [218, 105, 143] },
+  { id: 'ylang_oil',     icon: '滴', name: '依兰精油', category:'potion', color: [232, 180, 73] },
+  { id: 'ginger_oil',    icon: '滴', name: '姜精油', category:'potion', color: [197, 112, 54] },
+  { id: 'rosemary_oil',  icon: '滴', name: '迷迭香精油', category:'potion', color: [68, 151, 108] },
+  { id: 'cardamom_oil',  icon: '滴', name: '豆蔻精油', category:'potion', color: [147, 158, 78] },
+  { id: 'patchouli_oil', icon: '滴', name: '广藿香精油', category:'potion', color: [91, 73, 54] },
+  { id: 'cedarwood_oil', icon: '滴', name: '雪松精油', category:'potion', color: [139, 87, 54] },
+  { id: 'vetiver_oil',   icon: '滴', name: '岩兰草精油', category:'potion', color: [82, 89, 49] },
+  { id: 'petitgrain_oil',icon: '滴', name: '苦橙叶精油', category:'potion', color: [93, 156, 83] },
+  { id: 'blackpepper_oil',icon:'滴', name: '黑胡椒精油', category:'potion', color: [71, 63, 58] },
+  { id: 'frankincense_oil',icon:'滴',name:'乳香精油', category:'potion', color: [195, 151, 78] },
+  { id: 'myrrh_oil',     icon: '滴', name: '没药精油', category:'potion', color: [128, 76, 53] },
+  { id: 'sandalwood_oil',icon: '滴', name: '檀香精油', category:'potion', color: [177, 113, 78] },
+  { id: 'jasmine_oil',   icon: '滴', name: '茉莉精油', category:'potion', color: [239, 214, 144] },
+  { id: 'lavender_oil_magic',icon:'滴',name:'薰衣草精油',category:'potion', color: [151, 114, 211] },
+  { id: 'chamomile_oil', icon: '滴', name: '洋甘菊精油', category:'potion', color: [95, 126, 183] },
+  { id: 'rose_absolute', icon: '滴', name: '玫瑰原精', category:'potion', color: [204, 72, 125] },
+  { id: 'container_wax', icon: '蜡', name: '容器蜡', category:'candle', color: [239, 222, 180] },
+  { id: 'matched_wick',  icon: '芯', name: '匹配烛芯', category:'candle', color: [220, 205, 176] },
+  { id: 'rose_candle_fragrance', icon:'香', name:'玫瑰花香', category:'candle', color:[221,112,151] },
+  { id: 'cedar_spice_fragrance', icon:'香', name:'雪松辛香', category:'candle', color:[181,126,65] },
+  { id: 'cedar_resin_fragrance', icon:'香', name:'雪松树脂香', category:'candle', color:[128,68,61] },
+  { id: 'frankincense_sandalwood_fragrance', icon:'香', name:'乳香檀香', category:'candle', color:[209,172,108] },
+  { id: 'lavender_candle_fragrance', icon:'香', name:'薰衣草香', category:'candle', color:[151,124,194] },
+  { id: 'jasmine_sandalwood_fragrance', icon:'香', name:'茉莉檀香', category:'candle', color:[215,209,185] },
+  { id: 'pink_dye', icon:'色', name:'粉红蜡用色片', category:'candle', color:[232,137,174] },
+  { id: 'gold_dye', icon:'色', name:'金黄蜡用色片', category:'candle', color:[218,171,65] },
+  { id: 'wine_dye', icon:'色', name:'酒红蜡用色片', category:'candle', color:[133,48,67] },
+  { id: 'white_dye', icon:'色', name:'白色蜡用色片', category:'candle', color:[238,236,226] },
+  { id: 'mist_purple_dye', icon:'色', name:'雾紫蜡用色片', category:'candle', color:[167,143,190] },
+  { id: 'moon_blue_dye', icon:'色', name:'月白蓝蜡用色片', category:'candle', color:[158,190,207] },
+];
+const OIL_RECIPES={
+  love:{name:'爱情魔法油',source:'Love Oil · cunningham-oil-178',recipe:{jojoba:1,palmarosa_oil:7,ylang_oil:5,ginger_oil:1,rosemary_oil:2,cardamom_oil:1}},
+  prosperity:{name:'丰盛魔法油',source:'Fast Money Oil · cunningham-oil-166',recipe:{jojoba:1,patchouli_oil:7,cedarwood_oil:5,vetiver_oil:4,ginger_oil:2}},
+  protection:{name:'保护魔法油',source:'Protection Oil · cunningham-oil-187',recipe:{jojoba:1,petitgrain_oil:5,blackpepper_oil:5}},
+  purification:{name:'净化魔法油',source:'Purification Oil · cunningham-oil-190',recipe:{jojoba:1,frankincense_oil:4,myrrh_oil:3,sandalwood_oil:1}},
+  peace:{name:'静心魔法油',source:'Peace Oil · cunningham-oil-184',recipe:{jojoba:1,ylang_oil:3,lavender_oil_magic:3,chamomile_oil:2,rose_absolute:1}},
+  moon:{name:'月亮魔法油',source:'Moon Oil · cunningham-oil-182',recipe:{jojoba:1,jasmine_oil:1,sandalwood_oil:1}}
+};
+let activeOilRecipeId=null;
+const CANDLE_RECIPES={
+  love:{name:'爱情魔法蜡烛',color:[232,137,174],recipe:{container_wax:100,matched_wick:1,rose_candle_fragrance:2,pink_dye:1}},
+  prosperity:{name:'丰盛魔法蜡烛',color:[218,171,65],recipe:{container_wax:100,matched_wick:1,cedar_spice_fragrance:2,gold_dye:1}},
+  protection:{name:'保护魔法蜡烛',color:[133,48,67],recipe:{container_wax:100,matched_wick:1,cedar_resin_fragrance:2,wine_dye:1}},
+  purification:{name:'净化魔法蜡烛',color:[238,236,226],recipe:{container_wax:100,matched_wick:1,frankincense_sandalwood_fragrance:2,white_dye:1}},
+  peace:{name:'静心魔法蜡烛',color:[167,143,190],recipe:{container_wax:100,matched_wick:1,lavender_candle_fragrance:2,mist_purple_dye:1}},
+  moon:{name:'月亮魔法蜡烛',color:[158,190,207],recipe:{container_wax:100,matched_wick:1,jasmine_sandalwood_fragrance:2,moon_blue_dye:1}}
+};
+let activeCandleRecipeId=null;
+let candleRecipeCounts={};
+let candleWorkbenchEl=null;
+let candleCraftStage=0;
+let candleNaming=false;
+
+// ============================================================
+//  3. 状态
+// ============================================================
+let currentTabIdx = 0;
+let currentPageIdx = 0;
+let tornPages = []; // { tabId, tabName, pageTitle, content, x, y }
+
+// ============================================================
+//  4. 抽屉开关
+// ============================================================
+const drawer = document.getElementById('ingredientDrawer');
+const drawerTab = document.getElementById('drawerTab');
+const workshopInventoryDrawer = document.getElementById('workshopInventoryDrawer');
+const workshopInventoryTab = document.getElementById('workshopInventoryTab');
+
+drawerTab.addEventListener('click', () => {
+  workshopInventoryDrawer.classList.remove('open');
+  drawer.classList.toggle('closed');
+  drawer.classList.toggle('open');
+});
+workshopInventoryTab.addEventListener('click',()=>{
+  drawer.classList.remove('open');drawer.classList.add('closed');
+  workshopInventoryDrawer.classList.toggle('open');
+});
+
+// ============================================================
+//  5. 渲染材料网格
+// ============================================================
+let activeMaterialCategory = 'potion';
+function setMaterialCategory(category) {
+  activeMaterialCategory = category;
+  document.querySelectorAll('.material-tab').forEach(tab=>tab.classList.toggle('active',tab.dataset.materialCategory===category));
+  renderIngredients();
+  if (incenseDesktopMode) updateIncenseDrawerCounts();
+  else if (activeCandleRecipeId && category==='candle') updateCandleDrawerCounts();
+  else renderBottleAdded();
+}
+function renderIngredients() {
+  const grid = document.getElementById('ingredientGrid');
+  const oilPresets=activeMaterialCategory==='potion'?`<div class="oil-safety-note">配方请从魔法书选择 · 基础油 1/8 杯 · 精油按滴量取 · 仅限外用</div>`:'';
+  const candleNote=activeMaterialCategory==='candle'?`<div class="oil-safety-note">容器蜡烛小样 · 香料与色片须为蜡烛专用 · 完成后必须燃烧测试</div>`:'';
+  grid.innerHTML = oilPresets+candleNote+INGREDIENTS.filter(ing=>ing.category===activeMaterialCategory).map(ing => `
+    <div class="ingredient-item" data-ingr-id="${ing.id}">
+      <button class="bi-btn" data-action="minus">−</button>
+      <span class="ingredient-label">${ing.name}</span>
+      <span class="bi-count">0</span>
+      <button class="bi-btn" data-action="plus">＋</button>
+    </div>
+  `).join('');
+
+  grid.querySelectorAll('.ingredient-item').forEach(item => {
+    const id = item.dataset.ingrId;
+    // 份数增减（不触发拖动）
+    item.querySelector('[data-action="minus"]').addEventListener('click', (e) => { e.stopPropagation(); adjustIngredient(id, -1); });
+    item.querySelector('[data-action="plus"]').addEventListener('click', (e) => { e.stopPropagation(); adjustIngredient(id, 1); });
+    item.querySelectorAll('.bi-btn').forEach(btn => {
+      btn.addEventListener('pointerdown', (e) => e.stopPropagation());
+      btn.addEventListener('mousedown', (e) => e.stopPropagation());
+    });
+
+    // 点击材料名称或卡片空白处，等同于点击“＋”。
+    item.addEventListener('click', (e) => {
+      if (e.target.closest('.bi-btn')) return;
+      adjustIngredient(id, 1);
+    });
+  });
+}
+renderIngredients();
+document.querySelectorAll('.material-tab').forEach(tab=>tab.addEventListener('click',()=>setMaterialCategory(tab.dataset.materialCategory)));
+
+// ============================================================
+//  6. 桌面物品拖拽
+// ============================================================
+function setupDesktopItemDrag(el) {
+  let isDragging = false, offX = 0, offY = 0;
+  el.addEventListener('mousedown', (e) => {
+    if (e.button !== 0) return;
+    isDragging = true;
+    const r = el.getBoundingClientRect();
+    offX = e.clientX - r.left;
+    offY = e.clientY - r.top;
+    el.style.zIndex = 500;
+    el.style.cursor = 'grabbing';
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    el.style.left = (e.clientX - offX) + 'px';
+    el.style.top = (e.clientY - offY) + 'px';
+  });
+  document.addEventListener('mouseup', () => {
+    if (isDragging) { isDragging = false; el.style.cursor = ''; }
+  });
+}
+function formatCandleCount(id,count){
+  if(!count)return '0';
+  if(id==='container_wax'||id.includes('fragrance'))return `${count}g`;
+  if(id==='matched_wick')return `${count}根`;
+  return `${count}份`;
+}
+function updateCandleDrawerCounts(){
+  document.querySelectorAll('.ingredient-item').forEach(row=>{
+    const id=row.dataset.ingrId,count=candleRecipeCounts[id]||0,countEl=row.querySelector('.bi-count');
+    countEl.textContent=formatCandleCount(id,count);countEl.classList.toggle('has',!!count);
+    row.style.opacity=CANDLE_RECIPES[activeCandleRecipeId]?.recipe[id]?'1':'.42';
+  });
+}
+function loadOilRecipe(id){
+  const selected=OIL_RECIPES[id];if(!selected)return;activeOilRecipeId=id;bottleRecipe={...selected.recipe};renderIngredients();renderBottleAdded();showCraftNotify(`已按来源配方量取「${selected.name}」`);
+}
+
+function displayWorkshopItem(id){
+  let item=loadWorkshopItems().find(entry=>entry.id===id);if(!item)return;
+  if(item.type==='incense')item={...item,appearance:resolveIncenseAppearance(item)};
+  const existing=Array.from(document.querySelectorAll('.desktop-workshop-item')).find(el=>el.dataset.workshopId===id);
+  if(existing){showCraftNotify(`「${item.name}」已经在桌面上`);workshopInventoryDrawer.classList.remove('open');return;}
+  const el=document.createElement('div');el.className='desktop-workshop-item';el.dataset.workshopId=id;
+  el.style.left=`${Math.max(90,window.innerWidth/2-65)}px`;el.style.top=`${Math.max(80,window.innerHeight/2-100)}px`;
+  if(item.type==='incense'){
+    el.innerHTML=`<div class="craft-jar" title="点击打开香罐"></div><div class="item-caption">${escapeWorkshopText(item.name)}<br><small>点击打开盖子</small></div>`;
+    const jar=el.querySelector('.craft-jar');applyPowderAppearance(jar,item.appearance);
+    jar.addEventListener('click',event=>{event.stopPropagation();handleIncenseJarClick(item,el,jar);});
+  }else if(item.type==='magic_candle'){
+    const rgb=item.appearance?.color||[232,137,174],light=rgb.map(value=>mixChannel(value,255,.48));
+    el.style.setProperty('--candle-wax',`rgb(${rgb.join(',')})`);el.style.setProperty('--candle-wax-light',`rgb(${light.join(',')})`);el.style.setProperty('--candle-glow',`rgba(${rgb.join(',')},.5)`);
+    el.innerHTML=`<div class="crafted-candle-mini" title="点击点燃或熄灭"></div><div class="item-caption">${escapeWorkshopText(item.name)}<br><small>魔法蜡烛</small></div>`;
+    el.querySelector('.crafted-candle-mini').addEventListener('click',event=>{event.stopPropagation();el.classList.toggle('candle-lit');showCraftNotify(el.classList.contains('candle-lit')?'蜡烛已点燃':'蜡烛已熄灭');});
+  }else{
+    el.innerHTML=`<div class="potion-bottle"><div class="p-cork"></div><div class="p-neck"></div><div class="p-collar"></div><div class="p-body"><div class="p-liquid" style="height:${item.appearance?.level||48}%"></div></div><div class="p-emblem">☾</div></div><div class="item-caption">${escapeWorkshopText(item.name)}</div>`;
+  }
+  desktop.appendChild(el);setupDesktopItemDrag(el);workshopInventoryDrawer.classList.remove('open');showCraftNotify(`「${item.name}」已摆到桌面`);
+}
+function applyPowderAppearance(container,appearance){
+  if(!container)return;const mixed=appearance?.mixed||[132,98,74];
+  const top=mixed.map(value=>mixChannel(value,255,.2));const bottom=mixed.map(value=>mixChannel(value,18,.32));
+  container.style.setProperty('--powder-top',`rgb(${top.join(',')})`);container.style.setProperty('--powder-bottom',`rgb(${bottom.join(',')})`);
+  container.style.setProperty('--powder-glow',appearance?.glow||`rgba(${mixed.join(',')},.35)`);container.style.setProperty('--powder-level',`${appearance?.level||48}%`);
+}
+function createIncenseBurner(item=null,left=window.innerWidth/2+100,top=window.innerHeight/2-70){
+  const burner=document.createElement('div');burner.className='incense-burner';if(item)burner.dataset.sourceId=item.id;
+  burner.dataset.scoops=item?'1':'0';burner.style.left=`${Math.min(window.innerWidth-210,left)}px`;burner.style.top=`${Math.min(window.innerHeight-230,top)}px`;
+  burner.innerHTML=`<div class="incense-smoke"><span></span><span></span><span></span></div><div class="burner-cup"></div><div class="burner-stand"></div><div class="burner-label">${item?'已装入香粉 · 点击点燃热源':'空香炉 · 请拖入一匙香粉'}</div>`;
+  if(item){applyPowderAppearance(burner,item.appearance);updateBurnerScoops(burner,1,item.name);}
+  burner.addEventListener('click',()=>{if(!burner.dataset.sourceId){showCraftNotify('请先点击一罐成品熏香，用量匙取香');return;}burner.classList.toggle('active');const count=Number(burner.dataset.scoops)||1;burner.querySelector('.burner-label').textContent=burner.classList.contains('active')?`${item?.name||'熏香'} · ${count} 勺 · 加热中`:`${item?.name||'熏香'} · ${count} 勺 · 点击再次加热`;});
+  desktop.appendChild(burner);setupDesktopItemDrag(burner);return burner;
+}
+function updateBurnerScoops(burner,count,name='熏香'){
+  burner.dataset.scoops=String(count);burner.style.setProperty('--powder-depth',`${Math.max(2,10-(count-1)*2)}px`);
+  const label=burner.querySelector('.burner-label');if(label&&!burner.classList.contains('active'))label.textContent=`${name} · ${count} 勺 · 点击加热`;
+}
+function handleIncenseJarClick(item,jarEl,jar){
+  const caption=jarEl.querySelector('.item-caption small');
+  if(!jar.classList.contains('jar-open')){
+    jar.classList.add('jar-open');jar.title='拖动量匙进入香罐取粉';if(caption)caption.textContent='拖动勺子进罐取香';createControlledIncenseSpoon(item,jarEl,jar);showCraftNotify(`香罐已打开，请拖动勺子进罐舀取`);return;
+  }
+  if(!document.querySelector(`.controlled-incense-spoon[data-source-id="${item.id}"]`))createControlledIncenseSpoon(item,jarEl,jar);
+  showCraftNotify('请拖动勺子，而不是再次点击香罐');
+}
+function createControlledIncenseSpoon(item,jarEl,jar){
+  document.querySelectorAll('.controlled-incense-spoon').forEach(el=>el.remove());
+  const spoon=document.createElement('div');spoon.className='controlled-incense-spoon';spoon.dataset.sourceId=item.id;applyPowderAppearance(spoon,item.appearance);
+  const jarRect=jar.getBoundingClientRect();spoon.style.left=`${jarRect.left+22}px`;spoon.style.top=`${jarRect.top-25}px`;desktop.appendChild(spoon);
+  let dragging=false,offX=0,offY=0;
+  spoon.addEventListener('pointerdown',event=>{dragging=true;const rect=spoon.getBoundingClientRect();offX=event.clientX-rect.left;offY=event.clientY-rect.top;spoon.classList.add('dragging');spoon.setPointerCapture(event.pointerId);event.stopPropagation();event.preventDefault();});
+  spoon.addEventListener('pointermove',event=>{
+    if(!dragging)return;spoon.style.left=`${event.clientX-offX}px`;spoon.style.top=`${event.clientY-offY}px`;
+    const sr=spoon.getBoundingClientRect(),jr=jar.getBoundingClientRect(),cx=sr.left+13,cy=sr.top+sr.height/2;
+    const dipping=cx>jr.left+5&&cx<jr.right-5&&cy>jr.top+25&&cy<jr.bottom-12;jar.classList.toggle('spoon-dipping',dipping);
+    if(dipping&&!spoon.classList.contains('loaded')){spoon.classList.add('loaded');jarEl.querySelector('.item-caption small').textContent='已舀取 · 拖到香炉上方';showCraftNotify('已经舀起一匙香粉，请拖到空香炉上方');}
+  });
+  spoon.addEventListener('pointerup',event=>{
+    if(!dragging)return;dragging=false;spoon.classList.remove('dragging');jar.classList.remove('spoon-dipping');
+    const sr=spoon.getBoundingClientRect(),cx=sr.left+sr.width/2,cy=sr.top+sr.height/2;
+    const empty=Array.from(document.querySelectorAll('.incense-burner')).find(el=>{if(el.dataset.sourceId&&el.dataset.sourceId!==item.id)return false;const r=el.getBoundingClientRect();return cx>r.left&&cx<r.right&&cy>r.top&&cy<r.top+145;});
+    if(!spoon.classList.contains('loaded')){showCraftNotify('请先把勺头伸进香罐里舀取香粉');return;}
+    if(!empty){showCraftNotify('请把装有香粉的勺子拖到空香炉上方再松手');return;}
+    pourSpoonIntoBurner(item,spoon,empty,jarEl,jar);
+  });
+}
+function pourSpoonIntoBurner(item,spoon,empty,jarEl,jar){
+  spoon.classList.add('pouring');const shower=document.createElement('div');shower.className='powder-shower';shower.innerHTML='<span></span><span></span><span></span><span></span><span></span><span></span>';applyPowderAppearance(shower,item.appearance);empty.appendChild(shower);
+  showCraftNotify(`正在把「${item.name}」的香粉洒入香炉`);
+  setTimeout(()=>{
+    if(empty.dataset.sourceId===item.id){const next=(Number(empty.dataset.scoops)||1)+1;shower.remove();spoon.remove();updateBurnerScoops(empty,next,item.name);showCraftNotify(`已加入第 ${next} 勺「${item.name}」`);}
+    else{const left=parseFloat(empty.style.left),top=parseFloat(empty.style.top);empty.remove();spoon.remove();createIncenseBurner(item,left,top);showCraftNotify('第一勺香粉已装入香炉，可以继续添加');}
+    jar.classList.remove('jar-open');jar.title='点击打开香罐';const caption=jarEl.querySelector('.item-caption small');if(caption)caption.textContent='点击打开盖子';
+  },760);
+}
+
+// ============================================================
+//  7. 书本开关
+// ============================================================
+const book = document.getElementById('book');
+const bookToggleBtn = document.getElementById('bookToggleBtn');
+const bookCloseBtn = document.getElementById('bookCloseBtn');
+
+bookToggleBtn.addEventListener('click', () => {
+  if (book.classList.contains('open')) closeBook();
+  else openBook();
+});
+
+bookCloseBtn.addEventListener('click', (event) => {
+  event.stopPropagation();
+  closeBook();
+});
+
+function openBook() {
+  book.classList.remove('closed');
+  book.classList.add('open');
+  book.querySelector('.book-container').style.display = 'block';
+  bookToggleBtn.classList.add('active');
+  bookToggleBtn.title = '关闭魔法书';
+  bookToggleBtn.setAttribute('aria-label', '关闭魔法书');
+  bookToggleBtn.setAttribute('aria-expanded', 'true');
+  renderTabs();
+  renderPage();
+}
+
+function closeBook() {
+  book.classList.remove('open');
+  book.classList.add('closed');
+  book.querySelector('.book-container').style.display = 'none';
+  bookToggleBtn.classList.remove('active');
+  bookToggleBtn.title = '打开魔法书';
+  bookToggleBtn.setAttribute('aria-label', '打开魔法书');
+  bookToggleBtn.setAttribute('aria-expanded', 'false');
+}
+
+// ============================================================
+//  8. 标签 & 页面渲染
+// ============================================================
+const pageContent = document.getElementById('pageContent');
+const leftPageContent = document.getElementById('leftPageContent');
+const pageTitle = document.getElementById('pageTitle');
+const pageNumber = document.getElementById('pageNumber');
+const pageTabs = document.getElementById('pageTabs');
+const prevBtn = document.getElementById('prevPage');
+const nextBtn = document.getElementById('nextPage');
+const tearBtn = document.getElementById('tearBtn');
+const tearBtnLeft = document.getElementById('tearBtnLeft');
+const pageTurn = document.getElementById('pageTurn');
+const leftBookPage = document.getElementById('leftBookPage');
+const rightBookPage = document.getElementById('rightBookPage');
+let isPageTurning = false;
+
+function renderTabs() {
+  const tabIcons = {
+    overview: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.8 14.2 9l5.2 2.2-5.2 2.2-2.2 5.2-2.2-5.2-5.2-2.2L9.8 9Z"/><circle cx="12" cy="11.2" r="7.6"/></svg>',
+    recipes: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v5l-4 7.1A3.8 3.8 0 0 0 9.3 21h5.4a3.8 3.8 0 0 0 3.3-5.9L14 8V3M7.4 15h9.2"/></svg>',
+    ingredients: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V8M12 13c-4.4-.1-6.6-2.4-6.7-6.8 4.4.1 6.6 2.4 6.7 6.8ZM12 17c4.4-.1 6.6-2.4 6.7-6.8-4.4.1-6.6 2.4-6.7 6.8Z"/></svg>',
+    techniques: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18.5 15.2 7.3M13.5 5.6l2.9 2.9M3.5 20.5l4.2-1-3.2-3.2ZM15.8 4.2l1.7-1.7 4 4-1.7 1.7"/><path d="M12 16.5c2.8 0 5 1.8 5 4H7c0-2.2 2.2-4 5-4Z"/></svg>',
+    collection: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h12v17l-6-3.8-6 3.8Z"/><path d="M9 7.5h6M9 11h6"/></svg>'
+  };
+  pageTabs.innerHTML = BOOK_DATA.map((tab, i) =>
+    `<button type="button" class="page-tab ${i === currentTabIdx ? 'active' : ''}" data-tab-idx="${i}" title="${tab.title}" aria-label="${tab.title}" aria-current="${i === currentTabIdx ? 'page' : 'false'}">${tabIcons[tab.id] || tab.icon}</button>`
+  ).join('');
+
+  document.querySelectorAll('.page-tab').forEach(el => {
+    el.addEventListener('click', () => {
+      currentTabIdx = parseInt(el.dataset.tabIdx);
+      currentPageIdx = 0;
+      renderTabs();
+      renderPage();
+    });
+  });
+}
+
+function renderPage() {
+  const tab = BOOK_DATA[currentTabIdx];
+  const pages = tab.pages;
+  const page = pages[currentPageIdx];
+
+  pageTitle.textContent = page.title;
+  pageNumber.textContent = `第 ${currentPageIdx + 1} 页 / 共 ${pages.length} 页 · ${tab.title}`;
+  leftPageContent.innerHTML = page.leftContent || '';
+  pageContent.innerHTML = page.content;
+
+  document.querySelector('.page-sigil').style.display = page.leftContent ? 'none' : '';
+  document.querySelector('.page-whisper').style.display = page.leftContent ? 'none' : '';
+  tearBtn.style.display = page.tearable ? 'grid' : 'none';
+  tearBtnLeft.style.display = page.tearable ? 'grid' : 'none';
+
+  // 绑定复选框
+  pageContent.querySelectorAll('.checkbox').forEach(cb => {
+    cb.addEventListener('click', () => {
+      cb.classList.toggle('checked');
+      cb.dataset.checked = cb.classList.contains('checked');
+    });
+  });
+
+  [leftPageContent, pageContent].forEach(container => {
+    container.querySelectorAll('.book-jump').forEach(control => {
+      control.addEventListener('click', event => {
+        event.stopPropagation();
+        const targetTab = BOOK_DATA.findIndex(item => item.id === control.dataset.tab);
+        if (targetTab < 0) return;
+        currentTabIdx = targetTab;
+        currentPageIdx = Math.max(0, Math.min(Number(control.dataset.page || 0), BOOK_DATA[targetTab].pages.length - 1));
+        renderTabs();
+        renderPage();
+      });
+    });
+  });
+
+  prevBtn.style.visibility = currentPageIdx > 0 ? 'visible' : 'hidden';
+  nextBtn.style.visibility = currentPageIdx < pages.length - 1 ? 'visible' : 'hidden';
+  book.classList.toggle('can-turn-left', currentPageIdx > 0);
+  book.classList.toggle('can-turn-right', currentPageIdx < pages.length - 1);
+}
+
+function turnPage(direction) {
+  if (isPageTurning) return;
+  const pages = BOOK_DATA[currentTabIdx].pages;
+  const target = currentPageIdx + direction;
+  if (target < 0 || target >= pages.length) return;
+
+  isPageTurning = true;
+  prevBtn.disabled = true;
+  nextBtn.disabled = true;
+  const cls = direction > 0 ? 'turning-next' : 'turning-prev';
+  pageTurn.className = cls;
+
+  window.setTimeout(() => {
+    currentPageIdx = target;
+    renderPage();
+  }, 340);
+  window.setTimeout(() => {
+    pageTurn.className = '';
+    isPageTurning = false;
+    prevBtn.disabled = false;
+    nextBtn.disabled = false;
+  }, 740);
+}
+
+prevBtn.addEventListener('click', () => turnPage(-1));
+nextBtn.addEventListener('click', () => turnPage(1));
+
+function isBookControl(target) {
+  return !!target.closest('button, .page-tab, .checkbox, .ingredient-tag, [contenteditable="true"], input, textarea, a');
+}
+leftBookPage.addEventListener('click', e => {
+  if (!isBookControl(e.target)) turnPage(-1);
+});
+rightBookPage.addEventListener('click', e => {
+  if (!isBookControl(e.target)) turnPage(1);
+});
+
+// ============================================================
+//  9. 撕下页面
+// ============================================================
+function tearCurrentPage() {
+  const tab = BOOK_DATA[currentTabIdx];
+  const page = tab.pages[currentPageIdx];
+  const title = page.title;
+
+  if (!page.note) return;
+  const note = page.note;
+  const noteItems = items => items.map(item => `<div class="note-check">${item}</div>`).join('');
+
+  // 创建撕页
+  const torn = document.createElement('div');
+  torn.className = 'desktop-item torn-page';
+  const rot = (Math.random() - 0.5) * 6;
+  torn.style.setProperty('--rot', rot + 'deg');
+  torn.style.left = (200 + Math.random() * 300) + 'px';
+  torn.style.top = (150 + Math.random() * 200) + 'px';
+  torn.innerHTML = `
+    <div class="close-btn" data-action="delete">✕</div>
+    <div class="page-label">制作便笺</div>
+    <div class="note-title">${note.title}</div>
+    <div class="note-section">材料</div>
+    ${noteItems(note.materials)}
+    <div class="note-section">工具</div>
+    <div class="note-tools">${note.tools}</div>
+    <div class="note-section">步骤</div>
+    ${noteItems(note.steps)}
+    <div class="note-warning">${note.warning}</div>
+  `;
+  desktop.appendChild(torn);
+
+  // 关闭按钮
+  torn.querySelector('.close-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    torn.remove();
+  });
+  torn.querySelectorAll('.note-check').forEach(item => {
+    item.addEventListener('click', e => {
+      e.stopPropagation();
+      item.classList.toggle('done');
+    });
+  });
+
+  // 拖拽
+  setupDesktopItemDrag(torn);
+
+  // 通知
+  showCraftNotify(`已撕下「${title}」放置到桌面`);
+}
+tearBtn.addEventListener('click', tearCurrentPage);
+tearBtnLeft.addEventListener('click', tearCurrentPage);
+
+// ============================================================
+//  10. 合成通知
+// ============================================================
+const notify = document.getElementById('craftNotify');
+let notifyTimer = null;
+
+function showCraftNotify(text) {
+  notify.textContent = text;
+  notify.classList.add('show');
+  clearTimeout(notifyTimer);
+  notifyTimer = setTimeout(() => notify.classList.remove('show'), 2500);
+}
+
+// ============================================================
+//  10.1 散装熏香制作小样
+// ============================================================
+const incenseCraftOverlay = document.getElementById('incenseCraftOverlay');
+const incenseCraftStage = document.getElementById('incenseCraftStage');
+const incenseCraftProgress = document.getElementById('incenseCraftProgress');
+const incenseCraftBack = document.getElementById('incenseCraftBack');
+const incenseCraftNext = document.getElementById('incenseCraftNext');
+const INCENSE_RECIPES = {
+  clearing:{id:'clearing-incense',name:'净化熏香',purpose:'净化',source:'Clearing Incense',accent:[207,157,72],required:{frankincense:3,copal:3,myrrh:2,sandalwood:1}},
+  love:{id:'love-incense',name:'爱情熏香',purpose:'爱情',source:'Love Incense',accent:[221,76,151],required:{sandalwood:4,basil:1,bergamot:1,rose_oil:1,lavender_incense:1}},
+  prosperity:{id:'prosperity-incense',name:'丰盛熏香',purpose:'金钱',source:'Prosperity Incense',accent:[235,169,45],required:{frankincense:2,cinnamon_incense:1,nutmeg:1,lemon_balm:1,citron:1}},
+  protection:{id:'protection-incense',name:'保护熏香',purpose:'保护',source:'Protection Incense',accent:[142,37,67],required:{frankincense:4,dragons_blood:2,horehound:1}},
+  meditation:{id:'meditation-incense',name:'静心熏香',purpose:'放松',source:'Meditation Incense',accent:[157,143,205],required:{gum_arabic:1,sandalwood:1}},
+  universal:{id:'universal-incense',name:'经典树脂香',purpose:'纯香气',source:'Universal Incense',accent:[73,143,105],required:{frankincense:3,benzoin:2,myrrh:1,sandalwood:1,rosemary_incense:1}}
+};
+let activeIncenseRecipe=INCENSE_RECIPES.clearing;
+const INCENSE_RECIPE={...INCENSE_RECIPES.clearing,ingredients:Object.entries(INCENSE_RECIPES.clearing.required).map(([id,count])=>({name:INGREDIENTS.find(item=>item.id===id)?.name||id,amount:`${count} 份`}))};
+let incenseCraftStep = 0;
+let incenseCraftState = { measured:new Set(), ground:false, mixed:false, name:'净化熏香' };
+let incenseDesktopMode = false;
+let incenseFreeMode = false;
+let incenseRecipeCounts = {};
+let incenseWorkbenchEl = null;
+let incenseNaming = false;
+
+function updateIncenseDrawerCounts() {
+  document.querySelectorAll('.ingredient-item').forEach(row=>{
+    const id=row.dataset.ingrId, count=incenseRecipeCounts[id]||0, required=activeIncenseRecipe.required[id];
+    const countEl=row.querySelector('.bi-count');
+    countEl.textContent=incenseFreeMode ? count : (required ? `${count}/${required}` : '—');
+    countEl.classList.toggle('has',incenseFreeMode ? count>0 : required && count===required);
+    row.style.opacity=incenseFreeMode || required ? '1' : '.38';
+  });
+}
+function startDesktopIncense(freeMode=false,recipeId='clearing') {
+  activeIncenseRecipe=INCENSE_RECIPES[recipeId]||INCENSE_RECIPES.clearing;
+  if (incenseWorkbenchEl?.isConnected) incenseWorkbenchEl.remove();
+  incenseDesktopMode=true;incenseFreeMode=freeMode; incenseRecipeCounts={}; incenseNaming=false;
+  document.getElementById('mortarBtn')?.classList.add('active');
+  document.getElementById('mortarBtn')?.setAttribute('aria-expanded','true');
+  closeBook(); closePotionBottle();
+  incenseWorkbenchEl=document.createElement('div');
+  incenseWorkbenchEl.className='incense-workbench';
+  incenseWorkbenchEl.style.left='calc(50% - 115px)';incenseWorkbenchEl.style.top='calc(50% - 120px)';
+  incenseWorkbenchEl.innerHTML=`<div class="incense-mortar"></div><div class="incense-pour-jar craft-jar" title="倒入香罐"></div><div class="incense-work-label">${freeMode?'自由调香 · 点击材料加入研钵':'打开材料库 · 按配方加入研钵'}</div>`;
+  desktop.appendChild(incenseWorkbenchEl);
+  setMaterialCategory('incense');
+  drawer.classList.remove('closed');drawer.classList.add('open');
+  updateIncenseDrawerCounts();
+  incenseWorkbenchEl.addEventListener('click',event=>{
+    if(event.target.closest('.incense-pour-jar')){
+      event.stopPropagation();incenseNaming=true;potionName.value=incenseFreeMode?'我的调香':activeIncenseRecipe.name;potionName.placeholder='为这罐熏香命名...';potionNameOverlay.querySelector('.name-title').textContent='✦ 熏 香 命 名 ✦';potionNameOverlay.classList.add('active');return;
+    }
+    const complete=incenseFreeMode ? Object.values(incenseRecipeCounts).some(n=>n>0) : Object.entries(activeIncenseRecipe.required).every(([id,n])=>(incenseRecipeCounts[id]||0)===n);
+    if(!complete){showCraftNotify(incenseFreeMode?'请先加入至少一种熏香材料':'请先按抽屉中的份数加入全部材料');return;}
+    if(incenseWorkbenchEl.classList.contains('ground')){
+      incenseWorkbenchEl.classList.remove('ground');incenseWorkbenchEl.classList.add('mixed','ready');incenseWorkbenchEl.querySelector('.incense-work-label').textContent='混合完成 · 点击右侧香罐装罐';return;
+    }
+    if(!incenseWorkbenchEl.classList.contains('grinding') && !incenseWorkbenchEl.classList.contains('mixed')){
+      incenseWorkbenchEl.classList.add('grinding');incenseWorkbenchEl.querySelector('.incense-work-label').textContent='研磨中…';
+      setTimeout(()=>{incenseWorkbenchEl.classList.remove('grinding');incenseWorkbenchEl.classList.add('ground');incenseWorkbenchEl.querySelector('.incense-work-label').textContent='已研磨 · 再点击研钵混合';},1700);return;
+    }
+  });
+  showCraftNotify(`${freeMode?'自由调香':activeIncenseRecipe.name}制作台已放到桌面`);
+}
+function finishDesktopIncense(name){
+  const finishedIngredients=Object.entries(incenseRecipeCounts).map(([id,count])=>`${count} 份 ${INGREDIENTS.find(i=>i.id===id)?.name||id}`);
+  const list=loadWorkshopItems();
+  const appearance=calculateIncenseAppearance(incenseRecipeCounts);
+  const item={id:'incense_'+Date.now(),type:'incense',name,purpose:incenseFreeMode?'自由调香':activeIncenseRecipe.purpose,ingredients:finishedIngredients,recipe:incenseFreeMode?'custom':activeIncenseRecipe.id,source:incenseFreeMode?'personal-blend':activeIncenseRecipe.source,craft:'loose-noncombustible',appearance,createdAt:new Date().toISOString()};
+  list.unshift(item);saveWorkshopItems(list);selectWorkshopItem(item.id);drawer.classList.remove('open');drawer.classList.add('closed');workshopInventoryDrawer.classList.add('open');
+  if(incenseWorkbenchEl?.isConnected){incenseWorkbenchEl.innerHTML=`<div class="craft-jar" title="${name}"></div><div class="incense-work-label">${name}</div>`;applyPowderAppearance(incenseWorkbenchEl.querySelector('.craft-jar'),appearance);incenseWorkbenchEl.className='incense-workbench finished';setupDesktopItemDrag(incenseWorkbenchEl);}
+  incenseDesktopMode=false;incenseFreeMode=false;incenseNaming=false;incenseRecipeCounts={};document.getElementById('mortarBtn')?.classList.remove('active');document.getElementById('mortarBtn')?.setAttribute('aria-expanded','false');document.querySelectorAll('.ingredient-item').forEach(row=>row.style.opacity='');renderBottleAdded();
+  showCraftNotify(`「${name}」已装罐并存入魔法工坊`);
+}
+
+function openIncenseCraft() {
+  incenseCraftStep = 0;
+  incenseCraftState = { measured:new Set(), ground:false, mixed:false, name:'净化熏香' };
+  incenseCraftOverlay.classList.add('open');
+  incenseCraftOverlay.setAttribute('aria-hidden','false');
+  renderIncenseCraft();
+}
+function closeIncenseCraft() {
+  incenseCraftOverlay.classList.remove('open');
+  incenseCraftOverlay.setAttribute('aria-hidden','true');
+}
+function craftVisual(type) {
+  if (type === 'jar') return '<div class="craft-jar" aria-hidden="true"></div>';
+  return `<div class="craft-bowl ${incenseCraftState.mixed ? 'mixed' : ''}" aria-hidden="true"></div>`;
+}
+function renderIncenseCraft() {
+  incenseCraftProgress.innerHTML = Array.from({length:5},(_,i)=>`<span class="${i < incenseCraftStep ? 'done' : i === incenseCraftStep ? 'active' : ''}"></span>`).join('');
+  const stages = [
+    { title:'确认配方', text:'这是散装非自燃熏香：制作后装罐保存，现实使用时只取少量置于适用香炭或香薰器上。', body:`<div class="craft-options"><button class="craft-option selected" type="button">净化 · 温暖树脂木香</button></div>` },
+    { title:'量取材料', text:'按配方逐项点击取材。这里的“份”是相对比例，可以使用同一把量匙。', body:`<div class="craft-options">${INCENSE_RECIPE.ingredients.map((item,i)=>`<button class="craft-option ${incenseCraftState.measured.has(i)?'selected':''}" type="button" data-measure="${i}">${item.amount} ${item.name}</button>`).join('')}</div>` },
+    { title:'分别研磨', text:'先分别研磨，再混合；点击研钵完成这一步。', body:`<div class="craft-options"><button class="craft-option ${incenseCraftState.ground?'selected':''}" type="button" data-grind>${incenseCraftState.ground?'已研磨完成':'开始研磨'}</button></div>` },
+    { title:'均匀混合', text:'轻轻翻拌，让树脂、木材与粉末分布均匀。', body:`<div class="craft-options"><button class="craft-option ${incenseCraftState.mixed?'selected':''}" type="button" data-mix>${incenseCraftState.mixed?'混合完成':'混合熏香'}</button></div>` },
+    { title:'装罐与命名', text:'为成品命名。保存后会进入物品库，也可以带到显化之境。', body:`<input class="craft-name-input" id="incenseCraftName" maxlength="24" value="${incenseCraftState.name}" aria-label="熏香名称">` }
+  ];
+  const stage = stages[incenseCraftStep];
+  incenseCraftStage.innerHTML = `<div class="craft-stage"><div class="craft-visual">${craftVisual(incenseCraftStep === 4 ? 'jar' : 'bowl')}</div><div class="craft-copy"><h3>${stage.title}</h3><p>${stage.text}</p>${stage.body}</div></div>`;
+  incenseCraftBack.style.visibility = incenseCraftStep ? 'visible' : 'hidden';
+  incenseCraftNext.textContent = incenseCraftStep === 4 ? '保存成品' : '下一步';
+  incenseCraftStage.querySelectorAll('[data-measure]').forEach(button => button.addEventListener('click',()=>{
+    incenseCraftState.measured.add(Number(button.dataset.measure)); renderIncenseCraft();
+  }));
+  incenseCraftStage.querySelector('[data-grind]')?.addEventListener('click',()=>{ incenseCraftState.ground=true; renderIncenseCraft(); });
+  incenseCraftStage.querySelector('[data-mix]')?.addEventListener('click',()=>{ incenseCraftState.mixed=true; renderIncenseCraft(); });
+  document.getElementById('incenseCraftName')?.addEventListener('input',event=>{ incenseCraftState.name=event.target.value; });
+}
+function canAdvanceIncenseCraft() {
+  if (incenseCraftStep === 1 && incenseCraftState.measured.size < INCENSE_RECIPE.ingredients.length) { showCraftNotify('请先量取全部材料'); return false; }
+  if (incenseCraftStep === 2 && !incenseCraftState.ground) { showCraftNotify('请先完成研磨'); return false; }
+  if (incenseCraftStep === 3 && !incenseCraftState.mixed) { showCraftNotify('请先混合熏香'); return false; }
+  return true;
+}
+function saveFinishedIncense() {
+  const name = (incenseCraftState.name || '').trim() || '净化熏香';
+  const list = loadWorkshopItems();
+  const item = {
+    id:'incense_' + Date.now(), type:'incense', name, purpose:INCENSE_RECIPE.purpose,
+    ingredients:INCENSE_RECIPE.ingredients.map(item=>`${item.amount} ${item.name}`),
+    recipe:INCENSE_RECIPE.id, source:INCENSE_RECIPE.source, craft:'loose-noncombustible',
+    appearance:{ mixed:[132,98,74], glow:'rgba(213,165,83,.42)' }, createdAt:new Date().toISOString()
+  };
+  list.unshift(item);saveWorkshopItems(list);selectWorkshopItem(item.id);
+  const jar = document.createElement('div');
+  jar.className='desktop-item'; jar.style.left='calc(50% - 43px)';jar.style.top='calc(50% - 70px)';
+  jar.innerHTML=`<div class="craft-jar" title="${name}" aria-label="${name}"></div>`;
+  desktop.appendChild(jar); setupDesktopItemDrag(jar);
+  closeIncenseCraft(); closeBook(); showCraftNotify(`「${name}」已完成并存入魔法工坊`);
+}
+document.addEventListener('click',event=>{ const button=event.target.closest('[data-start-incense]');if(button)startDesktopIncense(false,button.dataset.recipeId||'clearing'); });
+document.addEventListener('click',event=>{
+  const button=event.target.closest('[data-start-oil]');if(!button)return;
+  activeCandleRecipeId=null;candleRecipeCounts={};closeBook();if(!_bottleEl||!_bottleEl.isConnected)bottleBtn.click();loadOilRecipe(button.dataset.startOil);drawer.classList.remove('closed');drawer.classList.add('open');
+});
+document.addEventListener('click',event=>{
+  const button=event.target.closest('[data-start-candle]');if(!button)return;
+  const selected=CANDLE_RECIPES[button.dataset.startCandle];if(!selected)return;
+  activeOilRecipeId=null;activeCandleRecipeId=button.dataset.startCandle;candleRecipeCounts={...selected.recipe};
+  if(_bottleEl?.isConnected)_bottleEl.remove();_bottleEl=null;setBottleButtonState(false);
+  closeBook();setMaterialCategory('candle');drawer.classList.remove('closed');drawer.classList.add('open');updateCandleDrawerCounts();startCandleWorkbench();
+  showCraftNotify(`已备好「${selected.name}」的小样材料`);
+});
+document.getElementById('incenseCraftClose').addEventListener('click',closeIncenseCraft);
+incenseCraftOverlay.addEventListener('click',event=>{ if(event.target===incenseCraftOverlay) closeIncenseCraft(); });
+incenseCraftBack.addEventListener('click',()=>{ if(incenseCraftStep>0){ incenseCraftStep--;renderIncenseCraft(); } });
+incenseCraftNext.addEventListener('click',()=>{
+  document.getElementById('incenseCraftName')?.dispatchEvent(new Event('input'));
+  if(!canAdvanceIncenseCraft()) return;
+  if(incenseCraftStep===4) saveFinishedIncense(); else { incenseCraftStep++;renderIncenseCraft(); }
+});
+
+// ============================================================
+//  11. 返回首页链接（已移至 HTML 顶部导航栏）
+// ============================================================
+
+// ============================================================
+//  12. 桌面点击取消选中
+// ============================================================
+const desktop = document.getElementById('desktop');
+desktop.addEventListener('click', (e) => {
+  if (e.target === desktop) {
+    // 关闭抽屉
+    drawer.classList.remove('open');
+    drawer.classList.add('closed');
+  }
+});
+
+// 关闭书本点击桌面
+desktop.addEventListener('dblclick', (e) => {
+  if (e.target === desktop && book.classList.contains('open')) {
+    closeBook();
+    showCraftNotify('魔法工坊已合上');
+  }
+});
+
+// ============================================================
+//  13. 炼金之瓶：居中瓶子 + 材料抽屉加料 → 存入圣物柜
+// ============================================================
+const bottleBtn = document.getElementById('bottleBtn');
+const mortarBtn = document.getElementById('mortarBtn');
+const burnerBtn = document.getElementById('burnerBtn');
+const candleBtn = document.getElementById('candleBtn');
+const storeToSanctum = document.getElementById('storeToSanctum');
+const sendToManifest = document.getElementById('sendToManifest');
+const potionNameOverlay = document.getElementById('potionNameOverlay');
+const potionName = document.getElementById('potionName');
+const potionNameOk = document.getElementById('potionNameOk');
+
+const SANCTUM_KEY = 'magiccat_sanctum';
+const WORKSHOP_ITEMS_KEY = 'magiccat_workshop_items';
+let selectedWorkshopItemId = null;
+let bottleRecipe = {};   // { ingId: 份数 }
+let _bottleEl = null;    // 放在桌面上的瓶子元素
+
+function loadSanctum() {
+  try { return JSON.parse(localStorage.getItem(SANCTUM_KEY)) || []; } catch (e) { return []; }
+}
+function saveSanctum(list) {
+  try { localStorage.setItem(SANCTUM_KEY, JSON.stringify(list)); } catch (e) { showCraftNotify('存储失败'); }
+}
+function loadWorkshopItems(){
+  try{return JSON.parse(localStorage.getItem(WORKSHOP_ITEMS_KEY))||[];}catch(e){return[];}
+}
+function saveWorkshopItems(list){
+  try{localStorage.setItem(WORKSHOP_ITEMS_KEY,JSON.stringify(list));renderWorkshopItems();return true;}catch(e){showCraftNotify('工坊成品保存失败');return false;}
+}
+function escapeWorkshopText(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+function renderWorkshopItems(){
+  const listEl=document.getElementById('workshopItemList');if(!listEl)return;
+  const items=loadWorkshopItems();
+  if(!items.length){listEl.innerHTML='<div class="workshop-empty">还没有成品<br>完成香薰、魔法油或蜡烛后会保存在这里</div>';return;}
+  listEl.innerHTML=items.map(item=>`<div class="workshop-item-card" data-show-id="${escapeWorkshopText(item.id)}"><div class="workshop-item-name">${escapeWorkshopText(item.name)}</div><div class="workshop-item-meta">${item.type==='incense'?'散装香薰':(item.type==='magic_oil'||item.type==='potion')?'魔法油':item.type==='magic_candle'?'魔法蜡烛':'工坊成品'} · ${escapeWorkshopText(item.purpose||'未分类')}<br>点击可摆到桌面</div><div class="workshop-item-actions"><button class="workshop-to-relic" type="button" data-transfer-id="${escapeWorkshopText(item.id)}">移入圣物库</button></div></div>`).join('');
+  listEl.querySelectorAll('[data-transfer-id]').forEach(button=>button.addEventListener('click',()=>transferWorkshopItem(button.dataset.transferId)));
+  listEl.querySelectorAll('[data-show-id]').forEach(card=>card.addEventListener('click',event=>{if(event.target.closest('[data-transfer-id]'))return;displayWorkshopItem(card.dataset.showId);}));
+}
+function selectWorkshopItem(id){
+  selectedWorkshopItemId=id||null;
+  sendToManifest.disabled=!selectedWorkshopItemId;
+  const item=loadWorkshopItems().find(entry=>entry.id===selectedWorkshopItemId);
+  sendToManifest.title=item?`将「${item.name}」移入显化之境`:'请先制作并保存一个成品';
+}
+const existingWorkshopItems=loadWorkshopItems();
+if(existingWorkshopItems.length) selectWorkshopItem(existingWorkshopItems[0].id);
+renderWorkshopItems();
+function transferWorkshopItem(id){
+  const workshopItems=loadWorkshopItems();
+  const item=workshopItems.find(entry=>entry.id===id);
+  if(!item){selectWorkshopItem(null);showCraftNotify('请先选择一个工坊成品');return;}
+  const manifestItems=loadSanctum();
+  const transferred={...item,transferredAt:new Date().toISOString()};
+  const existingIndex=manifestItems.findIndex(entry=>entry.id===item.id);
+  if(existingIndex>=0)manifestItems[existingIndex]=transferred;else manifestItems.unshift(transferred);
+  saveSanctum(manifestItems);
+  selectWorkshopItem(item.id);
+  showCraftNotify(`「${item.name}」已复制到显化之境圣物库，工坊成品仍保留`);
+}
+sendToManifest.addEventListener('click',()=>transferWorkshopItem(selectedWorkshopItemId));
+
+function setBottleButtonState(isOpen) {
+  bottleBtn.classList.toggle('active', isOpen);
+  bottleBtn.title = isOpen ? '关闭魔法油调配瓶' : '打开魔法油调配瓶';
+  bottleBtn.setAttribute('aria-label', bottleBtn.title);
+  bottleBtn.setAttribute('aria-expanded', String(isOpen));
+}
+
+function closePotionBottle() {
+  if (_bottleEl && _bottleEl.isConnected) _bottleEl.remove();
+  _bottleEl = null;
+  bottleRecipe = {};
+  renderBottleAdded();
+  setBottleButtonState(false);
+}
+
+function candleAppearance(recipeId=activeCandleRecipeId){
+  const color=CANDLE_RECIPES[recipeId]?.color||[232,137,174];
+  return {color,light:color.map(value=>mixChannel(value,255,.48)),glow:`rgba(${color.join(',')},.55)`};
+}
+function closeCandleWorkbench(resetRecipe=false){
+  candleWorkbenchEl?.remove();candleWorkbenchEl=null;candleCraftStage=0;
+  candleBtn.classList.remove('active');candleBtn.setAttribute('aria-expanded','false');
+  if(resetRecipe){activeCandleRecipeId=null;candleRecipeCounts={};}
+}
+function updateCandleWorkbench(){
+  if(!candleWorkbenchEl)return;
+  candleWorkbenchEl.className=`candle-workbench stage-${candleCraftStage}`;
+  const labels=['点击容器固定烛芯','点击融蜡杯加热容器蜡','加入香料与色片并搅匀','点击容器注蜡并等待冷却','蜡烛已冷却 · 点击完成命名'];
+  candleWorkbenchEl.querySelector('.candle-step-label').textContent=labels[candleCraftStage];
+}
+function advanceCandleCraft(target){
+  if(!activeCandleRecipeId){showCraftNotify('请先从魔法书选择一款蜡烛配方');return;}
+  const required=CANDLE_RECIPES[activeCandleRecipeId].recipe;
+  const complete=Object.entries(required).every(([id,count])=>(candleRecipeCounts[id]||0)>=count);
+  if(!complete){showCraftNotify('材料数量还没有达到书中小样配方');return;}
+  if(candleCraftStage===0&&target!=='vessel'){showCraftNotify('先点击右侧容器固定烛芯');return;}
+  if((candleCraftStage===1||candleCraftStage===2)&&target!=='pot'){showCraftNotify(candleCraftStage===1?'请点击左侧融蜡杯加热':'继续点击融蜡杯调色调香');return;}
+  if(candleCraftStage===3&&target!=='vessel'){showCraftNotify('请点击右侧容器注入融蜡');return;}
+  if(candleCraftStage<4){candleCraftStage++;updateCandleWorkbench();showCraftNotify(['烛芯已固定','容器蜡已融化','香料与色片已混合','已注蜡并完成冷却'][candleCraftStage-1]);return;}
+  candleNaming=true;potionName.value=CANDLE_RECIPES[activeCandleRecipeId].name;potionName.placeholder='为这枚魔法蜡烛命名...';potionNameOverlay.querySelector('.name-title').textContent='✦ 魔 法 蜡 烛 命 名 ✦';potionNameOverlay.classList.add('active');
+}
+function startCandleWorkbench(){
+  if(candleWorkbenchEl?.isConnected){candleBtn.classList.add('active');return;}
+  if(incenseDesktopMode){showCraftNotify('请先完成当前熏香制作');return;}
+  if(_bottleEl?.isConnected)closePotionBottle();
+  candleCraftStage=0;const appearance=candleAppearance();
+  const el=document.createElement('div');el.className='candle-workbench stage-0';
+  el.style.setProperty('--candle-wax',`rgb(${appearance.color.join(',')})`);el.style.setProperty('--candle-wax-light',`rgb(${appearance.light.join(',')})`);el.style.setProperty('--candle-glow',appearance.glow);
+  el.innerHTML=`<div class="candle-work-title">${activeCandleRecipeId?CANDLE_RECIPES[activeCandleRecipeId].name:'魔法蜡烛制作台'}</div><div class="wax-station" title="融蜡与调香"><div class="wax-pot"></div></div><div class="candle-vessel" title="固定烛芯与注蜡"><div class="vessel-glass"><span class="vessel-wick"></span><span class="vessel-wax"></span></div></div><div class="candle-step-label"></div>`;
+  el.querySelector('.wax-station').addEventListener('click',event=>{event.stopPropagation();advanceCandleCraft('pot');});
+  el.querySelector('.candle-vessel').addEventListener('click',event=>{event.stopPropagation();advanceCandleCraft('vessel');});
+  desktop.appendChild(el);candleWorkbenchEl=el;candleBtn.classList.add('active');candleBtn.setAttribute('aria-expanded','true');updateCandleWorkbench();
+}
+
+// 瓶按钮 → 第一次把瓶子放到桌面，再次点击关闭
+bottleBtn.addEventListener('click', () => {
+  if (incenseDesktopMode) { showCraftNotify('请先完成当前熏香制作'); return; }
+  if (_bottleEl && _bottleEl.isConnected) {
+    closePotionBottle();
+    return;
+  }
+  bottleRecipe = {};activeOilRecipeId=null;
+  setMaterialCategory('potion');
+  const el = document.createElement('div');
+  el.className = 'desktop-item bottle-on-desktop';
+  el.innerHTML = `
+    <div class="potion-bottle">
+      <div class="p-cork"></div>
+      <div class="p-neck"></div>
+      <div class="p-collar"></div>
+      <div class="p-body">
+        <div class="p-liquid"></div>
+        <div class="p-bubble" style="left:22%;top:35%;width:7px;height:7px;"></div>
+        <div class="p-bubble" style="left:62%;top:50%;width:5px;height:5px;"></div>
+        <div class="p-bubble" style="left:40%;top:22%;width:4px;height:4px;"></div>
+      </div>
+      <div class="p-emblem">☾</div>
+    </div>
+    <div class="bottle-added"></div>
+  `;
+  const dRect = desktop.getBoundingClientRect();
+  el.style.left = (dRect.width / 2 - 90) + 'px';   // 瓶子居中（容器固定 180px 宽）
+  el.style.top  = Math.max(20, dRect.height / 2 - 150) + 'px';
+  desktop.appendChild(el);
+  setupDesktopItemDrag(el);
+  _bottleEl = el;
+  setBottleButtonState(true);
+  renderBottleAdded();
+});
+mortarBtn.addEventListener('click',()=>{
+  if(incenseDesktopMode){
+    incenseWorkbenchEl?.remove();incenseWorkbenchEl=null;incenseDesktopMode=false;incenseFreeMode=false;incenseRecipeCounts={};
+    mortarBtn.classList.remove('active');mortarBtn.setAttribute('aria-expanded','false');document.querySelectorAll('.ingredient-item').forEach(row=>row.style.opacity='');renderIngredients();showCraftNotify('已收回熏香研钵');return;
+  }
+  startDesktopIncense(true);
+});
+burnerBtn.addEventListener('click',()=>{
+  const burners=Array.from(document.querySelectorAll('.incense-burner'));
+  if(burners.length){burners.forEach(el=>el.remove());burnerBtn.classList.remove('active');burnerBtn.setAttribute('aria-expanded','false');showCraftNotify('已收回熏香炉');return;}
+  createIncenseBurner();burnerBtn.classList.add('active');burnerBtn.setAttribute('aria-expanded','true');showCraftNotify('熏香炉已摆到桌面，请从成品香罐取一匙');
+});
+candleBtn.addEventListener('click',()=>{
+  if(candleWorkbenchEl?.isConnected){closeCandleWorkbench(false);showCraftNotify('已收回魔法蜡烛制作台');return;}
+  if(!activeCandleRecipeId){showCraftNotify('请先在魔法书的蜡烛配方中点击“准备材料”');return;}
+  setMaterialCategory('candle');startCandleWorkbench();
+});
+
+// 材料份数增减（材料抽屉里调用）
+function adjustIngredient(id, delta) {
+  if (incenseDesktopMode) {
+    const required = activeIncenseRecipe.required[id];
+    if (!incenseFreeMode && !required) { showCraftNotify('这个配方暂时不需要该材料'); return; }
+    const limit = incenseFreeMode ? 9 : required;
+    const next = Math.max(0, Math.min(limit, (incenseRecipeCounts[id] || 0) + delta));
+    if (next) incenseRecipeCounts[id] = next; else delete incenseRecipeCounts[id];
+    updateIncenseDrawerCounts();
+    const complete = incenseFreeMode ? Object.values(incenseRecipeCounts).some(n=>n>0) : Object.entries(activeIncenseRecipe.required).every(([key,n]) => (incenseRecipeCounts[key] || 0) === n);
+    if (incenseWorkbenchEl?.isConnected) incenseWorkbenchEl.querySelector('.incense-work-label').textContent = complete ? '材料齐全 · 点击研钵开始研磨' : (incenseFreeMode?'请选择熏香材料':'继续按抽屉份数加入材料');
+    return;
+  }
+  if(activeMaterialCategory==='candle'&&activeCandleRecipeId){
+    const required=CANDLE_RECIPES[activeCandleRecipeId].recipe[id];
+    if(!required){showCraftNotify('这款蜡烛暂时不需要该材料');return;}
+    const step=id==='container_wax'?10:1;
+    const limit=id==='container_wax'?200:(id==='matched_wick'?1:10);
+    const next=Math.max(0,Math.min(limit,(candleRecipeCounts[id]||0)+delta*step));
+    if(next)candleRecipeCounts[id]=next;else delete candleRecipeCounts[id];
+    updateCandleDrawerCounts();return;
+  }
+  activeOilRecipeId=null;
+  const next = (bottleRecipe[id] || 0) + delta;
+  if (next <= 0) delete bottleRecipe[id];
+  else bottleRecipe[id] = id==='jojoba'?1:Math.min(next,30);
+  // 更新材料抽屉里的份数显示
+  const row = document.querySelector(`.ingredient-item[data-ingr-id="${id}"]`);
+  if (row) {
+    const countEl = row.querySelector('.bi-count');
+    countEl.textContent = formatOilCount(id,bottleRecipe[id] || 0);
+    countEl.classList.toggle('has', !!bottleRecipe[id]);
+  }
+  renderBottleAdded();
+}
+
+function mixChannel(value, target, amount) {
+  return Math.round(value + (target - value) * amount);
+}
+
+function calculatePotionAppearance(recipe = bottleRecipe) {
+  const entries = Object.entries(recipe).filter(([, count]) => count > 0);
+  const totalUnits = entries.reduce((sum, [, count]) => sum + count, 0);
+  const fallback = [148, 82, 220];
+  const mixed = totalUnits
+    ? entries.reduce((rgb, [id, count]) => {
+        const color = INGREDIENTS.find(item => item.id === id)?.color || fallback;
+        return rgb.map((value, index) => value + color[index] * count);
+      }, [0, 0, 0]).map(value => Math.round(value / totalUnits))
+    : fallback;
+  const top = mixed.map(value => mixChannel(value, 255, .26));
+  const bottom = mixed.map(value => mixChannel(value, 18, .38));
+  const surface = mixed.map(value => mixChannel(value, 255, .44));
+  return {
+    totalUnits,
+    level: totalUnits ? Math.min(12 + totalUnits * 8, 86) : 0,
+    mixed,
+    top: `rgba(${top.join(',')},.82)`,
+    bottom: `rgba(${bottom.join(',')},.96)`,
+    surface: `rgba(${surface.join(',')},.76)`,
+    glow: `rgba(${mixed.join(',')},.58)`
+  };
+}
+function calculateIncenseAppearance(recipe=incenseRecipeCounts,recipeDefinition=activeIncenseRecipe){
+  const base=calculatePotionAppearance(recipe),accent=recipeDefinition?.accent;
+  const mixed=accent&&base.totalUnits?base.mixed.map((value,index)=>mixChannel(value,accent[index],.55)):base.mixed;
+  return {...base,mixed,level:base.totalUnits?Math.min(22+base.totalUnits*6,82):0,glow:`rgba(${mixed.join(',')},.48)`};
+}
+function calculateMagicOilAppearance(recipe=bottleRecipe){
+  const aromatic=Object.fromEntries(Object.entries(recipe).filter(([id,count])=>id!=='jojoba'&&count>0));
+  const base=calculatePotionAppearance(Object.keys(aromatic).length?aromatic:{jojoba:recipe.jojoba||0});
+  const hasBase=!!recipe.jojoba,totalDrops=Object.values(aromatic).reduce((sum,count)=>sum+count,0);
+  const mixed=base.mixed,top=mixed.map(value=>mixChannel(value,255,.34)),bottom=mixed.map(value=>mixChannel(value,35,.25));
+  return {...base,totalUnits:(hasBase?1:0)+totalDrops,level:hasBase?Math.min(68+Math.floor(totalDrops/8)*3,80):0,top:`rgba(${top.join(',')},.9)`,bottom:`rgba(${bottom.join(',')},.97)`,surface:`rgba(${mixed.map(value=>mixChannel(value,255,.52)).join(',')},.82)`,glow:`rgba(${mixed.join(',')},.55)`};
+}
+function formatOilCount(id,count){return id==='jojoba'?(count?'已加入':'未加入'):`${count} 滴`;}
+function resolveIncenseAppearance(item){
+  const definition=Object.values(INCENSE_RECIPES).find(recipe=>recipe.id===item.recipe);
+  return definition?calculateIncenseAppearance(definition.required,definition):(item.appearance||{mixed:[132,98,74],level:48,glow:'rgba(132,98,74,.36)'});
+}
+
+function applyPotionAppearance(container, appearance) {
+  if (!container || !appearance) return;
+  container.style.setProperty('--potion-top', appearance.top);
+  container.style.setProperty('--potion-bottom', appearance.bottom);
+  container.style.setProperty('--potion-surface', appearance.surface);
+  container.style.setProperty('--potion-glow', appearance.glow);
+  const liquid = container.querySelector('.p-liquid');
+  if (liquid) liquid.style.height = `${appearance.level || 0}%`;
+}
+
+// 更新瓶中已加材料 + 液体 + 同步抽屉份数
+function renderBottleAdded() {
+  const entries = Object.entries(bottleRecipe);
+  const appearance = calculateMagicOilAppearance();
+  const totalUnits = appearance.totalUnits;
+  if (_bottleEl && _bottleEl.isConnected) {
+    const addedEl = _bottleEl.querySelector('.bottle-added');
+    const liquid = _bottleEl.querySelector('.p-liquid');
+    if (addedEl) {
+      addedEl.innerHTML = entries.length
+        ? entries.map(([id, c]) => `<span class="ba-tag">${INGREDIENTS.find(i => i.id === id)?.name} ×${c}</span>`).join('')
+        : '<span class="ba-hint">在左侧材料中点击 ＋ 加入</span>';
+    }
+    // 材料按份数混色，总份数决定液面高度。
+    const bottle = _bottleEl.querySelector('.potion-bottle');
+    applyPotionAppearance(bottle, appearance);
+    bottle?.classList.toggle('has-liquid', totalUnits > 0);
+  }
+  // 抽屉里的份数始终与瓶中一致
+  document.querySelectorAll('.ingredient-item').forEach(row => {
+    const countEl = row.querySelector('.bi-count');
+    const c = bottleRecipe[row.dataset.ingrId] || 0;
+    countEl.textContent = formatOilCount(row.dataset.ingrId,c);
+    countEl.classList.toggle('has', !!c);
+  });
+}
+
+// 存入圣物柜（底部金色标签）→ 弹窗命名
+storeToSanctum.addEventListener('click', () => {
+  if(candleWorkbenchEl?.isConnected){
+    if(candleCraftStage<4){showCraftNotify('请先按制作台提示完成蜡烛');return;}
+    advanceCandleCraft('vessel');return;
+  }
+  if (!_bottleEl || !_bottleEl.isConnected) { showCraftNotify('请先点击魔法油瓶按钮，把调配瓶放到桌面'); return; }
+  if (!Object.keys(bottleRecipe).length) { showCraftNotify('请先在材料中加入材料'); return; }
+  potionName.value = activeOilRecipeId?OIL_RECIPES[activeOilRecipeId].name:'';
+  potionName.placeholder = '为这瓶魔法油命名...';
+  potionNameOverlay.querySelector('.name-title').textContent = '✦ 魔 法 油 命 名 ✦';
+  potionNameOverlay.classList.add('active');
+});
+potionNameOverlay.addEventListener('click', (e) => {
+  if (e.target === potionNameOverlay) potionNameOverlay.classList.remove('active');
+});
+potionNameOk.addEventListener('click', () => {
+  const name = potionName.value.trim();
+  if (!name) { showCraftNotify(incenseNaming ? '请为香薰命名' : candleNaming?'请为魔法蜡烛命名':'请为魔法油命名'); return; }
+  if (incenseNaming) {
+    potionNameOverlay.classList.remove('active');
+    finishDesktopIncense(name);
+    return;
+  }
+  if(candleNaming){
+    const selected=CANDLE_RECIPES[activeCandleRecipeId],appearance=candleAppearance();
+    const item={id:'candle_'+Date.now(),type:'magic_candle',name,purpose:selected.name.replace('魔法蜡烛',''),ingredients:Object.entries(selected.recipe).map(([id,count])=>`${INGREDIENTS.find(ing=>ing.id===id)?.name||id}×${formatCandleCount(id,count)}`),recipe:activeCandleRecipeId,appearance:{color:appearance.color},source:'The Candlemaker\'s Companion · Container Candle prototype',createdAt:new Date().toISOString()};
+    const list=loadWorkshopItems();list.unshift(item);saveWorkshopItems(list);selectWorkshopItem(item.id);
+    candleNaming=false;potionNameOverlay.classList.remove('active');closeCandleWorkbench(true);drawer.classList.remove('open');drawer.classList.add('closed');workshopInventoryDrawer.classList.add('open');renderIngredients();showCraftNotify(`已将「${name}」存入魔法工坊`);return;
+  }
+  const entries = Object.entries(bottleRecipe);
+  const appearance = calculateMagicOilAppearance();
+  const selectedOilRecipe=activeOilRecipeId?OIL_RECIPES[activeOilRecipeId]:null;
+  const list = loadWorkshopItems();
+  const item = {
+    id: 'oil_' + Date.now(),
+    type:'magic_oil',
+    name,
+    purpose:selectedOilRecipe?.name.replace('魔法油','')||'自由调油',
+    ingredients: entries.map(([id, c]) => {
+      const ing = INGREDIENTS.find(i => i.id === id);
+      return ing ? `${ing.name}×${c}` : null;
+    }).filter(Boolean),
+    recipe: entries.map(([id, count]) => ({ id, count, name: INGREDIENTS.find(i => i.id === id)?.name || id })),
+    appearance,
+    recipe:selectedOilRecipe?activeOilRecipeId:'custom-oil',
+    source:selectedOilRecipe?.source||'personal-blend',
+    ts: Date.now(),
+  };
+  list.unshift(item);
+  saveWorkshopItems(list);
+  selectWorkshopItem(item.id);
+  workshopInventoryDrawer.classList.add('open');
+  potionNameOverlay.classList.remove('active');
+  bottleRecipe = {};
+  renderBottleAdded();
+  showCraftNotify(`已将「${name}」存入魔法工坊`);
+});
+
+console.log('魔法工坊已加载');
+</script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>天工阁</title>
+<link rel="stylesheet" href="world_switch.css">
+<style>
+/* ============================================================
+   天工阁 · baigong_web.html（占位入口页，功能待开发）
+   视觉沿用东玄：墨黑 / 深墨绿 / 黛青 / 暗金 / 古玉青
+   ============================================================ */
+:root{
+  --ink:#d8cfb6; --ink-dim:#82998f;
+  --bg0:#050f0d; --bg1:#0a1f1a; --bg2:#12302a;
+  --jade:#7fd0b0; --jade-dim:#6f8d83;
+  --bronze:#a98a50; --gold:#d8c491; --gold-hi:#f0dca0;
+  --cinnabar:#cf6c54;
+  --line:rgba(178,151,88,.28); --line-soft:rgba(178,151,88,.14);
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{
+  font-family:"Noto Serif SC","Songti SC",serif;color:var(--ink);
+  background:var(--bg0);user-select:none;
+}
+[hidden]{display:none !important}
+.desk{position:fixed;inset:0;overflow:hidden;
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(56,96,82,.3), transparent 56%),
+    linear-gradient(rgba(5,18,16,.5), rgba(2,10,9,.92)),
+    repeating-linear-gradient(90deg, rgba(178,151,88,.02) 0 1px, transparent 1px 72px),
+    var(--bg0);
+}
+.desk::before{
+  content:"";position:absolute;inset:0;opacity:.14;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cg fill='none' stroke='%2385a997' stroke-width='.7'%3E%3Cpath d='M20 90c28-44 112-44 140 0-28 44-112 44-140 0Z'/%3E%3Cpath d='M90 20c44 28 44 112 0 140-44-28-44-112 0-140Z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* 东玄顶部导航（三页共用结构） */
+.east-nav{
+  position:fixed;top:12px;right:12px;z-index:2600;
+  display:flex;gap:10px;align-items:center;
+}
+.east-nav-link{
+  padding:6px 14px;font:12px/1 "Noto Serif SC","Songti SC",serif;letter-spacing:3px;
+  color:var(--ink-dim);text-decoration:none;cursor:pointer;
+  border:1px solid var(--line);border-radius:18px;
+  background:rgba(8,20,17,.82);backdrop-filter:blur(6px);
+  transition:.25s;white-space:nowrap;
+}
+.east-nav-link:hover{color:var(--gold-hi);border-color:var(--bronze);box-shadow:0 0 16px rgba(178,151,88,.2);}
+.east-nav-link.active{color:var(--gold-hi);border-color:var(--bronze);background:rgba(178,151,88,.12);}
+
+/* 占位内容 */
+.placeholder{
+  position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;
+  z-index:5;pointer-events:none;
+}
+.ph-icon{width:120px;height:120px;color:var(--bronze);opacity:.8;}
+.ph-icon svg{width:100%;height:100%;}
+.ph-text{font-size:15px;color:var(--gold);letter-spacing:12px;}
+.ph-sub{font-size:11px;color:var(--ink-dim);letter-spacing:4px;line-height:2;text-align:center;}
+.ph-seal{
+  margin-top:8px;width:64px;height:64px;border-radius:8px;
+  border:2px solid var(--cinnabar);color:var(--cinnabar);
+  display:grid;place-items:center;font-size:15px;letter-spacing:0;
+  transform:rotate(-8deg);opacity:.85;
+}
+</style>
+</head>
+<body data-world="east">
+<script src="world_switch.js"></script>
+
+<main class="desk">
+  <div class="placeholder">
+    <div class="ph-icon">
+      <svg viewBox="0 0 100 100" fill="none" aria-hidden="true">
+        <g stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <!-- 门扇 -->
+          <path d="M18 8v84M82 8v84"/>
+          <path d="M18 8h64v84H18z"/>
+          <path d="M30 8v36h14V8"/>
+          <!-- 门环 -->
+          <circle cx="62" cy="44" r="6"/>
+          <path d="M62 50v10"/>
+          <!-- 梁檐 -->
+          <path d="M8 8h84M12 2h76"/>
+          <!-- 星火（天工未备 · 以火启炉） -->
+          <path d="M50 74c2 5 7 7 7 11a7 7 0 1 1-14 0c0-4 5-6 7-11Z"/>
+        </g>
+      </svg>
+    </div>
+    <div class="ph-text">天 工 未 备</div>
+    <div class="ph-sub">此间尚在筹建之中。<br>天工之能，将在此处一一显现。</div>
+    <div class="ph-seal">天工</div>
+  </div>
+</main>
+
+<div class="east-nav">
+  <a class="east-nav-link" href="bird_web.html">玄鸟占卜桌</a>
+  <a class="east-nav-link" href="wish_web.html">祝祷之庭</a>
+  <a class="east-nav-link active" href="baigong_web.html">天工阁</a>
+</div>
+
+</body>
+</html>
