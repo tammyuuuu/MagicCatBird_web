@@ -1,0 +1,18 @@
+{
+  "name": "tiangong-bazi",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:bazi": "node --test tests/bazi/*.test.js",
+    "build:bazi": "esbuild src/bazi/ui/baziApp.js --bundle --platform=browser --format=iife --outfile=bazi_app.js"
+  },
+  "dependencies": {
+    "@js-joda/core": "^6.1.0",
+    "@js-joda/timezone": "^2.25.2",
+    "astronomy-engine": "^2.1.19",
+    "lunar-javascript": "^1.7.7"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  }
+}

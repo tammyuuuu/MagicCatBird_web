@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>命运图书馆 · 灵数秘典</title>
+  <style>
+    :root{--ink:#eee3ff;--muted:#aa91c4;--gold:#d7b56d;--line:rgba(196,157,229,.3);--panel:rgba(22,12,37,.86)}
+    *{box-sizing:border-box}html,body{min-height:100%}body{margin:0;color:var(--ink);font-family:"Noto Serif SC","Songti SC",serif;background:radial-gradient(circle at 50% -10%,#4d2e66 0,#1b102a 42%,#090611 100%);overflow-x:hidden}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(circle,#ead9ff 0 1px,transparent 1.5px);background-size:83px 83px;opacity:.16}
+    a{color:inherit}.top-nav{position:fixed;top:12px;right:12px;z-index:5;display:flex;gap:10px}.top-nav a{padding:7px 14px;border:1px solid #9f72df;border-radius:10px;background:rgba(24,13,42,.84);color:#dbc8f1;text-decoration:none;font-size:12px;letter-spacing:2px;box-shadow:0 0 15px rgba(159,114,223,.2)}.top-nav a:hover{border-color:var(--gold);color:#fff0c8}
+    main{width:min(1120px,calc(100% - 32px));margin:auto;padding:96px 0 60px}.kicker{text-align:center;color:var(--gold);letter-spacing:6px;font-size:12px}.hero h1{text-align:center;margin:10px 0 8px;font-size:clamp(30px,5vw,54px);font-weight:500;letter-spacing:8px;text-shadow:0 0 25px rgba(202,159,238,.35)}.hero p{max-width:650px;margin:0 auto 34px;text-align:center;color:var(--muted);line-height:1.9}
+    .library{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:580px;border:1px solid var(--line);background:rgba(8,5,15,.5);box-shadow:0 22px 60px rgba(0,0,0,.42)}.catalogue{padding:26px 18px;border-right:1px solid var(--line);background:linear-gradient(180deg,rgba(44,24,66,.75),rgba(15,9,24,.85))}.catalogue h2{margin:0 0 18px;color:var(--gold);font-size:15px;letter-spacing:4px}.chapter{width:100%;margin:0 0 9px;padding:12px;text-align:left;border:1px solid transparent;background:transparent;color:var(--muted);font:inherit;letter-spacing:2px}.chapter.active{border-color:var(--line);border-left:3px solid var(--gold);background:rgba(139,88,174,.12);color:var(--ink)}.chapter[disabled]{opacity:.5}.chapter small{display:block;margin-top:4px;letter-spacing:1px;color:#7d6a91}
+    .page{padding:42px clamp(24px,6vw,70px);background:linear-gradient(100deg,rgba(255,255,255,.025),transparent 48%)}.page-label{color:var(--gold);font-size:11px;letter-spacing:4px}.page h2{margin:8px 0 5px;font-size:27px;letter-spacing:4px}.page-intro{margin:0 0 28px;color:var(--muted)}form{display:grid;grid-template-columns:1fr auto;gap:12px;margin-bottom:28px}input{min-width:0;padding:13px 15px;border:1px solid var(--line);border-radius:7px;background:rgba(5,3,10,.65);color:var(--ink);font:inherit;color-scheme:dark}button[type=submit]{padding:0 24px;border:1px solid var(--gold);border-radius:7px;background:linear-gradient(145deg,#63407c,#2a183c);color:#fff0c8;font:inherit;letter-spacing:3px;cursor:pointer}.result{display:none;grid-template-columns:150px 1fr;gap:28px;align-items:center;padding:28px;border:1px solid var(--line);background:rgba(13,8,22,.56)}.result.show{display:grid}.number{display:grid;place-items:center;width:132px;height:132px;border:1px solid var(--gold);border-radius:50%;font-size:60px;color:#fff0c8;box-shadow:inset 0 0 25px rgba(215,181,109,.12),0 0 28px rgba(159,114,223,.16)}.result h3{margin:0 0 8px;color:var(--gold);font-size:21px;letter-spacing:3px}.result p{margin:0;color:#c7b7d6;line-height:1.9}.formula{margin-top:13px;color:#847493;font-size:12px;letter-spacing:1px}.privacy{margin-top:20px;color:#746581;font-size:11px}.empty{padding:42px 0;text-align:center;color:#756483}
+    @media(max-width:720px){.top-nav{left:12px;right:12px;justify-content:center;flex-wrap:wrap}.top-nav a{padding:6px 9px;font-size:10px}.library{grid-template-columns:1fr}.catalogue{border-right:0;border-bottom:1px solid var(--line);display:flex;gap:6px;overflow:auto}.catalogue h2{display:none}.chapter{min-width:150px;margin:0}.page{padding:28px 18px}form{grid-template-columns:1fr}button[type=submit]{padding:12px}.result.show{grid-template-columns:1fr;text-align:center}.number{margin:auto}}
+  </style>
+  <link rel="stylesheet" href="world_switch.css">
+</head>
+<body data-world="west">
+<script src="world_switch.js"></script>
+<nav class="top-nav" aria-label="主导航">
+  <a href="reading_web.html">黑猫占卜桌</a>
+  <a href="manifest_web.html">显化之境</a>
+</nav>
+<main>
+  <header class="hero">
+    <div class="kicker">THE LIBRARY OF FATE</div>
+    <h1>命运图书馆</h1>
+    <p>占卜回答此刻的问题，命理保存较长久的生命纹路。第一册先从生日所映出的生命灵数开始。</p>
+  </header>
+  <section class="library">
+    <aside class="catalogue" aria-label="命理目录">
+      <h2>秘 典 目 录</h2>
+      <button class="chapter active">Ⅰ　生命灵数<small>生日数字 · 已开放</small></button>
+      <button class="chapter" disabled>Ⅱ　姓名灵数<small>灵魂数与人格数 · 待续</small></button>
+      <button class="chapter" disabled>Ⅲ　个人流年<small>年度主题 · 待续</small></button>
+      <button class="chapter" disabled>Ⅳ　关系合盘<small>双人数字关系 · 待续</small></button>
+    </aside>
+    <article class="page">
+      <div class="page-label">CODEX I</div>
+      <h2>生命灵数</h2>
+      <p class="page-intro">输入公历生日，将所有数字逐步相加；11、22、33 作为大师数字保留。</p>
+      <form id="lifeForm">
+        <input id="birthday" type="date" required aria-label="公历生日">
+        <button type="submit">揭 示 数 字</button>
+      </form>
+      <div class="empty" id="emptyState">一本尚未写下姓名的命运册页</div>
+      <section class="result" id="result" aria-live="polite">
+        <div class="number" id="lifeNumber">—</div>
+        <div><h3 id="lifeTitle"></h3><p id="lifeText"></p><div class="formula" id="formula"></div></div>
+      </section>
+      <div class="privacy">生日仅用于本页即时计算，本小样不会上传或保存。</div>
+    </article>
+  </section>
+</main>
+<script>
+const meanings={
+  1:['开创者','独立、行动与自我定义是你的长期课题。优势在于率先开始，也要留意把坚定变成孤立。'],
+  2:['调和者','你擅长感受关系中的细微变化，以合作、耐心和倾听建立连接，也需要练习清晰表达边界。'],
+  3:['表达者','创造、语言和感染力构成你的生命动力。让灵感落地，并允许作品经历不完美的成长。'],
+  4:['建造者','秩序、可靠与持续积累是你的力量。稳定结构能保护你，但也要为变化保留一扇窗。'],
+  5:['探索者','自由、经验与变化推动你前进。你的课题是在好奇心与承诺之间找到可持续的节奏。'],
+  6:['守护者','责任、照料与美感使你凝聚他人。关怀别人时，也别把所有人的需要都背在自己身上。'],
+  7:['求知者','观察、分析与内在探索让你接近真实。独处能恢复能量，但洞见也需要回到生活中验证。'],
+  8:['实现者','资源、影响力与成果是你的重要主题。学习有意识地使用力量，让野心与价值观彼此一致。'],
+  9:['理想者','同理、整合与告别旧周期构成你的道路。你看见更大的整体，也要照顾具体而有限的自己。'],
+  11:['启示者 · 大师数字','高度直觉与感受力使你成为灵感的传递者。保持现实锚点，能让敏锐不被焦虑消耗。'],
+  22:['筑梦者 · 大师数字','你具有把宏大愿景转化为真实结构的潜力。伟大工程仍从清楚、稳定的小步骤开始。'],
+  33:['疗愈者 · 大师数字','慈悲、教导与服务是这个数字的象征。成熟的给予包含界限，而不是无止境地牺牲自己。']
+};
+function reduceNumber(value){while(value>9&&!([11,22,33].includes(value)))value=String(value).split('').reduce((sum,n)=>sum+Number(n),0);return value}
+document.getElementById('lifeForm').addEventListener('submit',event=>{
+  event.preventDefault();const raw=document.getElementById('birthday').value;if(!raw)return;
+  const digits=raw.replace(/\D/g,'').split('').map(Number);const sum=digits.reduce((a,b)=>a+b,0);const number=reduceNumber(sum);const meaning=meanings[number];
+  document.getElementById('lifeNumber').textContent=number;document.getElementById('lifeTitle').textContent=meaning[0];document.getElementById('lifeText').textContent=meaning[1];document.getElementById('formula').textContent=`${digits.join(' + ')} = ${sum}${sum===number?'':` → ${number}`}`;document.getElementById('emptyState').style.display='none';document.getElementById('result').classList.add('show');
+});
+</script>
+</body>
+</html>
