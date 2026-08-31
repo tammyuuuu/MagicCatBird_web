@@ -1,7 +1,7 @@
 (function(){
   const match=document.getElementById('matchView'),archive=document.getElementById('archiveView');
   const C=RelationshipContent,E=RelationshipEngine,N=NumerologyContent,STORE='destiny_relationship_archives_v1',PERSONAL_STORE='destiny_personal_archives_v1';
-  let current=null,selectedYear=new Date().getFullYear(),dates={a:'1999-07-07',b:'2000-02-09'};
+  let current=null,selectedYear=new Date().getFullYear(),dates={a:'2000-01-01',b:'2000-01-02'};
   const numbers=n=>N.number(n),path=value=>value.steps.join(' / ');
   const symbol=type=>type==='resonance'?'◎ 共鸣':type==='complement'?'◇ 互补':'△ 张力';
   function section(number,title,body,{id='',priority='support'}={}){return `<section class="section rel-section rel-${priority}" ${id?`id="${id}"`:''}><div class="section-number">${String(number).padStart(2,'0')}</div><div class="eyebrow">RELATIONSHIP REPORT</div><h2>${title}</h2>${body}</section>`}
