@@ -24913,7 +24913,7 @@
 
   // src/bazi/ui/baziApp.js
   if (new URLSearchParams(location.search).get("embed") === "1") document.body.classList.add("embedded");
-  var MVP_SAMPLE = { gender: "male", date: "1990-02-07", time: "05:30", place: "\u6B66\u6C49", timezoneId: "Asia/Shanghai", longitude: "114.3055", latitude: "30.5928" };
+  var MVP_SAMPLE = { gender: "male", date: "2000-01-01", time: "05:30", place: "\u6B66\u6C49", timezoneId: "Asia/Shanghai", longitude: "114.3055", latitude: "30.5928" };
   for (const [name, value] of Object.entries(MVP_SAMPLE)) {
     const field = document.querySelector(`[name="${name}"]`);
     if (field) field.value = value;
