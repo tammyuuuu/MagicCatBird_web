@@ -1800,7 +1800,7 @@
     body.mode-love #themeSwitcher { opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,-8px); }
     body.mode-love #starfield { background:radial-gradient(ellipse at 28% 28%,rgba(116,66,103,.18),transparent 34%),radial-gradient(ellipse at 74% 72%,rgba(102,62,90,.16),transparent 38%),linear-gradient(135deg,#090713 0%,#170b1d 46%,#120b18 72%,#08070e 100%)!important;filter:saturate(.78); }
     body.mode-love #starfield .star { opacity:.08!important;animation:none!important; }
-    body.mode-love #abundanceBasketDrawer,body.mode-love #abundanceBasketBackdrop { display:none!important; }
+
     #loveEnvironment { position:fixed;inset:0;z-index:2;overflow:hidden;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .9s ease,visibility .9s ease; }
     body.mode-love #loveEnvironment { opacity:1;visibility:visible; }
     .love-mist { position:absolute;border-radius:50%;filter:blur(64px);background:rgba(159,90,129,.042); }
@@ -1867,6 +1867,7 @@
     .love-choice span,.love-choice-button { display:block;padding:7px 12px;border:1px solid rgba(225,157,187,.36);border-radius:18px;background:rgba(58,28,54,.26);color:rgba(237,213,223,.78);font:12px 'Songti SC','STSong','Noto Serif SC','Source Han Serif SC',serif;letter-spacing:1px;cursor:pointer; }
     .love-choice input:checked+span,.love-choice-button.selected { border-color:rgba(244,188,212,.78);background:rgba(126,60,96,.34);color:#f7dce7;box-shadow:0 0 13px rgba(220,135,174,.13); }
     .love-custom-tag { display:flex;align-items:center;justify-content:center;gap:14px;margin:2px auto 20px; }
+    .love-custom-tag[hidden] { display:none!important; }
     .love-custom-tag>input { width:min(300px,52%)!important; }
     .love-custom-tag label { color:rgba(231,203,215,.66);font-size:12px;letter-spacing:1px;cursor:pointer; }
     .love-custom-tag label input { accent-color:#bc7899; }
@@ -1918,6 +1919,23 @@
     .love-vision-chapter h4 { margin:0 0 7px; }
     .love-vision-chapter p { margin:0; }
     .love-vision-closing { margin:28px 0 4px;text-align:center;color:rgba(245,207,223,.82);font-size:15px;letter-spacing:1px; }
+    .romantic-map { width:min(900px,100%);margin:8px auto 0; }
+    .romantic-stage-map { position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 28px;margin:30px auto 22px;padding:12px 4px; }
+    .romantic-stage-map::before { content:"";position:absolute;left:10%;right:10%;top:50%;height:1px;background:linear-gradient(90deg,transparent,rgba(223,158,188,.2),transparent);pointer-events:none; }
+    .romantic-stage-map button,.romantic-node-list button { position:relative;z-index:1;min-height:112px;padding:18px;border:0;border-top:1px solid rgba(232,170,198,.24);border-bottom:1px solid rgba(232,170,198,.13);background:radial-gradient(circle at 50% 20%,rgba(103,49,81,.2),rgba(25,14,35,.08) 68%);color:rgba(238,211,223,.82);font-family:'Songti SC','STSong','Noto Serif SC','Source Han Serif SC',serif;cursor:pointer;transition:.55s ease; }
+    .romantic-stage-map button:hover,.romantic-node-list button:hover { border-color:rgba(245,190,214,.5);background:radial-gradient(circle at 50% 28%,rgba(124,59,96,.3),rgba(34,18,43,.1) 72%);box-shadow:0 0 24px rgba(211,126,166,.08); }
+    .romantic-stage-map button>span,.romantic-node-list button>span { display:block;color:rgba(216,159,185,.45);font:10px Georgia,serif;letter-spacing:3px; }
+    .romantic-stage-map strong,.romantic-node-list strong { display:block;margin:10px 0 7px;color:rgba(244,215,227,.9);font-size:18px;font-weight:300;letter-spacing:4px; }
+    .romantic-stage-map small,.romantic-node-list small { display:block;color:rgba(222,190,204,.58);font-size:12px;line-height:1.7;letter-spacing:.5px; }
+    .romantic-node-list { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:24px auto; }
+    .romantic-node-list button { min-height:125px;text-align:left; }
+    .romantic-node-list strong { letter-spacing:2px; }
+    .romantic-story { width:min(720px,100%);margin:20px auto;padding:30px 36px;border-top:1px solid rgba(239,178,204,.35);border-bottom:1px solid rgba(239,178,204,.2);background:linear-gradient(90deg,transparent,rgba(69,31,59,.2),transparent); }
+    .romantic-story-time { text-align:center;color:rgba(221,171,193,.6);font-size:11px;letter-spacing:4px; }
+    .romantic-story h3 { margin:22px 0 9px;text-align:center;color:#efc9d8;font-size:23px;font-weight:300;letter-spacing:5px; }
+    .romantic-story-lead { margin:0 0 24px;text-align:center;color:rgba(229,194,209,.66);font-size:13px;letter-spacing:1px; }
+    .romantic-story-body { color:rgba(242,219,228,.84);font:16px/2.15 'Songti SC','STSong','Noto Serif SC','Source Han Serif SC',serif;letter-spacing:1px;white-space:pre-wrap; }
+    .romantic-story blockquote { margin:28px 0 0;padding-top:18px;border-top:1px solid rgba(230,169,196,.16);text-align:center;color:rgba(232,194,210,.68);font-size:13px;letter-spacing:1px; }
     #lovePreview.vision-immersive #loveBackHome,
     #lovePreview.vision-immersive [data-love-screen="vision"]>h2,
     #lovePreview.vision-immersive [data-love-screen="vision"]>.love-positioning { opacity:0;visibility:hidden; }
@@ -1953,6 +1971,13 @@
       .love-scene-editor .love-action-row { margin:10px 0; }
       .love-immersion-skip { right:18px;top:18px; }
       .love-immersion-frame p { font-size:17px;line-height:1.9; }
+      .romantic-stage-map,.romantic-node-list { grid-template-columns:1fr;gap:8px;margin-top:16px; }
+      .romantic-stage-map::before { display:none; }
+      .romantic-stage-map button,.romantic-node-list button { min-height:78px;padding:12px 14px; }
+      .romantic-stage-map strong,.romantic-node-list strong { margin:5px 0 3px;font-size:15px; }
+      .romantic-story { margin-top:8px;padding:22px 15px; }
+      .romantic-story h3 { font-size:19px; }
+      .romantic-story-body { font-size:14px;line-height:2; }
       .love-custom-tag { align-items:center;flex-direction:column;gap:8px; }
       .love-custom-tag>input { width:100%!important; }
       .love-affirmation-picker blockquote { margin-right:0;padding-bottom:30px; }
@@ -2003,7 +2028,7 @@
     .ledger-rule { display:flex;align-items:center;gap:14px;color:#dabb73;font:18px 'Microsoft YaHei',sans-serif;letter-spacing:4px; }
     .ledger-rule::before,.ledger-rule::after { content:'';height:1px;flex:1;background:linear-gradient(90deg,transparent,rgba(215,173,87,.38)); }
     .ledger-rule::after { transform:scaleX(-1); }
-    #abundanceList { margin-top:8px;display:grid;gap:3px; }
+    #abundanceTodayList { margin-top:8px;display:grid;gap:3px; }
     .ledger-row { display:grid;grid-template-columns:34px minmax(0,1fr) auto auto;gap:12px;align-items:center;min-height:54px;padding:7px 8px;border-bottom:1px solid rgba(218,180,105,.11);text-align:left; }
     .ledger-index { color:rgba(207,172,105,.48);font:13px Georgia,serif; }
     .ledger-item-main { min-width:0; }
@@ -2110,6 +2135,7 @@
     .form-actions button { padding:8px 14px;border:1px solid rgba(211,168,83,.3);border-radius:15px;background:transparent;color:rgba(229,210,173,.68);font:14px 'Songti SC','STSong','Noto Serif SC','Source Han Serif SC',serif;cursor:pointer; }
     .form-actions .primary { color:#efd28e;border-color:rgba(227,184,94,.62);background:rgba(91,59,25,.26); }
     .source-field,.feature-note { grid-column:1/-1; }
+    .source-field>span { color:rgba(235,207,151,.84);font-size:15px;letter-spacing:1px; }
     .source-choices { display:flex;flex-wrap:wrap;gap:8px;margin-top:8px; }
     .source-choice { position:relative;cursor:pointer; }
     .source-choice input { position:absolute;opacity:0;pointer-events:none;width:auto; }
@@ -2134,6 +2160,10 @@
     .abundance-record-actions { display:flex;justify-content:flex-end;gap:8px; }
     .abundance-record-actions button { width:31px;height:31px;padding:0;border:1px solid rgba(222,177,89,.42);border-radius:50%;background:rgba(67,43,21,.24);color:rgba(232,199,132,.74);font:15px/1 Georgia,serif;cursor:pointer;transition:.25s ease; }
     .abundance-record-actions button:hover { border-color:rgba(239,200,119,.78);background:rgba(103,66,27,.38);color:#f4d995;box-shadow:0 0 12px rgba(221,169,67,.13); }
+    .timeline-entry.feature-record,.wish-entry.feature-record { display:grid;grid-template-columns:78px minmax(150px,auto) minmax(180px,1fr) minmax(220px,1.5fr) 116px;align-items:center;gap:22px;padding:17px 8px; }
+    .feature-record .timeline-date { position:static; }
+    .feature-record strong,.feature-record p,.feature-record em { margin:0; }
+    .feature-record em { color:#e7c36f;font:17px Georgia,'Times New Roman',serif;font-style:normal; }
     .today-head .ritual-kicker { font-size:16px; }
     .today-head h2 { margin:4px 0 2px;color:#f0cf7d;font:48px Georgia,serif;font-weight:400;text-shadow:0 0 24px rgba(224,171,67,.18); }
     .today-head p { color:rgba(233,214,177,.58);font-size:14px; }
@@ -2149,20 +2179,21 @@
     .order-button { display:block;margin:7px auto;padding:10px 28px;border:1px solid rgba(226,182,91,.62);border-radius:19px;background:rgba(91,59,24,.32);color:#efd28e;font:15px 'Songti SC','STSong','Noto Serif SC','Source Han Serif SC',serif;letter-spacing:3px;cursor:pointer; }
     .order-button:disabled { opacity:.28;cursor:default; }
     .history-entry { display:block;margin:8px auto; }
-    .basket-fab { position:fixed;right:48px;bottom:92px;z-index:43;width:150px;padding:10px 13px;border:1px solid rgba(220,176,87,.38);border-radius:28px;background:rgba(18,11,24,.82);box-shadow:0 0 22px rgba(208,153,54,.08);color:#dec078;text-align:left;cursor:pointer;backdrop-filter:blur(8px); }
-    .basket-glyph { float:left;margin:3px 10px 0 0;font-size:24px; }
-    .basket-fab strong,.basket-fab small { display:block;font:13px 'Microsoft YaHei',sans-serif; }
-    .basket-fab small { margin-top:3px;color:rgba(225,204,165,.48);font-size:11px; }
-    .basket-drawer { position:fixed;right:0;top:0;bottom:0;z-index:1300;width:min(390px,92vw);padding:34px 26px;background:linear-gradient(160deg,rgba(26,15,31,.98),rgba(10,7,15,.98));border-left:1px solid rgba(220,174,83,.3);box-shadow:-28px 0 70px rgba(0,0,0,.42);transform:translateX(105%);visibility:hidden;transition:transform .42s ease,visibility 0s linear .42s;pointer-events:auto; }
-    .basket-drawer.open { transform:translateX(0);visibility:visible;transition-delay:0s; }
-    .basket-backdrop { position:fixed;inset:0;z-index:1290;background:rgba(4,2,8,.45);opacity:0;visibility:hidden;transition:.35s; }
-    .basket-backdrop.open { opacity:1;visibility:visible; }
-    .drawer-close { position:absolute;right:18px;top:16px;border:0;background:none;color:#d7b86f;font-size:24px;cursor:pointer; }
-    .basket-list { margin-top:20px;max-height:calc(100vh - 210px);overflow:auto; }
-    .basket-list .ledger-row { grid-template-columns:26px minmax(0,1fr) auto auto; }
-    .basket-totals { display:flex;justify-content:space-between;margin-top:17px;padding-top:15px;border-top:1px solid rgba(218,172,84,.2);color:rgba(227,208,171,.62);font-size:13px; }
-    .basket-totals b { color:#e3c277;font-weight:400; }
-    #remainingIdeas { display:block;margin:17px auto; }
+    .today-compose { display:flex;align-items:center;justify-content:center;gap:14px;margin:12px auto 4px;flex-wrap:wrap; }
+    .today-compose .feature-add { margin:0; }
+    .today-selected { color:rgba(238,218,181,.78);font:14px 'Songti SC','STSong','Noto Serif SC','Source Han Serif SC',serif;letter-spacing:1px; }
+    .today-selected b { color:#f0d28e;font-weight:400; }
+    .today-selected i { margin-left:8px;color:#dcb96d;font:16px Georgia,serif;font-style:normal; }
+    .idea-chip.selected { border-color:rgba(236,197,108,.85);background:rgba(126,82,32,.36);color:#f6dfa4;box-shadow:0 0 14px rgba(224,173,70,.2); }
+    .wish-stage { width:min(720px,100%);margin:14px auto 4px;padding:12px 10px;text-align:center;border-top:1px solid rgba(218,172,84,.14); }
+    .wish-stage .section-label { margin-bottom:11px; }
+    .wish-stage .idea-directions { justify-content:center; }
+    .wish-affirmation-picker { grid-column:1/-1;position:relative;padding:16px 78px 16px 18px;border-left:1px solid rgba(218,174,89,.3);background:linear-gradient(90deg,rgba(91,59,24,.2),transparent); }
+    .wish-affirmation-picker blockquote { margin:0;color:rgba(239,218,177,.82);font:15px/1.8 'Songti SC','STSong','Noto Serif SC','Source Han Serif SC',serif;letter-spacing:1px; }
+    .wish-affirmation-picker button { position:absolute;right:10px;top:50%;transform:translateY(-50%);padding:6px 10px;border:1px solid rgba(211,168,83,.3);border-radius:14px;background:transparent;color:rgba(232,205,151,.7);cursor:pointer; }
+    .wish-affirmation { display:block;margin-top:5px;color:rgba(224,188,116,.68);font-size:13px;line-height:1.7; }
+    .feature-add[hidden] { display:none!important; }
+    #abundanceTodayList { margin-top:8px;display:grid;gap:3px; }
     #abundanceTodayComplete { width:min(720px,100%);margin:25px auto;text-align:center; }
     .arrival-title { color:#e7c679;font:25px Georgia,'Microsoft YaHei',serif;letter-spacing:4px; }
     .arrival-list { margin:20px auto;width:min(560px,100%);text-align:left; }
@@ -2211,8 +2242,13 @@
       .real-entry strong { grid-column:2;grid-row:2; }
       .real-entry .real-entry-note { grid-column:2/4;grid-row:3; }
       .real-entry .abundance-record-actions { grid-column:3;grid-row:1/3; }
+      .timeline-entry.feature-record,.wish-entry.feature-record { grid-template-columns:58px minmax(0,1fr) auto;padding:14px 4px;gap:8px 12px; }
+      .feature-record .timeline-date { grid-column:1;grid-row:1; }
+      .feature-record em { grid-column:2;grid-row:1; }
+      .feature-record strong { grid-column:2;grid-row:2; }
+      .feature-record p { grid-column:2/4;grid-row:3; }
+      .feature-record .abundance-record-actions { grid-column:3;grid-row:1/3; }
       .today-head h2 { font-size:40px; }
-      .basket-fab { right:12px;bottom:78px;width:132px; }
       .abundance-back { left:14px;top:2px; }
       body.mode-love #ritualStage { width:calc(100vw - 18px);height:calc(100vh - 145px);top:46%; }
       .love-home-head { padding-top:24px; }
@@ -2377,9 +2413,30 @@
         <div class="feature-summary single"><span>本月<strong id="givingTotal">0 次给予</strong></span></div>
         <button class="feature-add" id="addGivingEntry" type="button">＋ 记下一次给予</button>
         <form class="feature-form" id="givingEntryForm" hidden>
-          <label>我给予了什么？<textarea id="givingEntryText" maxlength="220" required></textarea></label>
-          <label>类型<select id="givingEntryType"><option>金钱</option><option>礼物</option><option>时间</option><option>帮助</option><option>资源</option><option>其他</option></select></label>
+          <div class="source-field"><span>给了谁 / 流向哪里</span><div class="source-choices" id="givingRecipientChoices">
+            <label class="source-choice"><input type="radio" name="givingRecipient" value="家人"><span>家人</span></label>
+            <label class="source-choice"><input type="radio" name="givingRecipient" value="朋友"><span>朋友</span></label>
+            <label class="source-choice"><input type="radio" name="givingRecipient" value="伴侣"><span>伴侣</span></label>
+            <label class="source-choice"><input type="radio" name="givingRecipient" value="同事 / 合作伙伴"><span>同事 / 合作伙伴</span></label>
+            <label class="source-choice"><input type="radio" name="givingRecipient" value="陌生人"><span>陌生人</span></label>
+            <label class="source-choice"><input type="radio" name="givingRecipient" value="公益 / 机构"><span>公益 / 机构</span></label>
+            <label class="source-choice"><input type="radio" name="givingRecipient" value="自己"><span>自己</span></label>
+            <button class="source-choice-add" type="button" data-source-custom-target="givingRecipientCustomWrap" aria-label="输入其他对象">＋</button>
+          </div></div>
+          <div class="source-custom-row" id="givingRecipientCustomWrap" hidden><input id="givingRecipientCustom" type="text" maxlength="24" placeholder="自己写一个对象"></div>
+          <div class="source-field"><span>以什么方式给予</span><div class="source-choices" id="givingTypeChoices">
+            <label class="source-choice"><input type="radio" name="givingTypeObject" value="金钱"><span>金钱</span></label>
+            <label class="source-choice"><input type="radio" name="givingTypeObject" value="礼物"><span>礼物</span></label>
+            <label class="source-choice"><input type="radio" name="givingTypeObject" value="时间"><span>时间</span></label>
+            <label class="source-choice"><input type="radio" name="givingTypeObject" value="帮助"><span>帮助</span></label>
+            <label class="source-choice"><input type="radio" name="givingTypeObject" value="资源"><span>资源</span></label>
+            <label class="source-choice"><input type="radio" name="givingTypeObject" value="请客"><span>请客</span></label>
+            <label class="source-choice"><input type="radio" name="givingTypeObject" value="支持"><span>支持</span></label>
+            <button class="source-choice-add" type="button" data-source-custom-target="givingMethodCustomWrap" aria-label="输入其他方式">＋</button>
+          </div></div>
+          <div class="source-custom-row" id="givingMethodCustomWrap" hidden><input id="givingMethodCustom" type="text" maxlength="24" placeholder="自己写一种方式"></div>
           <label>数量 / 金额（选填）<input id="givingEntryValue" type="text" maxlength="40" placeholder="例如 ¥280 或 1小时"></label>
+          <label>补充记录（选填）<textarea id="givingEntryText" maxlength="220" placeholder="如果还有什么想记下，可以写在这里"></textarea></label>
           <label>日期<input id="givingEntryDate" type="date" required></label>
           <div class="form-actions"><button type="button" data-cancel-feature="giving">取消</button><button class="primary" type="submit">记下这次给予</button></div>
         </form>
@@ -2391,29 +2448,38 @@
         <div id="abundanceTodayComplete" hidden></div>
         <div id="abundanceTodayPicker">
           <section class="idea-stage"><div class="section-label">从哪里开始想？</div><div class="idea-directions" id="abundanceIdeaList"></div><button class="quiet-action" id="refreshAbundanceIdeas" type="button">换一批</button></section>
+          <div class="today-compose" id="abundanceComposeBar">
+            <span class="today-selected" id="abundanceSelectedHint" hidden>已选择：<b id="abundanceSelectedName"></b><i id="abundanceSelectedAmount"></i></span>
+            <button class="feature-add" id="expandAbundanceEditor" type="button" hidden>＋ 补充并加入</button>
+            <button class="feature-add" id="addAbundanceItem" type="button">＋ 自己写一个</button>
+          </div>
           <form class="item-compose" id="abundanceEditor" hidden>
-            <h3>你想得到什么？</h3>
+            <h3>补充这笔丰盛的去处</h3>
             <input id="abundanceItemName" type="text" maxlength="40" placeholder="名称" required>
             <textarea id="abundanceItemScene" maxlength="220" placeholder="它是什么样的？你会怎样使用、体验它？"></textarea>
             <div class="money-field">¥ <input id="abundanceItemAmount" type="number" min="1" step="1" inputmode="numeric" placeholder="你愿意为它花多少？" required></div>
-            <div class="form-actions"><button type="button" id="abundanceEditorCancel">取消</button><button class="primary" type="submit">加入丰盛篮</button></div>
+            <div class="form-actions"><button type="button" id="abundanceEditorCancel">取消</button><button class="primary" type="submit">加入今日清单</button></div>
           </form>
-          <button class="feature-add" id="addAbundanceItem" type="button">＋ 我自己想</button>
-          <div class="today-status"><span>已选 <b id="abundanceSpent">¥0</b></span><span>还可使用 <b id="abundanceRemaining">¥1,000</b></span></div>
+          <div class="today-status"><span>已安排 <b id="abundanceSpent">¥0</b></span><span>还可使用 <b id="abundanceRemaining">¥1,000</b></span></div>
+          <div class="abundance-list-wrap"><div class="ledger-rule">今日清单</div><div id="abundanceTodayList"></div></div>
           <div class="abundance-waiting" id="abundanceWaiting"></div>
           <button class="order-button" id="sealAbundanceDay" type="button" disabled>下单</button>
           <button class="quiet-action history-entry" id="openAbundanceHistory" type="button">查看往日丰盛</button>
         </div>
-        <button class="basket-fab" id="abundanceBasketBtn" type="button"><span class="basket-glyph">◇</span><strong>丰盛篮 · <i id="basketCount">0</i></strong><small><span id="basketSpent">¥0</span> / <span id="basketTotal">¥1,000</span></small></button>
       </section>
 
       <section class="abundance-screen feature-screen" id="abundanceWishesScreen" data-abundance-screen="wishes">
         <header class="feature-head"><div class="ritual-kicker">如果暂时不考虑现实条件，你真正想拥有或体验什么？</div><h2>愿望</h2></header>
-        <button class="feature-add" id="addWishEntry" type="button">＋ 写下一个愿望</button>
+        <div class="wish-stage">
+          <div class="section-label">从这些愿望里选一个开始，或自己写</div>
+          <div class="idea-directions" id="wishIdeaList"></div>
+        </div>
+        <button class="feature-add" id="addWishEntry" type="button">＋ 自己写一个愿望</button>
         <form class="feature-form" id="wishEntryForm" hidden>
-          <label>愿望名称<input id="wishEntryName" maxlength="50" required></label>
+          <label>愿望名称<input id="wishEntryName" maxlength="50" required placeholder="写下真正想拥有或体验的东西"></label>
           <label>大致金额<div class="money-field">约 ¥ <input id="wishEntryAmount" type="number" min="0" step="1"></div></label>
-          <label>描述<textarea id="wishEntryScene" maxlength="240"></textarea></label>
+          <label>描述<textarea id="wishEntryScene" maxlength="240" placeholder="它是什么样的？如果实现了，你会怎样生活？"></textarea></label>
+          <div class="wish-affirmation-picker"><input id="wishEntryAffirmation" type="hidden"><blockquote id="wishAffirmationText"></blockquote><button id="nextWishAffirmation" type="button">换一句</button></div>
           <div class="form-actions"><button type="button" data-cancel-feature="wish">取消</button><button class="primary" type="submit">写下愿望</button></div>
         </form>
         <div class="wish-list" id="wishList"></div>
@@ -2458,14 +2524,6 @@
     </section>
   </div>
 </div>
-
-<aside class="basket-drawer" id="abundanceBasketDrawer" aria-hidden="true">
-  <button class="drawer-close" id="closeAbundanceBasket" type="button">×</button><div class="ritual-kicker">今日丰盛篮</div>
-  <div class="basket-list" id="abundanceList"></div>
-  <div class="basket-totals"><span>已选 <b id="drawerSpent">¥0</b></span><span>还可使用 <b id="drawerRemaining">¥1,000</b></span></div>
-  <button class="quiet-action" id="remainingIdeas" type="button">帮我想想剩余金额可以怎么花</button>
-</aside>
-<div class="basket-backdrop" id="abundanceBasketBackdrop"></div>
 
 <div id="intentionBackdrop" aria-hidden="true"></div>
 
@@ -3162,6 +3220,8 @@ const ABUNDANCE_IDEA_DIRECTIONS = [
   { label:'为兴趣花一点', match:/书|兴趣|课程|学习|创作|工具|设备|项目|电影|游戏/ },
   { label:'送给重要的人', match:/重要的人|家人|礼物|支持/ }
 ];
+const WISH_IDEAS = [['一次长途旅行',5000,30000],['一段长期学习',5000,50000],['改善自己的住所',5000,100000],['建立一处工作空间',10000,100000],['启动一个想做的项目',5000,100000],['给自己一段不赶时间的休息',5000,50000],['支持家人的生活',5000,100000],['替自己换回一段自由时间',20000,500000],['创造理想的居住环境',30000,1000000],['建立长期创作空间',30000,1000000],['去理想的地方生活一段时间',20000,1000000]];
+const ABUNDANCE_WISH_AFFIRMATIONS = ['我允许丰盛以适合我的方式来到。','我值得拥有真正支持我生活的资源。','我的愿望正在变得清晰，也正在靠近现实。','我安心地接受，也自在地创造。','我拥有选择、体验与创造美好生活的能力。','每一份资源，都能流向我真正珍惜的生活。','我与丰盛之间，是自然、稳定而开放的关系。','我愿意看见机会，也愿意接住它。'];
 if (false) {
 let currentRitualMode = 'free';
 let abundanceEditingId = null;
@@ -3484,8 +3544,12 @@ let currentRitualMode = 'free';
 let currentAbundanceScreen = 'home';
 let abundanceEditingId = null;
 let realEditingId = null;
+let givingEditingId = null;
+let wishEditingId = null;
+let wishAffirmationIndex = 0;
 let abundanceIdeaDirection = null;
 let abundanceIdeaPage = 0;
+let abundanceSelectedIdea = null;
 
 const abundanceModeBtn = document.getElementById('abundanceModeBtn');
 const loveModeBtn = document.getElementById('loveModeBtn');
@@ -3511,12 +3575,11 @@ const abundanceSpent = document.getElementById('abundanceSpent');
 const abundanceRemaining = document.getElementById('abundanceRemaining');
 const abundanceWaiting = document.getElementById('abundanceWaiting');
 const sealAbundanceDay = document.getElementById('sealAbundanceDay');
-const abundanceBasketBtn = document.getElementById('abundanceBasketBtn');
-const abundanceBasketDrawer = document.getElementById('abundanceBasketDrawer');
-const abundanceBasketBackdrop = document.getElementById('abundanceBasketBackdrop');
-const closeAbundanceBasket = document.getElementById('closeAbundanceBasket');
-const abundanceList = document.getElementById('abundanceList');
-const remainingIdeas = document.getElementById('remainingIdeas');
+const abundanceTodayList = document.getElementById('abundanceTodayList');
+const expandAbundanceEditor = document.getElementById('expandAbundanceEditor');
+const abundanceSelectedHint = document.getElementById('abundanceSelectedHint');
+const abundanceSelectedName = document.getElementById('abundanceSelectedName');
+const abundanceSelectedAmount = document.getElementById('abundanceSelectedAmount');
 const abundanceHistoryList = document.getElementById('abundanceHistoryList');
 const abundanceHistoryDetail = document.getElementById('abundanceHistoryDetail');
 
@@ -3547,7 +3610,7 @@ function setActiveRitualView(view) { [abundanceWorkspace,lovePreview].forEach(el
 function setRitualMode(mode) {
   currentRitualMode=mode;document.body.classList.toggle('ritual-special',mode!=='free');document.body.classList.toggle('mode-abundance',mode==='abundance');document.body.classList.toggle('mode-love',mode==='love');
   abundanceModeBtn.classList.toggle('active',mode==='abundance');loveModeBtn.classList.toggle('active',mode==='love');abundanceModeBtn.setAttribute('aria-pressed',String(mode==='abundance'));loveModeBtn.setAttribute('aria-pressed',String(mode==='love'));
-  setIntentionPanel(false);divDrawer.classList.remove('open');divDrawer.classList.add('closed');recDrawer.classList.remove('open');recDrawer.classList.add('closed');closeBasket();
+  setIntentionPanel(false);divDrawer.classList.remove('open');divDrawer.classList.add('closed');recDrawer.classList.remove('open');recDrawer.classList.add('closed');
   if(mode==='abundance'){setActiveRitualView(abundanceWorkspace);openAbundanceScreen('home');}else if(mode==='love')renderLove();else setActiveRitualView(null);updateCount();
 }
 function openAbundanceScreen(name) {
@@ -3571,57 +3634,61 @@ function renderRealAbundance(data) {
   document.getElementById('realCashTotal').textContent=money(cash);
   document.getElementById('realTimeline').innerHTML=(data.realAbundance||[]).length?[...data.realAbundance].reverse().map(i=>`<article class="timeline-entry real-entry" data-real-id="${i.id}"><span class="timeline-date">${escapeAbundance(i.date.slice(5).replace('-','.'))}</span><em>${i.type==='value'?'历史估值　约 ':'+'}${money(i.amount)}</em><strong>${escapeAbundance(i.source||'丰盛抵达')}</strong><p class="real-entry-note ${i.text?'':'real-entry-blank'}">${i.text?escapeAbundance(i.text):''}</p><div class="abundance-record-actions"><button type="button" data-real-edit title="编辑" aria-label="编辑">✎</button><button type="button" data-real-delete title="删除" aria-label="删除">×</button></div></article>`).join(''):'<div class="timeline-empty">来到生活里的丰盛，会留在这里。</div>';
 }
-function renderGiving(data) { const entries=monthEntries(data.giving);document.getElementById('givingTotal').textContent=`${entries.length} 次给予`;document.getElementById('givingTimeline').innerHTML=(data.giving||[]).length?[...data.giving].reverse().map(i=>`<article class="timeline-entry"><span class="timeline-date">${escapeAbundance(i.date.slice(5).replace('-','.'))}</span><strong>${escapeAbundance(i.text)}</strong><em>${escapeAbundance(i.type)}${i.value?' · '+escapeAbundance(i.value):''}</em></article>`).join(''):'<div class="timeline-empty">给予不是任务，只记录那些自然流向别处的东西。</div>'; }
-function renderWishes(data) { document.getElementById('wishList').innerHTML=(data.wishes||[]).length?[...data.wishes].reverse().map(i=>`<article class="wish-entry" data-wish-id="${i.id}"><strong>${escapeAbundance(i.name)}</strong><em>${i.amount?`约 ${money(i.amount)}`:'金额未定'}</em>${i.scene?`<p>${escapeAbundance(i.scene)}</p>`:''}<p>${escapeAbundance(i.date.replaceAll('-','.'))}</p><button class="quiet-action" type="button" data-wish-to-basket>加入丰盛篮</button></article>`).join(''):'<div class="timeline-empty">还没有写下愿望。</div>'; }
+function renderGiving(data) { const entries=monthEntries(data.giving);document.getElementById('givingTotal').textContent=`${entries.length} 次给予`;document.getElementById('givingTimeline').innerHTML=(data.giving||[]).length?[...data.giving].reverse().map(i=>`<article class="timeline-entry feature-record" data-giving-id="${i.id}"><span class="timeline-date">${escapeAbundance(i.date.slice(5).replace('-','.'))}</span><em>${escapeAbundance(i.value||'—')}</em><strong>${escapeAbundance([i.recipient,i.type||'给予'].filter(Boolean).join(' · '))}</strong><p>${i.text?escapeAbundance(i.text):''}</p><div class="abundance-record-actions"><button type="button" data-giving-edit title="编辑" aria-label="编辑">✎</button><button type="button" data-giving-delete title="删除" aria-label="删除">×</button></div></article>`).join(''):'<div class="timeline-empty">给予不是任务，只记录那些自然流向别处的东西。</div>'; }
+function renderWishes(data) { document.getElementById('wishIdeaList').innerHTML=WISH_IDEAS.map(([name,min,max])=>`<button class="idea-chip" type="button" data-wish-idea="${escapeAbundance(name)}" data-wish-amount="${Math.round((min+max)/2)}">${escapeAbundance(name)}</button>`).join('')+'<button class="idea-chip" type="button" data-wish-self>我自己写</button>';document.getElementById('wishList').innerHTML=(data.wishes||[]).length?[...data.wishes].reverse().map(i=>`<article class="wish-entry feature-record" data-wish-id="${i.id}"><span class="timeline-date">${escapeAbundance(i.date.replaceAll('-','.').slice(5))}</span><em>${i.amount?`约 ${money(i.amount)}`:'金额未定'}</em><strong>${escapeAbundance(i.name)}</strong><p>${i.scene?escapeAbundance(i.scene):''}${i.affirmation?`<small class="wish-affirmation">“${escapeAbundance(i.affirmation)}”</small>`:''}</p><div class="abundance-record-actions"><button type="button" data-wish-to-today title="安排进今日丰盛" aria-label="安排进今日丰盛">＋</button><button type="button" data-wish-edit title="编辑" aria-label="编辑">✎</button><button type="button" data-wish-delete title="删除" aria-label="删除">×</button></div></article>`).join(''):'<div class="timeline-empty">还没有写下愿望。</div>'; }
 
 function ideaTier(amount){return amount<=1000?'small':amount<=5000?'medium':amount<=30000?'large':'vast';}
 function renderIdeaDirections(practice) {
   const remaining=practice.amount-spentForPractice(practice);refreshAbundanceIdeas.hidden=!abundanceIdeaDirection;
   if(!abundanceIdeaDirection){abundanceIdeaList.innerHTML=ABUNDANCE_IDEA_DIRECTIONS.map(d=>`<button class="idea-chip" type="button" data-idea-direction="${escapeAbundance(d.label)}">${escapeAbundance(d.label)}</button>`).join('')+'<button class="idea-chip" type="button" data-self-idea>我自己想</button>';return;}
   const pool=ABUNDANCE_IDEAS[ideaTier(Math.max(remaining,practice.amount))],direction=ABUNDANCE_IDEA_DIRECTIONS.find(d=>d.label===abundanceIdeaDirection),used=new Set(practice.items.map(i=>i.name));let source=pool.filter(i=>!used.has(i[0])&&i[1]<=Math.max(remaining,1)&&(direction?direction.match.test(i[0]):true));if(!source.length)source=pool.filter(i=>!used.has(i[0])&&i[1]<=Math.max(remaining,1));if(!source.length)source=pool;
-  const start=(abundanceIdeaPage*5)%source.length,batch=[...source,...source].slice(start,start+Math.min(5,source.length));abundanceIdeaList.innerHTML='<button class="idea-chip" type="button" data-ideas-back>← 换个方向</button>'+batch.map(([name,min,max])=>`<button class="idea-chip" type="button" data-idea-name="${escapeAbundance(name)}" data-idea-amount="${Math.min(Math.max(remaining,1),Math.max(min,Math.round(Math.min(max,Math.max(remaining,1))*.55)))}">${escapeAbundance(name)}</button>`).join('');
+  const start=(abundanceIdeaPage*5)%source.length,batch=[...source,...source].slice(start,start+Math.min(5,source.length));if(abundanceSelectedIdea&&!batch.some(([n])=>n===abundanceSelectedIdea.name))clearAbundanceSelection();
+  abundanceIdeaList.innerHTML='<button class="idea-chip" type="button" data-ideas-back>← 换个方向</button>'+batch.map(([name,min,max])=>`<button class="idea-chip${abundanceSelectedIdea&&abundanceSelectedIdea.name===name?' selected':''}" type="button" data-idea-name="${escapeAbundance(name)}" data-idea-amount="${Math.min(Math.max(remaining,1),Math.max(min,Math.round(Math.min(max,Math.max(remaining,1))*.55)))}">${escapeAbundance(name)}</button>`).join('');
 }
 function renderAbundanceToday(data) {
   const practice=data.current;if(!practice)return;const spent=spentForPractice(practice),remaining=practice.amount-spent;
-  abundanceTodayAmount.textContent=money(practice.amount);abundanceSpent.textContent=money(spent);abundanceRemaining.textContent=remaining>=0?money(remaining):`超出 ${money(Math.abs(remaining))}`;document.getElementById('basketCount').textContent=practice.items.length;document.getElementById('basketSpent').textContent=money(spent);document.getElementById('basketTotal').textContent=money(practice.amount);document.getElementById('drawerSpent').textContent=money(spent);document.getElementById('drawerRemaining').textContent=remaining>=0?money(remaining):`超出 ${money(Math.abs(remaining))}`;
-  abundanceTodayPicker.hidden=!!practice.sealedAt;abundanceTodayComplete.hidden=!practice.sealedAt;abundanceBasketBtn.hidden=!!practice.sealedAt;sealAbundanceDay.disabled=remaining!==0||!practice.items.length;abundanceWaiting.textContent=remaining<0?`已超出 ${money(Math.abs(remaining))}，请在丰盛篮中调整。`:remaining>0?'':'每一份丰盛都已经有了去处。';
-  renderBasket(practice);renderIdeaDirections(practice);abundanceEditor.hidden=true;
+  abundanceTodayAmount.textContent=money(practice.amount);abundanceSpent.textContent=money(spent);abundanceRemaining.textContent=remaining>=0?money(remaining):`超出 ${money(Math.abs(remaining))}`;
+  abundanceTodayPicker.hidden=!!practice.sealedAt;abundanceTodayComplete.hidden=!practice.sealedAt;sealAbundanceDay.disabled=remaining!==0||!practice.items.length;abundanceWaiting.textContent=remaining<0?`已超出 ${money(Math.abs(remaining))}，请在今日清单中调整。`:remaining>0?'':'每一份丰盛都已经有了去处。';
+  renderTodayList(practice);renderIdeaDirections(practice);abundanceEditor.hidden=true;
   if(practice.sealedAt) abundanceTodayComplete.innerHTML=`<div class="arrival-title">✦ 今日丰盛已抵达 ✦</div><p style="margin-top:10px;color:rgba(230,211,177,.55)">今天你得到了：</p><div class="arrival-list">${practice.items.map(i=>`<div class="arrival-row"><span>${escapeAbundance(i.name)}</span><b>${money(i.amount)}</b></div>`).join('')}</div><div class="arrival-total">总计　${money(practice.amount)}</div><div class="affirmation"><span>今日肯定</span>“${escapeAbundance(practice.closingLine||closingLineFor(practice))}”</div><p class="virtual-wealth-note">今日订单已封存 · 新的丰盛将在下一次练习中来到</p>`;
 }
-function renderBasket(practice) { const sealed=!!practice.sealedAt;abundanceList.innerHTML=practice.items.length?practice.items.map((item,index)=>`<div class="ledger-row" data-id="${item.id}"><span class="ledger-index">${String(index+1).padStart(2,'0')}</span><div class="ledger-item-main"><div class="ledger-name">${escapeAbundance(item.name)}</div>${item.scene?`<div class="ledger-scene">${escapeAbundance(item.scene)}</div>`:''}</div><strong>${money(item.amount)}</strong>${sealed?'<span class="sealed-mark">✦</span>':'<div class="ledger-row-actions"><button type="button" data-edit title="修改">✎</button><button type="button" data-delete title="删除">×</button></div>'}</div>`).join(''):'<div class="timeline-empty">丰盛篮还是空的。</div>'; }
+function renderTodayList(practice) { const sealed=!!practice.sealedAt;abundanceTodayList.innerHTML=practice.items.length?practice.items.map((item,index)=>`<div class="ledger-row" data-id="${item.id}"><span class="ledger-index">${String(index+1).padStart(2,'0')}</span><div class="ledger-item-main"><div class="ledger-name">${escapeAbundance(item.name)}</div>${item.scene?`<div class="ledger-scene">${escapeAbundance(item.scene)}</div>`:''}</div><strong>${money(item.amount)}</strong>${sealed?'<span class="sealed-mark">✦</span>':'<div class="ledger-row-actions"><button type="button" data-edit title="修改">✎</button><button type="button" data-delete title="删除">×</button></div>'}</div>`).join(''):'<div class="timeline-empty">还没有写下去处。</div>'; }
 function openAbundanceEditor(item=null) { const data=loadAbundance(),practice=data.current;if(!practice||practice.sealedAt)return;abundanceEditingId=item&&item.id||null;abundanceItemName.value=item&&item.name||'';abundanceItemAmount.value=item&&item.amount||'';abundanceItemScene.value=item&&item.scene||'';abundanceEditor.hidden=false;setTimeout(()=>abundanceItemName.focus(),0); }
 function closeAbundanceEditor(){abundanceEditingId=null;abundanceEditor.reset();abundanceEditor.hidden=true;}
-function openBasket(){abundanceBasketDrawer.classList.add('open');abundanceBasketBackdrop.classList.add('open');abundanceBasketDrawer.setAttribute('aria-hidden','false');}
-function closeBasket(){if(!abundanceBasketDrawer)return;abundanceBasketDrawer.classList.remove('open');abundanceBasketBackdrop.classList.remove('open');abundanceBasketDrawer.setAttribute('aria-hidden','true');}
 function renderAbundanceHistory(data){abundanceHistoryDetail.hidden=true;abundanceHistoryList.hidden=false;abundanceHistoryList.innerHTML=data.history.length?[...data.history].reverse().map(p=>`<button class="history-row" type="button" data-history-id="${p.id}"><span class="no">No.${p.sequence}</span><span class="date">${p.sealedDate.replaceAll('-','.')}<small>${escapeAbundance(stageForSequence(p.sequence).name)} · 已封存</small></span><strong>${money(p.amount)}</strong></button>`).join(''):'<div class="timeline-empty">还没有封存的丰盛订单。</div>';}
 function showHistoryDetail(id){const data=loadAbundance(),p=data.history.find(x=>x.id===id);if(!p)return;abundanceHistoryList.hidden=true;abundanceHistoryDetail.hidden=false;abundanceHistoryDetail.innerHTML=`<div class="history-detail-head"><b>第 ${p.sequence} 次丰盛练习</b><button type="button" id="historyDetailBack">返回</button></div>${p.items.map(i=>`<div class="history-detail-item"><span>${escapeAbundance(i.name)}</span><b>${money(i.amount)}</b></div>`).join('')}`;document.getElementById('historyDetailBack').onclick=()=>renderAbundanceHistory(data);}
 
-abundanceModeBtn.addEventListener('click',()=>setRitualMode(currentRitualMode==='abundance'?'free':'abundance'));loveModeBtn.addEventListener('click',()=>setRitualMode(currentRitualMode==='love'?'free':'love'));
+abundanceModeBtn.addEventListener('click',()=>setRitualMode('abundance'));loveModeBtn.addEventListener('click',()=>setRitualMode('love'));
 document.querySelectorAll('[data-open-love]').forEach(btn=>btn.addEventListener('click',()=>openLoveScreen(btn.dataset.openLove)));
 loveBackHome.addEventListener('click',()=>openLoveScreen('home'));
-document.querySelectorAll('[data-open-abundance]').forEach(btn=>btn.addEventListener('click',()=>openAbundanceScreen(btn.dataset.openAbundance)));abundanceBackHome.addEventListener('click',()=>{closeBasket();openAbundanceScreen('home');});
-addAbundanceItem.addEventListener('click',()=>openAbundanceEditor());abundanceEditorCancel.addEventListener('click',closeAbundanceEditor);
-abundanceIdeaList.addEventListener('click',e=>{const btn=e.target.closest('button');if(!btn)return;if(btn.dataset.ideaDirection){abundanceIdeaDirection=btn.dataset.ideaDirection;abundanceIdeaPage=0;renderAbundanceToday(loadAbundance());return;}if(btn.hasAttribute('data-ideas-back')){abundanceIdeaDirection=null;renderAbundanceToday(loadAbundance());return;}if(btn.hasAttribute('data-self-idea')){openAbundanceEditor();return;}if(btn.dataset.ideaName)openAbundanceEditor({name:btn.dataset.ideaName,amount:Number(btn.dataset.ideaAmount)||'',scene:''});});
-refreshAbundanceIdeas.addEventListener('click',()=>{abundanceIdeaPage++;renderAbundanceToday(loadAbundance());});
-abundanceEditor.addEventListener('submit',e=>{e.preventDefault();const data=loadAbundance(),practice=data.current,amount=Math.round(Number(abundanceItemAmount.value));if(!practice||practice.sealedAt||!abundanceItemName.value.trim()||!Number.isFinite(amount)||amount<1)return;if(abundanceEditingId){const item=practice.items.find(i=>i.id===abundanceEditingId);if(item)Object.assign(item,{name:abundanceItemName.value.trim(),amount,scene:abundanceItemScene.value.trim(),updatedAt:Date.now()});}else practice.items.push({id:'abundance_item_'+Date.now(),name:abundanceItemName.value.trim(),amount,scene:abundanceItemScene.value.trim(),createdAt:Date.now()});saveAbundance(data);closeAbundanceEditor();renderAbundanceToday(data);});
-abundanceBasketBtn.addEventListener('click',openBasket);closeAbundanceBasket.addEventListener('click',closeBasket);abundanceBasketBackdrop.addEventListener('click',closeBasket);
-abundanceList.addEventListener('click',e=>{const row=e.target.closest('.ledger-row');if(!row)return;const data=loadAbundance(),p=data.current;if(!p||p.sealedAt)return;const item=p.items.find(i=>i.id===row.dataset.id);if(!item)return;if(e.target.closest('[data-edit]')){closeBasket();openAbundanceEditor(item);}if(e.target.closest('[data-delete]')){p.items=p.items.filter(i=>i.id!==item.id);saveAbundance(data);renderAbundanceToday(data);}});
-remainingIdeas.addEventListener('click',()=>{closeBasket();abundanceIdeaDirection=null;renderAbundanceToday(loadAbundance());});
-sealAbundanceDay.addEventListener('click',()=>{const data=loadAbundance(),p=data.current;if(!p||p.sealedAt||spentForPractice(p)!==p.amount||!p.items.length)return;p.sealedAt=Date.now();p.sealedDate=localDateKey();p.closingLine=closingLineFor(p);data.history.push(JSON.parse(JSON.stringify(p)));saveAbundance(data);closeBasket();renderAbundanceToday(data);});
+document.querySelectorAll('[data-open-abundance]').forEach(btn=>btn.addEventListener('click',()=>openAbundanceScreen(btn.dataset.openAbundance)));abundanceBackHome.addEventListener('click',()=>{clearAbundanceSelection();openAbundanceScreen('home');});
+function clearAbundanceSelection(){abundanceSelectedIdea=null;if(abundanceSelectedHint){abundanceSelectedHint.hidden=true;expandAbundanceEditor.hidden=true;}document.querySelectorAll('#abundanceIdeaList .idea-chip.selected').forEach(ch=>ch.classList.remove('selected'));}
+addAbundanceItem.addEventListener('click',()=>{clearAbundanceSelection();openAbundanceEditor();});abundanceEditorCancel.addEventListener('click',closeAbundanceEditor);
+expandAbundanceEditor.addEventListener('click',()=>{if(!abundanceSelectedIdea)return;openAbundanceEditor({name:abundanceSelectedIdea.name,amount:abundanceSelectedIdea.amount,scene:''});});
+abundanceIdeaList.addEventListener('click',e=>{const btn=e.target.closest('button');if(!btn)return;if(btn.dataset.ideaDirection){abundanceIdeaDirection=btn.dataset.ideaDirection;abundanceIdeaPage=0;clearAbundanceSelection();renderAbundanceToday(loadAbundance());return;}if(btn.hasAttribute('data-ideas-back')){abundanceIdeaDirection=null;clearAbundanceSelection();renderAbundanceToday(loadAbundance());return;}if(btn.hasAttribute('data-self-idea')){clearAbundanceSelection();openAbundanceEditor();return;}if(btn.dataset.ideaName){abundanceSelectedIdea={name:btn.dataset.ideaName,amount:Number(btn.dataset.ideaAmount)||0};document.querySelectorAll('#abundanceIdeaList .idea-chip.selected').forEach(ch=>ch.classList.remove('selected'));btn.classList.add('selected');abundanceSelectedName.textContent=btn.dataset.ideaName;abundanceSelectedAmount.textContent=abundanceSelectedIdea.amount?money(abundanceSelectedIdea.amount):'';abundanceSelectedHint.hidden=false;expandAbundanceEditor.hidden=false;abundanceEditor.hidden=true;return;}});
+refreshAbundanceIdeas.addEventListener('click',()=>{abundanceIdeaPage++;clearAbundanceSelection();renderAbundanceToday(loadAbundance());});
+abundanceEditor.addEventListener('submit',e=>{e.preventDefault();const data=loadAbundance(),practice=data.current,amount=Math.round(Number(abundanceItemAmount.value));if(!practice||practice.sealedAt||!abundanceItemName.value.trim()||!Number.isFinite(amount)||amount<1)return;if(abundanceEditingId){const item=practice.items.find(i=>i.id===abundanceEditingId);if(item)Object.assign(item,{name:abundanceItemName.value.trim(),amount,scene:abundanceItemScene.value.trim(),updatedAt:Date.now()});}else practice.items.push({id:'abundance_item_'+Date.now(),name:abundanceItemName.value.trim(),amount,scene:abundanceItemScene.value.trim(),createdAt:Date.now()});saveAbundance(data);closeAbundanceEditor();clearAbundanceSelection();renderAbundanceToday(data);});
+abundanceTodayList.addEventListener('click',e=>{const row=e.target.closest('.ledger-row');if(!row)return;const data=loadAbundance(),p=data.current;if(!p||p.sealedAt)return;const item=p.items.find(i=>i.id===row.dataset.id);if(!item)return;if(e.target.closest('[data-edit]')){openAbundanceEditor(item);}if(e.target.closest('[data-delete]')){p.items=p.items.filter(i=>i.id!==item.id);saveAbundance(data);renderAbundanceToday(data);}});
+sealAbundanceDay.addEventListener('click',()=>{const data=loadAbundance(),p=data.current;if(!p||p.sealedAt||spentForPractice(p)!==p.amount||!p.items.length)return;p.sealedAt=Date.now();p.sealedDate=localDateKey();p.closingLine=closingLineFor(p);data.history.push(JSON.parse(JSON.stringify(p)));saveAbundance(data);renderAbundanceToday(data);});
 document.getElementById('openAbundanceHistory').addEventListener('click',()=>openAbundanceScreen('history'));abundanceHistoryList.addEventListener('click',e=>{const row=e.target.closest('[data-history-id]');if(row)showHistoryDetail(row.dataset.historyId);});
 
-function showFeatureForm(id){const form=document.getElementById(id);form.hidden=false;const date=form.querySelector('input[type=date]');if(date)date.value=localDateKey();}
+function showFeatureForm(id){const form=document.getElementById(id);form.reset();form.hidden=false;const date=form.querySelector('input[type=date]');if(date)date.value=localDateKey();}
 function collapseRealSourceCustoms(){document.querySelectorAll('[data-source-custom-target]').forEach(btn=>{btn.classList.remove('active');const target=document.getElementById(btn.dataset.sourceCustomTarget);if(target)target.hidden=true;});}
 function setRealSourceField(name,value,customInputId,customWrapId){const radios=[...document.querySelectorAll(`[name="${name}"]`)],match=radios.find(r=>r.value===value),input=document.getElementById(customInputId),wrap=document.getElementById(customWrapId),toggle=document.querySelector(`[data-source-custom-target="${customWrapId}"]`);if(match){match.checked=true;input.value='';wrap.hidden=true;toggle?.classList.remove('active');}else if(value){radios.forEach(r=>r.checked=false);input.value=value;wrap.hidden=false;toggle?.classList.add('active');}}
 function openRealEntryForm(item=null){const form=document.getElementById('realEntryForm');form.reset();collapseRealSourceCustoms();realEditingId=item?.id||null;form.hidden=false;if(item){document.getElementById('realEntryAmount').value=item.amount||'';document.getElementById('realEntryDate').value=item.date||localDateKey();document.getElementById('realEntryText').value=item.text||'';const legacy=String(item.source||'').split(' · ');setRealSourceField('realSourceObject',item.sourceObject||legacy[0]||'','realEntrySourceObjectCustom','realSourceObjectCustomWrap');setRealSourceField('realSourceMethod',item.sourceMethod||legacy[1]||'','realEntrySourceMethodCustom','realSourceMethodCustomWrap');}else document.getElementById('realEntryDate').value=localDateKey();form.scrollIntoView({behavior:'smooth',block:'nearest'});}
+function openGivingForm(item=null){const form=document.getElementById('givingEntryForm');form.reset();collapseRealSourceCustoms();givingEditingId=item?.id||null;form.hidden=false;document.getElementById('givingEntryDate').value=item?.date||localDateKey();document.getElementById('givingEntryText').value=item?.text||'';document.getElementById('givingEntryValue').value=item?.value||'';if(item){setRealSourceField('givingRecipient',item.recipient||'','givingRecipientCustom','givingRecipientCustomWrap');setRealSourceField('givingTypeObject',item.type||'','givingMethodCustom','givingMethodCustomWrap');}form.scrollIntoView({behavior:'smooth',block:'nearest'});}
+function openWishForm(item=null){const form=document.getElementById('wishEntryForm');form.reset();wishEditingId=item?.id||null;form.dataset.editDate=item?.date||'';form.hidden=false;document.getElementById('wishEntryName').value=item?.name||'';document.getElementById('wishEntryAmount').value=item?.amount||'';document.getElementById('wishEntryScene').value=item?.scene||'';const saved=item?.affirmation||ABUNDANCE_WISH_AFFIRMATIONS[0];wishAffirmationIndex=Math.max(0,ABUNDANCE_WISH_AFFIRMATIONS.indexOf(saved));document.getElementById('wishEntryAffirmation').value=saved;document.getElementById('wishAffirmationText').textContent=saved;form.scrollIntoView({behavior:'smooth',block:'nearest'});}
 document.querySelectorAll('[data-source-custom-target]').forEach(btn=>btn.addEventListener('click',()=>{const target=document.getElementById(btn.dataset.sourceCustomTarget),opening=target.hidden;target.hidden=!opening;btn.classList.toggle('active',opening);if(opening)setTimeout(()=>target.querySelector('input')?.focus(),0);}));
-document.getElementById('addRealEntry').addEventListener('click',()=>openRealEntryForm());document.getElementById('addGivingEntry').addEventListener('click',()=>showFeatureForm('givingEntryForm'));document.getElementById('addWishEntry').addEventListener('click',()=>showFeatureForm('wishEntryForm'));
-document.querySelectorAll('[data-cancel-feature]').forEach(btn=>btn.addEventListener('click',()=>{const form=btn.closest('form');form.hidden=true;if(form.id==='realEntryForm'){realEditingId=null;form.reset();collapseRealSourceCustoms();}}));
+document.getElementById('addRealEntry').addEventListener('click',()=>openRealEntryForm());document.getElementById('addGivingEntry').addEventListener('click',()=>openGivingForm());document.getElementById('addWishEntry').addEventListener('click',()=>openWishForm());
+document.querySelectorAll('[data-cancel-feature]').forEach(btn=>btn.addEventListener('click',()=>{const form=btn.closest('form');form.hidden=true;if(form.id==='realEntryForm'){realEditingId=null;form.reset();collapseRealSourceCustoms();}if(form.id==='givingEntryForm'){givingEditingId=null;form.reset();collapseRealSourceCustoms();}if(form.id==='wishEntryForm')wishEditingId=null;}));
 document.getElementById('realEntryForm').addEventListener('submit',e=>{e.preventDefault();const data=loadAbundance(),objectCustom=document.getElementById('realEntrySourceObjectCustom').value.trim(),methodCustom=document.getElementById('realEntrySourceMethodCustom').value.trim(),sourceObject=objectCustom||e.currentTarget.querySelector('[name=realSourceObject]:checked')?.value||'',sourceMethod=methodCustom||e.currentTarget.querySelector('[name=realSourceMethod]:checked')?.value||'',source=[sourceObject,sourceMethod].filter(Boolean).join(' · '),value={text:document.getElementById('realEntryText').value.trim(),type:'cash',amount:Math.max(0,Math.round(Number(document.getElementById('realEntryAmount').value)||0)),source,sourceObject,sourceMethod,date:document.getElementById('realEntryDate').value};if(realEditingId){const item=data.realAbundance.find(i=>i.id===realEditingId);if(item)Object.assign(item,value,{updatedAt:Date.now()});}else data.realAbundance.push({id:'real_'+Date.now(),...value,createdAt:Date.now()});saveAbundance(data);realEditingId=null;e.currentTarget.reset();collapseRealSourceCustoms();e.currentTarget.hidden=true;renderRealAbundance(data);});
 document.getElementById('realTimeline').addEventListener('click',e=>{const row=e.target.closest('[data-real-id]');if(!row)return;const data=loadAbundance(),item=data.realAbundance.find(i=>i.id===row.dataset.realId);if(!item)return;if(e.target.closest('[data-real-edit]')){openRealEntryForm(item);return;}if(e.target.closest('[data-real-delete]')){if(!confirm('删除这条现实丰盛记录？'))return;data.realAbundance=data.realAbundance.filter(i=>i.id!==item.id);saveAbundance(data);renderRealAbundance(data);}});
-document.getElementById('givingEntryForm').addEventListener('submit',e=>{e.preventDefault();const data=loadAbundance();data.giving.push({id:'giving_'+Date.now(),text:document.getElementById('givingEntryText').value.trim(),type:document.getElementById('givingEntryType').value,value:document.getElementById('givingEntryValue').value.trim(),date:document.getElementById('givingEntryDate').value,createdAt:Date.now()});saveAbundance(data);e.currentTarget.reset();e.currentTarget.hidden=true;renderGiving(data);});
-document.getElementById('wishEntryForm').addEventListener('submit',e=>{e.preventDefault();const data=loadAbundance();data.wishes.push({id:'wish_'+Date.now(),name:document.getElementById('wishEntryName').value.trim(),amount:Math.max(0,Math.round(Number(document.getElementById('wishEntryAmount').value)||0)),scene:document.getElementById('wishEntryScene').value.trim(),date:localDateKey(),createdAt:Date.now()});saveAbundance(data);e.currentTarget.reset();e.currentTarget.hidden=true;renderWishes(data);});
-document.getElementById('wishList').addEventListener('click',e=>{const card=e.target.closest('[data-wish-id]');if(!card||!e.target.closest('[data-wish-to-basket]'))return;const data=loadAbundance(),wish=data.wishes.find(w=>w.id===card.dataset.wishId);if(!wish)return;openAbundanceScreen('today');openAbundanceEditor({name:wish.name,amount:wish.amount||'',scene:wish.scene||''});});
+document.getElementById('givingEntryForm').addEventListener('submit',e=>{e.preventDefault();const data=loadAbundance(),recipientCustom=document.getElementById('givingRecipientCustom').value.trim(),methodCustom=document.getElementById('givingMethodCustom').value.trim(),value={text:document.getElementById('givingEntryText').value.trim(),recipient:recipientCustom||e.currentTarget.querySelector('[name=givingRecipient]:checked')?.value||'',type:methodCustom||e.currentTarget.querySelector('[name=givingTypeObject]:checked')?.value||'',value:document.getElementById('givingEntryValue').value.trim(),date:document.getElementById('givingEntryDate').value};if(!value.recipient||!value.type)return;if(givingEditingId){const item=data.giving.find(i=>i.id===givingEditingId);if(item)Object.assign(item,value,{updatedAt:Date.now()});}else data.giving.push({id:'giving_'+Date.now(),...value,createdAt:Date.now()});saveAbundance(data);givingEditingId=null;e.currentTarget.reset();collapseRealSourceCustoms();e.currentTarget.hidden=true;renderGiving(data);});
+document.getElementById('givingTimeline').addEventListener('click',e=>{const row=e.target.closest('[data-giving-id]');if(!row)return;const data=loadAbundance(),item=data.giving.find(i=>i.id===row.dataset.givingId);if(!item)return;if(e.target.closest('[data-giving-edit]')){openGivingForm(item);return;}if(e.target.closest('[data-giving-delete]')){if(!confirm('删除这条给予记录？'))return;data.giving=data.giving.filter(i=>i.id!==item.id);saveAbundance(data);renderGiving(data);}});
+document.getElementById('nextWishAffirmation').addEventListener('click',()=>{wishAffirmationIndex=(wishAffirmationIndex+1)%ABUNDANCE_WISH_AFFIRMATIONS.length;const line=ABUNDANCE_WISH_AFFIRMATIONS[wishAffirmationIndex];document.getElementById('wishEntryAffirmation').value=line;document.getElementById('wishAffirmationText').textContent=line;});
+document.getElementById('wishEntryForm').addEventListener('submit',e=>{e.preventDefault();const data=loadAbundance(),value={name:document.getElementById('wishEntryName').value.trim(),amount:Math.max(0,Math.round(Number(document.getElementById('wishEntryAmount').value)||0)),scene:document.getElementById('wishEntryScene').value.trim(),affirmation:document.getElementById('wishEntryAffirmation').value||ABUNDANCE_WISH_AFFIRMATIONS[0],date:e.currentTarget.dataset.editDate||localDateKey()};if(wishEditingId){const item=data.wishes.find(i=>i.id===wishEditingId);if(item)Object.assign(item,value,{updatedAt:Date.now()});}else data.wishes.push({id:'wish_'+Date.now(),...value,createdAt:Date.now()});saveAbundance(data);wishEditingId=null;e.currentTarget.reset();e.currentTarget.hidden=true;renderWishes(data);});
+document.getElementById('wishIdeaList').addEventListener('click',e=>{const btn=e.target.closest('button');if(!btn)return;if(btn.hasAttribute('data-wish-self')){openWishForm();return;}if(btn.dataset.wishIdea){openWishForm();document.getElementById('wishEntryName').value=btn.dataset.wishIdea;document.getElementById('wishEntryAmount').value=Number(btn.dataset.wishAmount)||'';}});
+document.getElementById('wishList').addEventListener('click',e=>{const card=e.target.closest('[data-wish-id]');if(!card)return;const data=loadAbundance(),wish=data.wishes.find(w=>w.id===card.dataset.wishId);if(!wish)return;if(e.target.closest('[data-wish-edit]')){openWishForm(wish);return;}if(e.target.closest('[data-wish-delete]')){if(!confirm('删除这个愿望？'))return;data.wishes=data.wishes.filter(w=>w.id!==wish.id);saveAbundance(data);renderWishes(data);return;}if(e.target.closest('[data-wish-to-today]')){openAbundanceScreen('today');openAbundanceEditor({name:wish.name,amount:wish.amount||'',scene:wish.scene||''});}});
 
 updateCount();
 
