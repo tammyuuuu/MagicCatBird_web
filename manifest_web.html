@@ -1711,29 +1711,28 @@
     body[data-theme="parchment"] .wish-bottle { --bottle-line:#c09a50;--bottle-line-soft:rgba(203,167,92,.42);--bottle-glass:rgba(75,25,36,.66);--bottle-depth:rgba(17,58,49,.64);--bottle-glint:#f0d990;--bottle-star:#f1d994;--note-bg:linear-gradient(145deg,rgba(74,26,38,.94),rgba(20,53,46,.92));--note-line:rgba(203,167,92,.72);--note-ink:#f1d994; }
     body[data-theme="dopamine"] .wish-bottle { --bottle-line:#91cbe6;--bottle-line-soft:rgba(145,203,230,.38);--bottle-glass:rgba(242,168,197,.22);--bottle-depth:rgba(191,228,210,.3);--bottle-glint:#fff;--bottle-star:#df72a5;--note-bg:linear-gradient(155deg,rgba(255,255,255,.94),rgba(240,248,250,.9));--note-line:rgba(145,203,230,.7);--note-ink:#607c91;filter:drop-shadow(0 8px 11px rgba(112,129,151,.14)) drop-shadow(0 0 8px rgba(145,203,230,.2)); }
     /* ===== 三种仪式入口与丰盛练习（增量层） ===== */
-    #activateBtn {
+    /* 星夜紫晶（默认）：仅在没有 data-theme 时生效，四套配色各自覆盖 */
+    body:not([data-theme]) #activateBtn {
       background:linear-gradient(155deg,rgba(42,19,68,.96),rgba(27,10,48,.96));
       border-color:#a967d3;color:#f0d8ff;
       box-shadow:0 0 19px rgba(180,91,205,.3),inset 0 0 13px rgba(232,139,211,.08);
     }
-    #activateBtn::before { border-color:rgba(214,121,205,.38); }
-    #activateBtn:hover:not(:disabled),#activateBtn.active {
+    body:not([data-theme]) #activateBtn::before { border-color:rgba(214,121,205,.38); }
+    body:not([data-theme]) #activateBtn:hover:not(:disabled),
+    body:not([data-theme]) #activateBtn.active {
       background:linear-gradient(155deg,rgba(69,27,91,.98),rgba(42,14,66,.98));
       border-color:#e08acb;color:#ffe8fb;
       box-shadow:0 0 32px rgba(202,103,197,.48),inset 0 0 16px rgba(239,147,211,.13);
     }
-    #activateBtn .btn-star,#activateBtn.active .btn-star { color:#e8a4db;text-shadow:0 0 7px rgba(232,126,208,.62); }
-    #activateBtn.locked { cursor:default;opacity:1;filter:none;box-shadow:0 0 19px rgba(180,91,205,.3),inset 0 0 13px rgba(232,139,211,.08); }
-    #activateBtn.locked:hover {
+    body:not([data-theme]) #activateBtn .btn-star,
+    body:not([data-theme]) #activateBtn.active .btn-star { color:#e8a4db;text-shadow:0 0 7px rgba(232,126,208,.62); }
+    body:not([data-theme]) #activateBtn.locked { cursor:default;opacity:1;filter:none;box-shadow:0 0 19px rgba(180,91,205,.3),inset 0 0 13px rgba(232,139,211,.08); }
+    body:not([data-theme]) #activateBtn.locked:hover {
       opacity:1;filter:none;
       background:linear-gradient(155deg,rgba(69,27,91,.98),rgba(42,14,66,.98));
       border-color:#e08acb;color:#ffe8fb;
       box-shadow:0 0 32px rgba(202,103,197,.48),inset 0 0 16px rgba(239,147,211,.13);
     }
-    body[data-theme="noir"] #activateBtn,body[data-theme="parchment"] #activateBtn,body[data-theme="dopamine"] #activateBtn {
-      background:linear-gradient(155deg,rgba(42,19,68,.96),rgba(27,10,48,.96));border-color:#a967d3;color:#f0d8ff;box-shadow:0 0 19px rgba(180,91,205,.3),inset 0 0 13px rgba(232,139,211,.08);
-    }
-    body[data-theme="noir"] #activateBtn .btn-star,body[data-theme="parchment"] #activateBtn .btn-star,body[data-theme="dopamine"] #activateBtn .btn-star { color:#e8a4db;text-shadow:0 0 7px rgba(232,126,208,.62); }
     .ritual-mode-btn {
       position:fixed;bottom:42px;z-index:30;width:44px;height:44px;padding:0;
       border-radius:50%;font-family:inherit;cursor:pointer;
@@ -1752,6 +1751,95 @@
     #loveModeBtn:hover { transform:translateX(50%) scale(1.08); }
     #abundanceModeBtn:hover,#abundanceModeBtn.active { border-color:#f0cc79;background:rgba(67,44,23,.76);box-shadow:0 0 24px rgba(226,177,76,.34); }
     #loveModeBtn:hover,#loveModeBtn.active { border-color:#e5aac5;background:rgba(69,31,58,.75);box-shadow:0 0 24px rgba(208,127,165,.27); }
+
+    /* ----- 三种仪式入口跟随页面配色：显化 / 丰盛 / 爱 ----- */
+    /* 霜白墨羽：象牙白玻璃 + 墨色镂空线稿，悬停反白为实心墨 */
+    body[data-theme="noir"] #abundanceModeBtn,
+    body[data-theme="noir"] #loveModeBtn {
+      color:#252529;border-color:#252529;background:rgba(255,253,249,.82);
+      box-shadow:0 5px 14px rgba(0,0,0,.1);
+    }
+    body[data-theme="noir"] #abundanceModeBtn:hover,
+    body[data-theme="noir"] #abundanceModeBtn.active,
+    body[data-theme="noir"] #loveModeBtn:hover,
+    body[data-theme="noir"] #loveModeBtn.active {
+      color:#fff;border-color:#17171a;background:#17171a;
+      box-shadow:0 0 22px rgba(23,23,26,.26),0 0 0 4px rgba(23,23,26,.1);
+    }
+    body[data-theme="noir"] #abundanceModeBtn svg circle { fill:rgba(23,23,26,.1); }
+    body[data-theme="noir"] #loveModeBtn svg path[fill] { fill:rgba(23,23,26,.08); }
+    body[data-theme="noir"] #activateBtn:hover:not(:disabled):not(.active),
+    body[data-theme="noir"] #activateBtn.locked:hover {
+      background:#17171a;border-color:#17171a;color:#fff;
+      box-shadow:0 0 22px rgba(23,23,26,.26),0 6px 16px rgba(0,0,0,.18);
+    }
+    body[data-theme="noir"] #activateBtn:hover:not(:disabled) .btn-star { color:#fff;text-shadow:none; }
+    body[data-theme="noir"] #activateBtn::before { border-color:rgba(23,23,26,.3); }
+    body[data-theme="noir"] .ritual-mode-btn::after { background:rgba(255,253,249,.97); }
+
+    /* 琥珀秘卷：古铜包边的深色珐琅，丰盛走金、爱走玫瑰金 */
+    body[data-theme="parchment"] #abundanceModeBtn,
+    body[data-theme="parchment"] #loveModeBtn {
+      border:2px solid #b89049;color:#f0d686;
+      background:radial-gradient(circle at 36% 28%,rgba(255,231,165,.12),transparent 23%),radial-gradient(circle,#54202c 0 58%,#251318 72%);
+      box-shadow:0 6px 17px rgba(0,0,0,.38),0 0 0 2px rgba(66,39,22,.85),0 0 0 3px rgba(202,163,82,.35),inset 0 0 10px rgba(238,198,105,.09);
+    }
+    body[data-theme="parchment"] #loveModeBtn {
+      border-color:rgba(198,139,160,.75);color:#eab8c9;
+      background:radial-gradient(circle at 36% 28%,rgba(255,231,165,.1),transparent 23%),radial-gradient(circle,#4a2338 0 58%,#1e1020 72%);
+    }
+    body[data-theme="parchment"] #abundanceModeBtn:hover,
+    body[data-theme="parchment"] #abundanceModeBtn.active {
+      border-color:#f0cc79;color:#fff0bd;
+      background:radial-gradient(circle,#5f2634 0 58%,#2b171d 72%);
+      box-shadow:0 0 24px rgba(226,177,76,.34),0 0 0 2px rgba(75,44,24,.9),0 0 0 3px rgba(224,193,116,.48);
+    }
+    body[data-theme="parchment"] #loveModeBtn:hover,
+    body[data-theme="parchment"] #loveModeBtn.active {
+      border-color:#e5aac5;color:#ffe0ec;
+      background:radial-gradient(circle,#552a42 0 58%,#221226 72%);
+      box-shadow:0 0 24px rgba(208,127,165,.27),0 0 0 2px rgba(75,44,24,.9),0 0 0 3px rgba(224,193,116,.3);
+    }
+    body[data-theme="parchment"] #abundanceModeBtn svg circle { fill:rgba(91,61,23,.42); }
+    body[data-theme="parchment"] #loveModeBtn svg path[fill] { fill:rgba(111,49,78,.3); }
+    body[data-theme="parchment"] #activateBtn:hover:not(:disabled),
+    body[data-theme="parchment"] #activateBtn.active,
+    body[data-theme="parchment"] #activateBtn.locked:hover {
+      background:linear-gradient(155deg,#5a2030,#1c453c);border-color:#e0c174;color:#fff0bd;
+      box-shadow:0 0 26px rgba(203,167,92,.3),inset 0 0 14px rgba(255,222,139,.1);
+    }
+    body[data-theme="parchment"] #activateBtn::before { border-color:rgba(221,181,92,.42); }
+    body[data-theme="parchment"] .ritual-mode-btn::after { background:linear-gradient(145deg,rgba(74,26,38,.97),rgba(22,55,48,.97)); }
+
+    /* 雾糖奇遇：雾白玻璃 + 低饱和糖果色描边（丰盛奶油黄 / 爱 糖果粉） */
+    body[data-theme="dopamine"] #abundanceModeBtn,
+    body[data-theme="dopamine"] #loveModeBtn {
+      background:radial-gradient(circle at 35% 26%,rgba(255,255,255,.95),rgba(255,255,255,.58) 42%,rgba(244,246,250,.7));
+      box-shadow:0 6px 15px rgba(112,129,151,.13),inset 0 0 0 2px rgba(255,255,255,.62);
+    }
+    body[data-theme="dopamine"] #abundanceModeBtn { border-color:#e7c977;color:#8a7540; }
+    body[data-theme="dopamine"] #loveModeBtn { border-color:#e598b8;color:#b66788; }
+    body[data-theme="dopamine"] #abundanceModeBtn:hover,
+    body[data-theme="dopamine"] #abundanceModeBtn.active {
+      border-color:#f0dd9a;color:#7b6534;background:rgba(255,255,255,.94);
+      box-shadow:0 8px 20px rgba(112,129,151,.17),0 0 0 3px rgba(255,255,255,.6),0 0 18px rgba(231,201,119,.32);
+    }
+    body[data-theme="dopamine"] #loveModeBtn:hover,
+    body[data-theme="dopamine"] #loveModeBtn.active {
+      border-color:#f2a8c5;color:#a85f7d;background:rgba(255,255,255,.94);
+      box-shadow:0 8px 20px rgba(112,129,151,.17),0 0 0 3px rgba(255,255,255,.6),0 0 18px rgba(229,152,184,.34);
+    }
+    body[data-theme="dopamine"] #abundanceModeBtn svg circle { fill:rgba(242,226,163,.55); }
+    body[data-theme="dopamine"] #loveModeBtn svg path[fill] { fill:rgba(242,168,197,.34); }
+    body[data-theme="dopamine"] #activateBtn:hover:not(:disabled),
+    body[data-theme="dopamine"] #activateBtn.active,
+    body[data-theme="dopamine"] #activateBtn.locked:hover {
+      background:rgba(255,255,255,.94);border-color:#e598b8;color:#b66788;
+      box-shadow:0 0 24px rgba(229,152,184,.32),0 0 0 4px rgba(255,255,255,.5);
+    }
+    body[data-theme="dopamine"] #activateBtn::before { border-color:rgba(229,152,184,.42); }
+    body[data-theme="dopamine"] .ritual-mode-btn::after { background:rgba(255,255,255,.97); }
+
     body.ritual-special #altarClearBtn,body.ritual-special #manifestRecordBtn,body.ritual-special #intentionTab,body.ritual-special #divTab,body.ritual-special #recTab { opacity:0;pointer-events:none; }
     body.ritual-special #guidance { opacity:0; }
     body.ritual-special #altar .altar-item { opacity:.08;filter:blur(2px);pointer-events:none; }
