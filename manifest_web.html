@@ -2382,15 +2382,28 @@
     body:is([data-theme="noir"],[data-theme="dopamine"]) #recordDrawer .record-item:hover { border-color:var(--library-accent);background:rgba(255,255,255,.9); }
 
     /* 蜡烛沿用历史图片，通过主题滤镜同步库预览与圆阵。 */
-    body { --candle-tint:none;--candle-glow:rgba(255,190,118,.4); }
-    body[data-theme="noir"] { --candle-tint:grayscale(1);--candle-glow:rgba(37,37,41,.16); }
-    body[data-theme="parchment"] { --candle-tint:sepia(.65) saturate(1.35);--candle-glow:rgba(203,167,92,.4); }
-    body[data-theme="dopamine"] { --candle-tint:sepia(.3) saturate(.8) hue-rotate(295deg);--candle-glow:rgba(229,152,184,.4); }
+    body { --candle-tint:sepia(1) saturate(1.4) hue-rotate(215deg);--candle-glow:rgba(181,139,223,.4);--candle-flame:#d8b9f2; }
+    body[data-theme="noir"] { --candle-tint:grayscale(1) contrast(1.15);--candle-glow:rgba(37,37,41,.16);--candle-flame:#ece8df; }
+    body[data-theme="parchment"] { --candle-tint:sepia(1) saturate(1.8) brightness(.9);--candle-glow:rgba(203,167,92,.4);--candle-flame:#efd584; }
+    body[data-theme="dopamine"] { --candle-tint:sepia(1) saturate(1.5) hue-rotate(290deg);--candle-glow:rgba(229,152,184,.4);--candle-flame:#f2a8c5; }
     body .divination-item .di-candle-preview,body .altar-candle { filter:drop-shadow(0 0 6px var(--candle-glow)); }
     body .di-candle-preview img,body .altar-candle img { filter:var(--candle-tint); }
+    body[data-theme="noir"] .di-candle-preview img,body[data-theme="noir"] .altar-candle img,body[data-theme="dopamine"] .di-candle-preview img,body[data-theme="dopamine"] .altar-candle img { filter:none; }
+    body .altar-candle-flame { background:radial-gradient(ellipse at 50% 70%,#fff9ed 0%,var(--candle-flame) 55%,transparent 75%);box-shadow:0 0 14px var(--candle-glow); }
 </style>
   <link rel="stylesheet" href="world_switch.css">
+<style>
+body[data-theme="noir"] .di-candle-preview{width:16px;height:52px;}
+body[data-theme="noir"] .altar-candle{width:40px;height:130px;}
+body[data-theme="noir"] :is(.di-candle-preview,.altar-candle) img{width:581.82%;height:238.7%;left:-221.21%;top:-71.33%;}
+body[data-theme="dopamine"] .di-candle-preview{width:8px;height:54px;}
+body[data-theme="dopamine"] .altar-candle{width:20px;height:136px;}
+body[data-theme="dopamine"] :is(.di-candle-preview,.altar-candle) img{width:1301.7%;height:255.68%;left:-600.85%;top:-23.35%;}
+body:not([data-theme]) .altar-candle-flame,body[data-theme="mystic"] .altar-candle-flame,body[data-theme="parchment"] .altar-candle-flame{top:-16px;}
+body[data-theme="noir"] .altar-candle-flame{background:radial-gradient(ellipse at 50% 70%,#fff2d9 0 14%,#ff7755 35%,#df3d35 65%,transparent 80%);filter:drop-shadow(0 0 6px #d94a3a99);box-shadow:0 0 14px #d94a3a55;}
+</style>
 <link rel="stylesheet" href="theme_panel.css">
+<style>/* M394：圆阵圣物不显示名称小字。 */ .altar-item .altar-item-label{display:none!important;}</style>
 <script src="pwa.js" defer></script>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/webp" sizes="192x192" href="icons/icon-192.webp?v=icon1">
@@ -2850,6 +2863,7 @@ function applyManifestTheme(theme, persist = true) {
   const nextTheme = MANIFEST_THEMES.has(theme) ? theme : 'mystic';
   if (nextTheme === 'mystic') document.body.removeAttribute('data-theme');
   else document.body.dataset.theme = nextTheme;
+  document.querySelectorAll('.di-candle-preview img,.altar-candle img').forEach(image=>image.src=manifestCandleImage(nextTheme));
   manifestThemeDots.forEach(dot => {
     const active = dot.dataset.theme === nextTheme;
     dot.classList.toggle('active', active);
@@ -2857,6 +2871,7 @@ function applyManifestTheme(theme, persist = true) {
   });
   if (persist) localStorage.setItem(MANIFEST_THEME_KEY, nextTheme);
 }
+function manifestCandleImage(theme=document.body.dataset.theme){return theme==='noir'?'图片/蜡烛/+_candle.png':theme==='dopamine'?'图片/蜡烛/kwi_candle.png':'图片/蜡烛/candle.png';}
 
 manifestThemeDots.forEach(dot => dot.addEventListener('click', () => applyManifestTheme(dot.dataset.theme)));
 applyManifestTheme(localStorage.getItem(MANIFEST_THEME_KEY) || 'mystic', false);
@@ -3116,7 +3131,7 @@ function renderDivinationItems() {
   grid.innerHTML = DIVINATION_ITEMS.map(item => `
     <div class="divination-item" data-item-id="${item.id}" style="--item-glow:${item.glow || '255,190,118'}">
       ${item.type === 'candle'
-        ? `<span class="di-candle-preview"><img src="${item.image}" alt="${item.name}" draggable="false"></span>`
+        ? `<span class="di-candle-preview"><img src="${manifestCandleImage()}" alt="${item.name}" draggable="false"></span>`
         : `<img class="di-image" src="${item.image}" alt="${item.name}" draggable="false">`}
       <span class="di-label">${item.name}</span>
     </div>
@@ -3163,7 +3178,7 @@ function addToAltar(data) {
     el.style.left = (cx - 29) + 'px';
     el.style.top = (cy - 46) + 'px';
   } else if (data.type === 'candle') {
-    el.innerHTML = `<div class="altar-candle"><div class="altar-candle-crop"><img src="${data.image}" alt="${data.name}" draggable="false"></div><span class="altar-candle-flame"></span></div><span class="altar-item-label">${data.name}</span>`;
+    el.innerHTML = `<div class="altar-candle"><div class="altar-candle-crop"><img src="${manifestCandleImage()}" alt="${data.name}" draggable="false"></div><span class="altar-candle-flame"></span></div><span class="altar-item-label">${data.name}</span>`;
     el.style.left = (cx - 14) + 'px';
     el.style.top = (cy - 66) + 'px';
   } else {
@@ -4257,6 +4272,7 @@ console.log('显化之境已开启');
 </script>
 </body>
 </html>
+
 
 
 

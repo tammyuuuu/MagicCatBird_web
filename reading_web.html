@@ -7974,8 +7974,8 @@ function persistRecords(records) {
 function beginTarotRecord() {
   pendingDice = null;
   pendingSpread = null;
-  if (activeSpread) {
-    if (!placedCards.length) { alert('请先放入卡牌'); return; }
+  if (activeSpread || placedCards.some(c=>c.isConnected)) {
+    if (!placedCards.some(c=>c.isConnected)) { alert('请先放入卡牌'); return; }
     pendingSpread = captureSpread();
     _captureDataUrl = null;
     openRecordPage(null);
@@ -8552,6 +8552,21 @@ const themedCandleFrontArt = document.querySelector('#candleStand .candle-front-
 </script>
 
 <script src="card_images.js"></script>
+<style>
+/* M392：按主题图片真实边界显示完整蜡烛。 */
+body:not([data-theme]) .placed-candle:not(.in-candle-stand) .candle-ui-flame,body[data-theme="mystic"] .placed-candle:not(.in-candle-stand) .candle-ui-flame,body[data-theme="parchment"] .placed-candle:not(.in-candle-stand) .candle-ui-flame{top:-17px;}
+body:not([data-theme]) .placed-candle.in-candle-stand .candle-ui-flame,body[data-theme="mystic"] .placed-candle.in-candle-stand .candle-ui-flame,body[data-theme="parchment"] .placed-candle.in-candle-stand .candle-ui-flame{margin-top:-5px;}
+body[data-theme="noir"] .placed-candle .candle-ui-flame::before{background:radial-gradient(ellipse at 50% 70%,#fff2d9 0 14%,#ff7755 35%,#df3d35 65%,transparent 80%);filter:drop-shadow(0 0 6px #d94a3a99);}
+body[data-theme="noir"] .placed-candle .candle-ui-flame::after{background:#df3d35;}
+body[data-theme="noir"] .bag-candle-preview{width:18px;height:58px;}
+body[data-theme="noir"] .bag-candle-preview img,body[data-theme="noir"] .placed-candle:not(.in-candle-stand) .candle-image{width:581.82%;height:238.7%;left:-221.21%;top:-71.33%;}
+body[data-theme="dopamine"] .bag-candle-preview{width:8px;height:54px;}
+body[data-theme="dopamine"] .bag-candle-preview img,body[data-theme="dopamine"] .placed-candle:not(.in-candle-stand) .candle-image{width:1301.7%;height:255.68%;left:-600.85%;top:-23.35%;}
+body[data-theme="dopamine"] .placed-candle:not(.in-candle-stand){width:22px;height:149px;}
+/* M391：紫色与暖金蜡烛，黑白雾糖保留原图。 */
+body:not([data-theme]) :is(.candle-image,.bag-candle-preview img),body[data-theme="mystic"] :is(.candle-image,.bag-candle-preview img){filter:sepia(1) saturate(1.4) hue-rotate(215deg);}
+body[data-theme="parchment"] :is(.candle-image,.bag-candle-preview img){filter:sepia(1) saturate(1.8) brightness(.9);}
+</style>
 <link rel="stylesheet" href="dice_flying.css?v=m367">
 <script src="dice_flying.js?v=m367"></script>
 <script src="spread.js"></script>

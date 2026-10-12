@@ -270,8 +270,10 @@ window.addEventListener('resize', () => {
 });
 
 function captureSpread() {
-  const g = spreadGeometry();
-  return { type: activeSpread, slots: spreadSlots(), swapped: activeSpread === 'inspiration' && inspirationSwapped, aspect: g.width / g.height, cards: placedCards.filter(c => c.isConnected).map(c => {
+  const cards=placedCards.filter(c=>c.isConnected),auto=!activeSpread||cards.some(c=>c.dataset.spreadSlot===undefined);
+  let g = auto?null:spreadGeometry();
+  if(auto){const rects=cards.map(c=>c.getBoundingClientRect()),pad=24;const left=Math.min(...rects.map(r=>r.left))-pad,top=Math.min(...rects.map(r=>r.top))-pad;g={left,top,width:Math.max(...rects.map(r=>r.right))-left+pad,height:Math.max(...rects.map(r=>r.bottom))-top+pad};}
+  return { type: activeSpread||'free', auto, slots:activeSpread?spreadSlots():[], swapped: activeSpread === 'inspiration' && inspirationSwapped, aspect: g.width / g.height, cards: cards.map(c => {
     const r = c.getBoundingClientRect();
     return { data: c._cardData, reversed: c.dataset.reversed === 'true', revealed: c.classList.contains('revealed'), slot: c.dataset.spreadSlot, html: c.innerHTML, className: c.className, ratio: c.style.getPropertyValue('--card-image-ratio'), x: (r.x - g.left) / g.width, y: (r.y - g.top) / g.height, w: r.width / g.width };
   }) };
@@ -279,11 +281,11 @@ function captureSpread() {
 function showSpreadRecord(spread) {
   rpPhoto.replaceChildren();
   const tip = document.createElement('div'); tip.className = 'spread-record-tip';
-  tip.textContent = `${SPREADS[spread.type].name} · 点击卡牌放大查看`;
+  tip.textContent = `${SPREADS[spread.type]?.name||'自由牌阵'} · 点击卡牌放大查看`;
   const board = document.createElement('div'); board.className = 'spread-record-board';
   board.dataset.spread = spread.type;
-  const positions = spread.slots || SPREADS[spread.type].slots;
-  const boardAspect = spread.type === 'three' ? 2 : 1.6;
+  const positions = spread.slots || SPREADS[spread.type]?.slots || [];
+  const boardAspect = spread.auto?spread.aspect:spread.type === 'three' ? 2 : 1.6;
   const recordRatio = saved => saved?.className?.includes('theme-tarot-placement') ? 0.618034 : Number(saved?.ratio) || 2 / 3;
   const defaultRatio = spread.cards.length ? recordRatio(spread.cards[0]) : 0.618034;
   let rowGap = 1;
@@ -292,7 +294,7 @@ function showSpreadRecord(spread) {
   }));
   const cardFraction = Math.min(.22, rowGap * .76 * defaultRatio / boardAspect * .82);
   board.style.aspectRatio = String(boardAspect);
-  positions.forEach(([label, x, y], index) => {
+  (spread.auto?[]:positions).forEach(([label, x, y], index) => {
     const slot = document.createElement('div'); slot.className = 'spread-record-slot';
     const saved = spread.cards.find(card => String(card.slot) === String(index));
     const ratio = saved ? recordRatio(saved) : defaultRatio;
@@ -307,7 +309,7 @@ function showSpreadRecord(spread) {
     card.dataset.cardId = saved.data.id; card.dataset.reversed = String(saved.reversed);
     card.style.setProperty('--card-image-ratio', String(recordRatio(saved)));
     Object.assign(card.style, { position: 'absolute', left: `${saved.x * 100}%`, top: `${saved.y * 100}%`, width: `${saved.w * 100}%`, transform: 'none', margin: '0' });
-    const position = saved.slot !== undefined ? positions[Number(saved.slot)] : null;
+    const position = !spread.auto&&saved.slot !== undefined ? positions[Number(saved.slot)] : null;
     if (position) Object.assign(card.style, { left: `${position[1] * 100}%`, top: `${(.12 + position[2] * .76) * 100}%`, width: `${cardFraction * 100}%`, transform: 'translate(-50%, -50%)' });
     card.onclick = () => openCardZoom(card, saved.data.name);
     board.append(card);
@@ -322,5 +324,6 @@ new MutationObserver(() => {
   renderSpread();
   placedCards.filter(c => c.dataset.spreadSlot !== undefined).forEach(c => snapToSpread(c, true));
 }).observe(fanArea, { attributes: true, attributeFilter: ['class'] });
+
 
 
