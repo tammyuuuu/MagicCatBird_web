@@ -1,11 +1,11 @@
-﻿tmp/
+tmp/
 书/
 node_modules/
 tools/.validation_python/
 工具/
 项目管理/
 图片/待审核/
-图片/已批准/
+图片/已批准/*
 图片/已弃用/
 图片/+
 
@@ -22,3 +22,10 @@ tools/tw_geonames/
 tools/tw_geonames.zip
 china_cities_source.json
 china_cities_LICENSE.txt
+
+# 卦录入口正式素材
+!图片/已批准/baihu_records_whitejade_web_v03.svg
+!图片/已批准/xuanwu_records_bluejade_web_v04.svg
+!图片/已批准/qinglong_records_jade_web_v03.svg
+!图片/已批准/zhuque_records_agate_web_v01.svg
+
