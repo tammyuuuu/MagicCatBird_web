@@ -1,0 +1,19 @@
+#themeToggle, #themeSheet, #themeSheetBackdrop, #libraryTheme { display:none !important; }
+.web-theme-dots { position:fixed; top:20px; left:50vw; transform:translateX(-50%); display:flex; gap:14px; align-items:center; z-index:950; }
+.web-theme-dots button { position:relative; width:16px; height:16px; padding:0; border:1px solid rgba(255,255,255,.5); border-radius:50%; cursor:pointer; }
+.web-theme-dots button[data-theme="mystic"] { background:#8f62d1; border-color:#d4b35f; }
+.web-theme-dots button[data-theme="noir"] { background:#fffdf9; border-color:#666; }
+.web-theme-dots button[data-theme="parchment"] { background:#4a1722; border-color:#c9a454; }
+.web-theme-dots button[data-theme="dopamine"] { background:linear-gradient(135deg,#f2a8c5 0 35%,#a9d8ee 35% 68%,#bfe4d2 68%); border-color:#dfa5bd; }
+.web-theme-dots button[aria-pressed="true"]::after { content:''; position:absolute; inset:-5px; border:1px solid var(--ui-gold,#b6a0cf); border-radius:50%; }
+.web-theme-dots button:hover { transform:scale(1.15); }
+.web-theme-dots button:focus-visible { outline:2px solid #b6a0cf; outline-offset:5px; }
+body.ritual-mode .web-theme-dots { display:none; }
+/* One shared navigation size across the three desktop pages. */
+body :is(.top-nav a, .ui-nav-link, .ui-top-nav a) {
+  display:inline-flex; align-items:center; justify-content:center;
+  height:36px; min-height:36px; padding:0 16px !important; box-sizing:border-box;
+  border-width:1px; border-style:solid; border-radius:18px;
+  font-family:"Songti SC","SimSun",serif !important; font-size:12px; font-weight:400; line-height:1;
+  letter-spacing:2px; text-decoration:none; white-space:nowrap;
+}

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
+<head><link rel="stylesheet" href="web_theme_dots.css"><script defer src="web_theme_dots.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>显化之境 · 意念成真</title>
@@ -505,11 +505,11 @@
       text-shadow: 0 0 6px color-mix(in srgb, currentColor 35%, transparent);
     }
     #divTab.drawer-bookmark {
-      top: calc(50% - 78px); color: #f1d49a; border-color: #d5a553;
+      top: calc(50% + 23px); color: #f1d49a; border-color: #d5a553;
       background: linear-gradient(90deg, rgba(28,18,45,.97), rgba(24,13,44,.93));
     }
     #recTab.drawer-bookmark {
-      top: calc(50% + 23px); color: #b9def1; border-color: #5ba4cd;
+      top: calc(50% - 78px); color: #b9def1; border-color: #5ba4cd;
       background: linear-gradient(90deg, rgba(20,34,52,.96), rgba(24,13,44,.9));
     }
     .side-tab.drawer-bookmark:hover { width: 41px; color: #fff; }
@@ -1006,20 +1006,22 @@
     }
 
     /* ===== 与黑猫占卜桌统一的全高左侧抽屉 ===== */
+    /* 世界入口位于库抽屉下方，打开库时由面板遮住。 */
+    body .world-switch { z-index: 200; }
     #divinationDrawer,
     #recordDrawer {
       position: fixed;
       left: 0; top: 0; bottom: 0;
-      width: 280px;
+      width: min(340px, calc(100vw - 24px));
       height: auto;
       transform: translateX(-100%);
       z-index: 300;
       transition: transform .4s cubic-bezier(.25,1,.5,1);
     }
     #divinationDrawer.closed,
-    #recordDrawer.closed { width: 280px; transform: translateX(-100%); }
+    #recordDrawer.closed { width: min(340px, calc(100vw - 24px)); transform: translateX(-100%); }
     #divinationDrawer.open,
-    #recordDrawer.open { width: 280px; transform: translateX(0); }
+    #recordDrawer.open { width: min(340px, calc(100vw - 24px)); transform: translateX(0); }
     #divinationDrawer.closed .drawer-panel,
     #recordDrawer.closed .drawer-panel { display: block; }
     #divinationDrawer .drawer-panel,
@@ -1415,7 +1417,7 @@
     }
     .wish-bottle.open .bottle-cork { top: -16px; opacity: .55; transform: translateX(-50%) rotate(20deg); }
     .wish-bottle.open .rolled-note {
-      top: -136px; width: 184px; height: 78px;
+      top: -154px; width: 184px; height: 96px;
       opacity: 1;
       transform: translateX(-50%) scale(1);
       overflow: visible;
@@ -2356,18 +2358,49 @@
       .love-feature h2 { font-size:26px; }
       .love-empty-frame { min-height:240px;margin-top:35px;padding:20px; }
     }
-  </style>
+  
+    /* 第三、四主题：每个库沿用自己的书签色。 */
+    body[data-theme="parchment"] #divinationDrawer { --library-accent:#c09a50;--library-rgb:203,167,92;--library-ink:#f1d994; }
+    body[data-theme="parchment"] #recordDrawer { --library-accent:#9fbdad;--library-rgb:159,189,173;--library-ink:#d8e6d9; }
+    body[data-theme="dopamine"] #divinationDrawer { --library-accent:#e598b8;--library-rgb:229,152,184;--library-ink:#866a7a; }
+    body[data-theme="dopamine"] #recordDrawer { --library-accent:#91cbe6;--library-rgb:145,203,230;--library-ink:#607c91; }
+    body:is([data-theme="parchment"],[data-theme="dopamine"]) :is(#divinationDrawer,#recordDrawer) .drawer-panel {
+      border-color:var(--library-accent);color:var(--library-ink);
+      scrollbar-width:thin;scrollbar-color:var(--library-accent) transparent;
+    }
+    body:is([data-theme="parchment"],[data-theme="dopamine"]) :is(#divinationDrawer,#recordDrawer) :is(.panel-title,.di-label,.potion-sec-title,.ri-q,.ri-count,.record-empty) { color:var(--library-ink);border-color:rgba(var(--library-rgb),.5); }
+    body:is([data-theme="parchment"],[data-theme="dopamine"]) :is(#divinationDrawer,#recordDrawer) :is(.divination-item,.potion-item,.record-item):nth-child(n) { color:var(--library-ink);border-color:rgba(var(--library-rgb),.62); }
+
+    body[data-theme="noir"] #recordDrawer { --library-accent:#252529;--library-rgb:37,37,41;--library-ink:#252529; }
+    body:is([data-theme="noir"],[data-theme="dopamine"]) #recordDrawer :is(.ri-date,.record-kind,.ri-count) { color:var(--library-ink);border-color:rgba(var(--library-rgb),.55); }
+    body:is([data-theme="noir"],[data-theme="dopamine"]) #recordDrawer .layout-record-glyph {
+      color:var(--library-ink);border-color:var(--library-accent);
+      background:radial-gradient(circle,rgba(var(--library-rgb),.12),rgba(255,255,255,.75) 70%);
+      box-shadow:inset 0 0 12px rgba(var(--library-rgb),.08),0 0 9px rgba(var(--library-rgb),.08);
+    }
+    body:is([data-theme="noir"],[data-theme="dopamine"]) #recordDrawer .layout-delete { color:var(--library-ink);border-color:rgba(var(--library-rgb),.6);background:rgba(255,255,255,.6); }
+    body:is([data-theme="noir"],[data-theme="dopamine"]) #recordDrawer .record-item:hover { border-color:var(--library-accent);background:rgba(255,255,255,.9); }
+
+    /* 蜡烛沿用历史图片，通过主题滤镜同步库预览与圆阵。 */
+    body { --candle-tint:none;--candle-glow:rgba(255,190,118,.4); }
+    body[data-theme="noir"] { --candle-tint:grayscale(1);--candle-glow:rgba(37,37,41,.16); }
+    body[data-theme="parchment"] { --candle-tint:sepia(.65) saturate(1.35);--candle-glow:rgba(203,167,92,.4); }
+    body[data-theme="dopamine"] { --candle-tint:sepia(.3) saturate(.8) hue-rotate(295deg);--candle-glow:rgba(229,152,184,.4); }
+    body .divination-item .di-candle-preview,body .altar-candle { filter:drop-shadow(0 0 6px var(--candle-glow)); }
+    body .di-candle-preview img,body .altar-candle img { filter:var(--candle-tint); }
+</style>
   <link rel="stylesheet" href="world_switch.css">
+<link rel="stylesheet" href="theme_panel.css">
+<script src="pwa.js" defer></script>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/webp" sizes="192x192" href="icons/icon-192.webp?v=icon1">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.webp?v=icon1">
+<meta name="theme-color" content="#0d001a">
 </head>
 <body data-world="west">
 <script src="world_switch.js"></script>
 
-<div id="themeSwitcher" role="group" aria-label="页面配色">
-  <button class="theme-dot active" data-theme="mystic" title="星夜紫晶" aria-label="星夜紫晶" aria-pressed="true"></button>
-  <button class="theme-dot" data-theme="noir" title="霜白墨羽" aria-label="霜白墨羽" aria-pressed="false"></button>
-  <button class="theme-dot" data-theme="parchment" title="琥珀秘卷" aria-label="琥珀秘卷" aria-pressed="false"></button>
-  <button class="theme-dot" data-theme="dopamine" title="雾糖奇遇" aria-label="雾糖奇遇" aria-pressed="false"></button>
-</div>
+
 
 <!-- 星空 -->
 <div id="starfield"></div>
@@ -2764,11 +2797,54 @@
 
 <script src="abundance_core.js"></script>
 <script src="love_v01.js"></script>
+<!-- 配色入口：一颗按钮 + 底部色卡面板 -->
+<button id="themeToggle" type="button" aria-label="切换桌面配色" aria-expanded="false" aria-controls="themeSheet">
+  <svg class="theme-paw-icon" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+    <defs><clipPath id="themePawClip"><circle cx="50" cy="50" r="47"/></clipPath></defs>
+    <g clip-path="url(#themePawClip)" stroke="none">
+      <path class="paw-body" d="M26 103C28 86 27 78 22 65C17 54 12 46 15 39C18 30 25 30 30 34C28 24 33 18 39 18C44 18 48 21 50 25C53 20 57 18 62 18C70 18 74 26 72 34C78 29 86 33 87 40C89 49 82 57 78 67C73 80 73 90 76 103Z"/>
+      <ellipse cx="26" cy="46" rx="5.8" ry="8.1" fill="#9865d8" transform="rotate(-18 26 46)"/>
+      <ellipse class="paw-ivory" cx="41" cy="33" rx="5.8" ry="8.4" fill="#fff8ea" transform="rotate(-7 41 33)"/>
+      <ellipse cx="60" cy="33" rx="5.8" ry="8.4" fill="#80334e" transform="rotate(7 60 33)"/>
+      <ellipse cx="76" cy="46" rx="5.8" ry="8.1" fill="#f2a8c5" transform="rotate(18 76 46)"/>
+      <path class="paw-pad" d="M50 48C42 48 38 54 35 59C29 62 27 67 29 71C32 78 41 76 47 74C49 73 51 73 54 74C61 77 70 77 73 71C76 65 70 61 65 58C61 52 57 48 50 48Z"/>
+    </g>
+    <circle class="paw-ring" cx="50" cy="50" r="47"/>
+  </svg>
+</button>
+<div id="themeSheetBackdrop"></div>
+<section id="themeSheet" role="dialog" aria-modal="true" aria-label="桌面配色">
+  <div class="ts-title">桌 面 配 色</div>
+  <div class="ts-list">
+    <button class="ts-card" type="button" data-theme="mystic" aria-pressed="false">
+      <span class="ts-swatch ts-swatch--mystic"></span>
+      <span class="ts-meta"><b>星夜紫晶</b><em>星雨 · 紫晶 · 月光</em></span>
+      <span class="ts-check">✦</span>
+    </button>
+    <button class="ts-card" type="button" data-theme="noir" aria-pressed="false">
+      <span class="ts-swatch ts-swatch--noir"></span>
+      <span class="ts-meta"><b>霜白墨羽</b><em>象牙白 · 墨线稿</em></span>
+      <span class="ts-check">✦</span>
+    </button>
+    <button class="ts-card" type="button" data-theme="parchment" aria-pressed="false">
+      <span class="ts-swatch ts-swatch--parchment"></span>
+      <span class="ts-meta"><b>琥珀秘卷</b><em>宝石釉面 · 古铜包边</em></span>
+      <span class="ts-check">✦</span>
+    </button>
+    <button class="ts-card" type="button" data-theme="dopamine" aria-pressed="false">
+      <span class="ts-swatch ts-swatch--dopamine"></span>
+      <span class="ts-meta"><b>雾糖奇遇</b><em>雾白底 · 低饱和糖果色</em></span>
+      <span class="ts-check">✦</span>
+    </button>
+  </div>
+</section>
+
+
 <script src="html2canvas.min.js"></script>
 <script>
 const MANIFEST_THEME_KEY = 'magiccat_reading_theme';
 const MANIFEST_THEMES = new Set(['mystic', 'noir', 'parchment', 'dopamine']);
-const manifestThemeDots = [...document.querySelectorAll('#themeSwitcher .theme-dot')];
+const manifestThemeDots = [...document.querySelectorAll('#themeSheet .ts-card')];
 
 function applyManifestTheme(theme, persist = true) {
   const nextTheme = MANIFEST_THEMES.has(theme) ? theme : 'mystic';
@@ -2886,30 +2962,41 @@ let wishBottleEl = null;
 
 // 把愿望文字用浏览器原生 canvas 预渲染成图片（避免 html2canvas 截图时中文宽度测量错误）
 function renderWishNoteDataURL(wish) {
-  const W = 120, H = 42;          // 打开的纸条内尺寸
-  const scale = 3;                // 高清倍数
+  const W = 142, H = 67;          // 与纸条内侧尺寸一致，避免拉伸文字
+  const scale = 3;
   const canvas = document.createElement('canvas');
   canvas.width = W * scale;
   canvas.height = H * scale;
   const ctx = canvas.getContext('2d');
   ctx.scale(scale, scale);
-  ctx.font = '9px "PingFang SC","Microsoft YaHei","Noto Sans CJK SC","Hiragino Sans GB",sans-serif';
   ctx.textBaseline = 'middle';
   const theme = document.body.dataset.theme || 'mystic';
   ctx.fillStyle = theme === 'noir' ? '#2c2d32' : theme === 'dopamine' ? '#607c91' : theme === 'parchment' ? '#f1d994' : '#f3e7c8';
-  // 按字符宽度换行
-  const lines = [];
-  let cur = '';
-  for (const ch of wish) {
-    if (cur && ctx.measureText(cur + ch).width > W) { lines.push(cur); cur = ch; }
-    else cur += ch;
-  }
-  if (cur) lines.push(cur);
-  const lineH = 11;
+  const spacing = .4;
+  const textWidth = text => Array.from(text).reduce((w, ch) => w + ctx.measureText(ch).width + spacing, -spacing);
+  let fontSize = 8.5, lines, lineH;
+  // 普通愿望用舒展的行距；长文字逐步缩小，保留上下留白。
+  do {
+    ctx.font = `${fontSize}px "PingFang SC","Microsoft YaHei","Noto Sans CJK SC","Hiragino Sans GB",sans-serif`;
+    lines = [];
+    let cur = '';
+    for (const ch of wish) {
+      if (ch === '\n') { lines.push(cur); cur = ''; continue; }
+      if (cur && textWidth(cur + ch) > W - 4) { lines.push(cur); cur = ch; }
+      else cur += ch;
+    }
+    if (cur) lines.push(cur);
+    lineH = fontSize * 1.8;
+    if (lines.length * lineH <= H - 8) break;
+    fontSize -= .25;
+  } while (fontSize > 1);
   let y = (H - lines.length * lineH) / 2 + lineH / 2;
   for (const ln of lines) {
-    const tw = ctx.measureText(ln).width;
-    ctx.fillText(ln, (W - tw) / 2, y);
+    let x = (W - textWidth(ln)) / 2;
+    for (const ch of ln) {
+      ctx.fillText(ch, x, y);
+      x += ctx.measureText(ch).width + spacing;
+    }
     y += lineH;
   }
   return canvas.toDataURL('image/png');
@@ -4158,5 +4245,19 @@ function renderRecords() {
 
 console.log('显化之境已开启');
 </script>
+<script>
+(() => {
+ const toggle=document.getElementById('themeToggle'), sheet=document.getElementById('themeSheet'), backdrop=document.getElementById('themeSheetBackdrop');
+ function close(){sheet.classList.remove('open');backdrop.classList.remove('open');toggle.setAttribute('aria-expanded','false');}
+ toggle.addEventListener('click',()=>{const open=!sheet.classList.contains('open');sheet.classList.toggle('open',open);backdrop.classList.toggle('open',open);toggle.setAttribute('aria-expanded',String(open));});
+ backdrop.addEventListener('click',close);
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+ new MutationObserver(()=>{if(document.body.classList.contains('ritual-special'))close();}).observe(document.body,{attributes:true,attributeFilter:['class']});
+})();
+</script>
 </body>
 </html>
+
+
+
+

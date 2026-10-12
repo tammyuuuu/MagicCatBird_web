@@ -1,0 +1,18 @@
+{
+  "name": "魔法猫",
+  "short_name": "魔法猫",
+  "id": "./reading_web.html",
+  "lang": "zh-CN",
+  "start_url": "./reading_web.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0d001a",
+  "theme_color": "#0d001a",
+  "icons": [
+    { "src": "icons/icon-192.webp?v=icon1", "sizes": "192x192", "type": "image/webp", "purpose": "any" },
+    { "src": "icons/icon-512.webp?v=icon1", "sizes": "512x512", "type": "image/webp", "purpose": "any" },
+    { "src": "icons/apple-touch-icon.webp?v=icon1", "sizes": "180x180", "type": "image/webp" }
+  ]
+}
+

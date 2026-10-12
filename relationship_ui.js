@@ -29,3 +29,4 @@
   new MutationObserver(installPersonalSave).observe(document.getElementById('report'),{childList:true,subtree:true});
   document.querySelector('[data-view="match"]').addEventListener('click',()=>{if(!match.innerHTML)entry()});document.querySelector('[data-view="archive"]').addEventListener('click',showArchive);window.RelationshipUI={entry,renderReport,showArchive};
 })();
+const cosmicScript=document.createElement('script');cosmicScript.src='cosmic_app.js?v=1';document.body.append(cosmicScript);

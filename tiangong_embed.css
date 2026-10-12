@@ -1,0 +1,87 @@
+html[data-workshop-theme="rouge"]{--bg0:#310b08;--bg1:#39150f;--bg2:#54251a;--ink:#ead9b8;--ink-dim:#c5ad94;--jade:#d6b780;--jade-dim:#c5ad94;--gold:#dec28b;--gold-hi:#f2ddad;--bronze:#b48f59;--line:#b48f5966;--line-soft:#b48f5933;--wash:#310b08b3;--cloth:url('图片/已批准/zhuque_brocade_tile_master_v01.png');}
+html[data-workshop-theme="paper"]{--bg0:#fffdf7;--bg1:#fffdf6;--bg2:#f7efd9;--ink:#292720;--ink-dim:#716554;--jade:#806b45;--jade-dim:#716554;--gold:#806337;--gold-hi:#6b502b;--bronze:#bba06a;--line:#bba06a88;--line-soft:#bba06a44;--wash:#fffdf7aa;--cloth:url('图片/已批准/baihu_brocade_tile_master_v01.png');}
+html[data-workshop-theme="jade"]{--bg0:#0b1929;--bg1:#12273b;--bg2:#1d3850;--ink:#e9e0cf;--ink-dim:#b1c2ce;--jade:#8daec7;--jade-dim:#b1c2ce;--gold:#d1b77f;--gold-hi:#eed6a4;--bronze:#b49a65;--line:#b49a6566;--line-soft:#b49a6533;--wash:#0b1929bb;--cloth:url('图片/已批准/xuanwu_brocade_tile_master_v01.png');}
+html[data-workshop-theme="apricot"]{--bg0:#edf4e9;--bg1:#f7faf0;--bg2:#e3efd9;--ink:#242d26;--ink-dim:#55715e;--jade:#386b52;--jade-dim:#55715e;--gold:#71552b;--gold-hi:#66502d;--bronze:#a99b6d;--line:#a99b6d88;--line-soft:#a99b6d44;--wash:#edf4e9cc;--cloth:url('图片/已批准/qinglong_brocade_tile_master_v01.png');}
+html[data-workshop-theme]{--bg:var(--bg0);--muted:var(--ink-dim);}html[data-workshop-theme] body{background:var(--bg0);color:var(--ink);}html[data-workshop-theme] :is(.panel,input,select,button,.time-grid div,.luck-row div,.compare div){background:var(--bg1);color:var(--ink);border-color:var(--line);}html[data-workshop-theme] :is(h1,h2,h3,strong,b,summary){color:var(--gold-hi);}html[data-workshop-theme] :is(p,label,small,pre,td,th,a){color:var(--ink);}html[data-workshop-theme] th{background:var(--bg2);}html[data-workshop-theme] :is(td,th){border-color:var(--line);}
+html[data-workshop-theme] body.embedded,html[data-workshop-theme] .embedded :is(.layout,.layout>aside,.layout>section.panel,.module-rail,.rail-records,.module-rail button,.archive-card,.pending-module,.work-head,.chart-input-panel,.chart-form){background:var(--bg1)!important;color:var(--ink)!important;box-shadow:none!important;}html[data-workshop-theme] .embedded :is(input,select,textarea,button){background:var(--bg2)!important;color:var(--ink)!important;border-color:var(--line)!important;box-shadow:none!important;}html[data-workshop-theme] .embedded :is(label,small,p,.rail-note,.rail-kicker,.rail-title,.module-rail button b,.module-rail button small){color:var(--ink)!important;}html[data-workshop-theme] .embedded :is(td,th){background:var(--bg1);color:var(--ink);}html[data-workshop-theme] .embedded{scrollbar-color:var(--bronze) var(--bg0);}
+html[data-workshop-theme] body.embedded{--ink:inherit;--jade:inherit;--bronze:inherit;--gold:inherit;--gold2:var(--gold-hi);--line:inherit;--soft:var(--line-soft);--muted:var(--ink-dim);}
+
+/* M293 与外层两栏同宽，保留排盘与档案交互。 */
+html[data-workshop-theme]{--workshop-rail:300px;}
+html[data-workshop-theme] .embedded .layout{height:100dvh;grid-template-columns:var(--workshop-rail) minmax(0,1fr);background:linear-gradient(var(--wash),var(--wash)),var(--cloth) repeat!important;background-size:auto,640px 640px!important;}
+html[data-workshop-theme] .embedded .layout>aside{height:100dvh;padding:76px 22px 90px;background:color-mix(in srgb,var(--bg1) 88%,transparent)!important;overflow:auto;scrollbar-gutter:stable;}
+html[data-workshop-theme] .embedded .layout>section.panel{height:100dvh;padding:76px 36px 70px;background:transparent!important;overflow:auto;}
+html[data-workshop-theme] .embedded .module-rail{display:block;}.embedded .rail-records{display:grid;}
+@media(max-width:900px){html[data-workshop-theme] .embedded .layout>section.panel{padding-top:100px;}}
+@media(max-width:640px){html[data-workshop-theme]{--workshop-rail:120px;}html[data-workshop-theme] .embedded .layout{height:100dvh;grid-template-columns:120px minmax(0,1fr);}html[data-workshop-theme] .embedded .layout>aside{padding:100px 10px 85px;}html[data-workshop-theme] .embedded .layout>section.panel{padding:100px 14px 85px;min-width:0;}html[data-workshop-theme] .embedded .module-rail button{padding:10px 5px;}html[data-workshop-theme] .embedded .module-rail button b{font-size:11px;}html[data-workshop-theme] .embedded .rail-title{font-size:18px;}html[data-workshop-theme] .embedded .work-head{grid-template-columns:1fr;}html[data-workshop-theme] .embedded .time-grid{grid-template-columns:1fr;}}
+
+/* M295 右侧锦缎直接绘制，避免旧实色面板覆盖底层。 */
+html[data-workshop-theme] body.embedded .layout>section.panel{background:linear-gradient(var(--wash),var(--wash)),var(--cloth) repeat!important;background-size:auto,640px 640px!important;background-position:0 0!important;}
+html[data-workshop-theme] body.embedded .layout>section.panel :is(.work-head,.chart-input-panel,.chart-form,.pending-module){background:transparent!important;}
+
+/* M296 排盘说明写于锦缎纸面，保留输入控件边界。 */
+html[data-workshop-theme] body.embedded :is(.time-grid div,.compare div,.archive-card,.pending-module,.archive-analysis,.annual-detail,.month-panel){background:transparent!important;border-radius:0!important;box-shadow:none!important;}
+html[data-workshop-theme] body.embedded :is(.time-grid div,.compare div,.archive-card){border:0!important;border-left:2px solid var(--bronze)!important;padding:12px 16px;}
+
+/* M297 术数阅读尺度与目录节奏。 */
+html[data-workshop-theme] body.embedded{font-size:14px;line-height:1.8;}
+html[data-workshop-theme] .embedded .rail-kicker{font-size:11px;}
+html[data-workshop-theme] .embedded .rail-title{font-size:25px;}
+html[data-workshop-theme] .embedded .rail-note{font-size:12px;line-height:1.9;margin:12px 0 20px;}
+html[data-workshop-theme] .embedded .module-rail button{padding:17px 14px;}
+html[data-workshop-theme] .embedded .module-rail button b{font-size:15px;line-height:1.6;}
+html[data-workshop-theme] .embedded .module-rail button small{font-size:11px;line-height:1.8;}
+html[data-workshop-theme] .embedded label{font-size:13px;line-height:1.8;margin:10px 0;}
+html[data-workshop-theme] .embedded :is(input,select,textarea){font-size:14px;padding:10px 12px;}
+html[data-workshop-theme] .embedded form{gap:6px 24px;}
+html[data-workshop-theme] .embedded :is(h2,.work h3){font-size:18px;line-height:1.7;margin:24px 0 16px;}
+html[data-workshop-theme] .embedded :is(p,details,summary,.time-grid div){font-size:13px;line-height:1.9;}
+html[data-workshop-theme] .embedded table{font-size:13px;line-height:1.8;}
+html[data-workshop-theme] .embedded :is(td,th){padding:11px 8px;}
+html[data-workshop-theme] .embedded .work-head h1{font-size:24px;}
+html[data-workshop-theme] .embedded :is(form>button,.save-chart,.archive-card button){font-size:13px;padding:11px 18px;}
+html[data-workshop-theme] .embedded .archive-card{margin-bottom:18px;}
+@media(max-width:640px){html[data-workshop-theme] .embedded .rail-title{font-size:18px;}html[data-workshop-theme] .embedded .rail-note{font-size:11px;}html[data-workshop-theme] .embedded .module-rail button{padding:13px 5px;}html[data-workshop-theme] .embedded .module-rail button b{font-size:12px;letter-spacing:1px;}html[data-workshop-theme] .embedded .module-rail button small{font-size:10px;}html[data-workshop-theme] .embedded :is(input,select,textarea){font-size:13px;padding:9px 8px;}html[data-workshop-theme] .embedded h2{font-size:16px;}html[data-workshop-theme] .embedded table{font-size:12px;}}
+/* M309：术数条目与书函卡片一致 */
+html[data-workshop-theme] .embedded .module-rail .rail-records{display:grid;gap:14px;}
+html[data-workshop-theme] .embedded .module-rail .rail-records button{display:grid;grid-template-columns:42px minmax(0,1fr) 10px;grid-template-rows:auto auto;column-gap:12px;row-gap:7px;padding:18px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg1);box-shadow:none;}
+html[data-workshop-theme] .embedded .module-rail .rail-records button::before{content:'八字';grid-column:1;grid-row:1/3;writing-mode:vertical-rl;letter-spacing:6px;display:flex;align-items:center;justify-content:center;min-height:72px;border:1px solid var(--line);border-radius:5px;font-size:12px;color:var(--gold);position:static;}
+html[data-workshop-theme] .embedded .module-rail button[data-module=archive]::before{content:'命档';}
+html[data-workshop-theme] .embedded .module-rail button[data-module=notes]::before{content:'术理';}
+html[data-workshop-theme] .embedded .module-rail .rail-records button b{grid-column:2;grid-row:1;font-size:15px;line-height:1.6;font-weight:400;letter-spacing:1px;}
+html[data-workshop-theme] .embedded .module-rail .rail-records button small{grid-column:2;grid-row:2;font-size:11px;line-height:1.8;color:var(--ink-dim);}
+html[data-workshop-theme] .embedded .module-rail .rail-records button i{grid-column:3;grid-row:1/3;align-self:center;font-size:20px;color:var(--gold);}
+html[data-workshop-theme] .embedded .module-rail .rail-records button.active{border:1px solid var(--bronze);background:var(--bg1);}
+@media(max-width:640px){html[data-workshop-theme] .embedded .module-rail .rail-records button{grid-template-columns:minmax(0,1fr) 8px;padding:12px 7px;gap:6px;}html[data-workshop-theme] .embedded .module-rail .rail-records button::before{display:none;}html[data-workshop-theme] .embedded .module-rail .rail-records button :is(b,small){grid-column:1;}html[data-workshop-theme] .embedded .module-rail .rail-records button b{font-size:12px;}html[data-workshop-theme] .embedded .module-rail .rail-records button small{font-size:10px;}html[data-workshop-theme] .embedded .module-rail .rail-records button i{grid-column:2;}}
+html[data-workshop-theme] .embedded .module-rail .rail-records button::after{display:none!important;}
+html[data-workshop-theme] .embedded .module-rail .rail-records button{grid-template-columns:minmax(0,1fr) 10px;}
+html[data-workshop-theme] .embedded .module-rail .rail-records button::before{display:none!important;}
+html[data-workshop-theme] .embedded .module-rail .rail-records button :is(b,small){grid-column:1;}
+html[data-workshop-theme] .embedded .module-rail .rail-records button i{grid-column:2;}
+/* M317 青龙左栏候选一：石绿与暖绢，仅影响左栏 */
+html[data-workshop-theme="apricot"] .embedded .layout>aside{background:#cbd9c7!important;color:#253f35!important;border-right-color:#8b9e83!important;}
+html[data-workshop-theme="apricot"] .embedded .layout>aside :is(.module-rail,.rail-records){background:transparent!important;}
+html[data-workshop-theme="apricot"] .embedded .module-rail .rail-records button{background:#e5e9d8!important;border-color:#94a489!important;color:#253f35!important;}
+html[data-workshop-theme="apricot"] .embedded .module-rail .rail-records button.active{background:#dae3cf!important;border-color:#57755c!important;}
+html[data-workshop-theme="apricot"] .embedded .module-rail :is(.rail-title,button b){color:#253f35!important;}
+html[data-workshop-theme="apricot"] .embedded .module-rail :is(.rail-note,.rail-kicker,button small){color:#526b58!important;font-weight:400;}
+html[data-workshop-theme="apricot"] .embedded .module-rail button i{color:#57755c!important;}
+html[data-workshop-theme="apricot"] body.embedded .layout>aside{background:#cbd9c7!important;--bg1:#cbd9c7;--ink:#253f35;--ink-dim:#526b58;--line:#94a489;}
+html[data-workshop-theme="apricot"] body.embedded .layout>aside .module-rail :is(.rail-title,button b){color:#253f35!important;}
+html[data-workshop-theme="apricot"] body.embedded .layout>aside .module-rail :is(.rail-kicker,.rail-note,button small){color:#526b58!important;}
+/* M318 青龙候选二：青绿底与赭金点缀 */
+html[data-workshop-theme="apricot"] body.embedded .layout>aside .module-rail .rail-records button{border-color:#b29255!important;}
+html[data-workshop-theme="apricot"] body.embedded .layout>aside .module-rail .rail-records button.active{border-color:#976426!important;}
+html[data-workshop-theme="apricot"] body.embedded .layout>aside .module-rail :is(.rail-kicker,button i){color:#8d5d25!important;}
+/* M319 青龙候选三：青绿与暗朱红 */
+html[data-workshop-theme="apricot"] body.embedded .layout>aside .module-rail .rail-records button{border-color:#94a489!important;}
+html[data-workshop-theme="apricot"] body.embedded .layout>aside .module-rail .rail-records button.active{border-color:#93483f!important;}
+html[data-workshop-theme="apricot"] body.embedded .layout>aside .module-rail :is(.rail-kicker,button i){color:#93483f!important;}
+/* M320 青龙候选四：青绿与紫灰 */
+html[data-workshop-theme="apricot"] body.embedded .layout>aside .module-rail .rail-records button.active{border-color:#365e70!important;}
+html[data-workshop-theme="apricot"] body.embedded .layout>aside .module-rail :is(.rail-kicker,button i){color:#365e70!important;}
+/* M323 与符箓卡片一致的深玉绿与石青字。 */
+html[data-workshop-theme="apricot"] body.embedded .layout>aside .module-rail .rail-records button{background:#cedcc5!important;}
+html[data-workshop-theme="apricot"] body.embedded .layout>aside .module-rail .rail-records button.active{background:#bccfb5!important;}
+html[data-workshop-theme="apricot"] body.embedded .layout>aside .module-rail button b{color:#203f4b!important;}
+html[data-workshop-theme="apricot"] body.embedded .layout>aside .module-rail button small{color:#3d5962!important;}

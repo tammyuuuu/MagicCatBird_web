@@ -1,0 +1,981 @@
+/* 中国色主题小样：配色取设计值，非传统色标准色号。 */
+html[data-bird-theme="rouge"] {
+  --bg0:#2b1413;--bg1:#43201d;--bg2:#64302b;--ink:#eee0ca;--ink-dim:#c4a396;--motif:#c57565;
+  --jade:#d39b9f;--jade-dim:#b78b92;--bronze:#b3986e;--gold:#d8be92;--gold-hi:#f0dcc0;--cinnabar:#efa88b;
+  --line:#b3986e66;--line-soft:#b3986e33;--accent-rgb:179,152,110;--wash:#713b35;color-scheme:dark;
+}
+html[data-bird-theme="paper"] {
+  --bg0:#eee8f0;--bg1:#faf6f8;--bg2:#dcd0e2;--ink:#453650;--ink-dim:#7c6984;--motif:#654177;
+  --jade:#79618d;--jade-dim:#8b749a;--bronze:#7b5c8d;--gold:#644575;--gold-hi:#493055;--cinnabar:#a44b3d;
+  --line:#7b5c8d66;--line-soft:#7b5c8d33;--accent-rgb:123,92,141;--wash:#d7c6de;color-scheme:light;
+}
+html[data-bird-theme="jade"] {
+  --bg0:#171919;--bg1:#272c2b;--bg2:#3a413e;--ink:#e6dfca;--ink-dim:#adb3a5;--motif:#b1b6a7;
+  --jade:#a7b4a6;--jade-dim:#8f9b8f;--bronze:#a49d81;--gold:#c9c0a1;--gold-hi:#e9e0c7;--cinnabar:#e4a084;
+  --line:#a49d8166;--line-soft:#a49d8133;--accent-rgb:164,157,129;--wash:#434a43;color-scheme:dark;
+}
+html[data-bird-theme="apricot"] {
+  --bg0:#e9ecd6;--bg1:#f6f5e9;--bg2:#d2dbb3;--ink:#3e482c;--ink-dim:#6e7952;--motif:#7e963b;
+  --jade:#6d853e;--jade-dim:#809257;--bronze:#7f8b47;--gold:#627434;--gold-hi:#435521;--cinnabar:#a64736;
+  --line:#7f8b4766;--line-soft:#7f8b4733;--accent-rgb:127,139,71;--wash:#cbd4a6;color-scheme:light;
+}
+html[data-bird-theme] body {color:var(--ink);background:var(--bg0)}
+/* body 原有 :root 变量由 html 上更高特异性的主题覆盖。 */
+html[data-bird-theme] .desk {background:radial-gradient(ellipse at 58% 42%,var(--wash),transparent 65%),linear-gradient(145deg,var(--bg1),var(--bg0));}
+html[data-bird-theme] .desk::before {background-image:var(--beast-pattern);background-repeat:no-repeat;background-position:calc(50% + 160px) 48%;background-size:min(65vw,680px);opacity:.15;pointer-events:none;}
+html[data-bird-theme] .aux {background:color-mix(in srgb,var(--bg1) 70%,transparent);}
+/* 朱雀可读性试样：绘景与文字层分开，中央压暗，外围保留火羽。 */
+html[data-bird-theme="rouge"] body {--ink-dim:#d4bdab;--jade-dim:#c7a49c;}
+html[data-bird-theme="rouge"] .desk {background:#260d0b url('图片/已批准/zhuque_main_panel_master_v11.png') right center/calc(100% - clamp(264px,24vw,348px)) 100% no-repeat;}
+html[data-bird-theme="rouge"] .desk::before {background:radial-gradient(ellipse 30% 42% at 62% 48%,#1d0b0be6 0%,#230e0bb3 65%,transparent 100%),linear-gradient(#17090935,#17090970);opacity:1;}
+html[data-bird-theme="rouge"] .aux {background:#28100feb;border-right:1px solid #b3986e77;}
+html[data-bird-theme="rouge"] :is(.boshi,.yarrow,.rec-drawer) {background:linear-gradient(150deg,#382019fa,#21120ffa);}
+html[data-bird-theme="rouge"] :is(.hex-caption,.hex-meta,.hex-col-title,.yao-label,.yao-marker) {text-shadow:0 1px 4px #000,0 0 10px #170807;}
+html[data-bird-theme="rouge"] body .yao-bar.yao-none {background:#d6aa7852;}
+@media(max-width:900px) {html[data-bird-theme="rouge"] .desk::before {background:linear-gradient(#210c0ba8,#210c0bcc);}html[data-bird-theme="rouge"] .aux {background:#28100ff2;}}
+html[data-bird-theme] :is(.boshi,.yarrow,.rec-drawer) {background:linear-gradient(155deg,var(--bg1),var(--bg0));box-shadow:0 14px 40px #0002;}
+html[data-bird-theme] :is(.question-input,.time-fields input) {background:var(--bg1);color:var(--ink);color-scheme:inherit;}
+html[data-bird-theme] .question-input::placeholder {color:var(--ink-dim);}
+html[data-bird-theme] :is(.sj-btn,.mini-btn,.act-btn,.rec-item,.east-nav-link,.method-options label:has(input:checked),.y-modes label:has(input:checked)) {background:rgba(var(--accent-rgb),.06);border-color:var(--line);}
+html[data-bird-theme] :is(.sj-btn.active,.east-nav-link.active,.bird-palette button[aria-pressed="true"]) {background:rgba(var(--accent-rgb),.15);border-color:var(--bronze);box-shadow:0 0 16px rgba(var(--accent-rgb),.12);}
+html[data-bird-theme] :is(.act-btn,.mini-btn,.sj-btn,.east-nav-link,.rec-item):hover {background:rgba(var(--accent-rgb),.17);}
+html[data-bird-theme] .east-nav-link {background-color:var(--bg1);}
+html[data-bird-theme] .cast-btn {background:linear-gradient(130deg,var(--bg2),var(--bg1));box-shadow:0 0 20px rgba(var(--accent-rgb),.12);}
+html[data-bird-theme] .cast-btn:hover:not(:disabled) {background:var(--bg2);box-shadow:0 0 26px rgba(var(--accent-rgb),.24);}
+html[data-bird-theme] :is(.g-e,.g-yao-item .g-e,.prow .p-fushen) {color:var(--ink-dim);}
+html[data-bird-theme] .prow {border-bottom-color:var(--line-soft);}
+html[data-bird-theme] .yao-bar.yao-yang {background:linear-gradient(90deg,var(--bronze),var(--gold),var(--bronze));box-shadow:0 0 12px rgba(var(--accent-rgb),.22);}
+html[data-bird-theme] .yao-bar.yao-yin::before,html[data-bird-theme] .yao-bar.yao-yin::after {background:linear-gradient(90deg,var(--jade-dim),var(--jade),var(--jade-dim));box-shadow:0 0 10px rgba(var(--accent-rgb),.15);}
+html[data-bird-theme] .yao-bar.yao-none {background:rgba(var(--accent-rgb),.12);}
+html[data-bird-theme] :is(.aux,.main-stage,.rec-drawer) {scrollbar-color:var(--bronze) transparent;}
+html[data-bird-theme] :is(.aux,.main-stage)::-webkit-scrollbar-thumb {background:var(--bronze);}
+html[data-bird-theme] .world-switch--east {--ws-ink:var(--gold);--ws-ink-hi:var(--gold-hi);--ws-border:var(--line);--ws-border-hi:var(--bronze);background:var(--bg1);}
+html[data-bird-theme] .ws-tip {background:var(--bg1);color:var(--ink);}
+.bird-palette {position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:2600;height:30px;margin:0;padding:0 10px;border:1px solid var(--line);border-radius:16px;background:var(--bg1);box-shadow:0 0 15px rgba(var(--accent-rgb),.16);backdrop-filter:blur(8px);display:flex;align-items:center;gap:9px;}
+.bird-palette legend {padding:0 8px;color:var(--gold);font-size:11px;letter-spacing:2px;}
+.bird-palette button {position:relative;display:grid;place-items:center;width:14px;height:14px;padding:0;background:transparent;color:var(--ink-dim);border:0;border-radius:50%;cursor:pointer;}
+.bird-palette button[aria-pressed="true"]::after {content:'';position:absolute;inset:-4px;border:1px solid var(--gold-hi);border-radius:50%;pointer-events:none;}
+.bird-palette button[aria-pressed="true"] {color:var(--gold-hi);}
+.bird-palette button:focus-visible {outline:2px solid var(--bronze);outline-offset:3px;}
+.palette-swatch {width:14px;height:14px;border-radius:50%;border:1px solid #8885;}
+.swatch-rouge {background:#943f35}
+.swatch-paper {background:#ffffff}
+.swatch-jade {background:#202524}
+.swatch-apricot {background:#7e963b}
+/* M-170：撤回用户否决的线条祥云，等待绘制背景候选。 */
+/* M-171：用户授权的左栏绘景试样。 */
+/* M-175：批准的按钮图片，独立装饰层不遮挡原文字。 */
+html[data-bird-theme="rouge"] body .stage-wrap .aux :is(button,.method-options label,.y-modes label) {position:relative;isolation:isolate;--button-art:url('图片/已批准/zhuque_secondary_web_v01.svg');}
+html[data-bird-theme="rouge"] body .stage-wrap .aux button.sj-btn {--button-art:url('图片/已批准/zhuque_card_web_v01.svg');}
+html[data-bird-theme="rouge"] body .stage-wrap .aux button.mini-btn {--button-art:url('图片/已批准/zhuque_mini_web_v01.svg');}
+html[data-bird-theme="rouge"] body .stage-wrap .aux button.cast-btn {--button-art:url('图片/已批准/zhuque_button_web_v01.svg');}
+html[data-bird-theme="rouge"] body .stage-wrap .aux :is(button,.method-options label,.y-modes label)::before {content:'';position:absolute;inset:-1px;z-index:-1;background:var(--button-art) center/100% 100% no-repeat;pointer-events:none;border-radius:inherit;}
+html[data-bird-theme="rouge"] body .stage-wrap .aux button:disabled::before {filter:brightness(.55) saturate(.55);}
+html[data-bird-theme="rouge"] body .stage-wrap .aux {
+  background-color:#28100f;
+  background-image:linear-gradient(#210b0ba3,#210b0bb3),url('图片/已批准/zhuque_sidebar_master_v01.png');
+  background-size:100% 100%,100% 100%;background-position:center;background-repeat:no-repeat;
+}
+html[data-bird-theme="rouge"] body .stage-wrap .aux :is(button,.method-options label,.y-modes label,.time-fields) {background:linear-gradient(135deg,#3a211a,#2c1713);box-shadow:inset 0 1px 0 #e0b97b12,0 2px 5px #12080745;}
+html[data-bird-theme="rouge"] body .stage-wrap .aux :is(.sj-btn.active,.method-options label:has(input:checked),.y-modes label:has(input:checked)) {background:linear-gradient(135deg,#593729,#43251d);}
+html[data-bird-theme="rouge"] body .stage-wrap .aux button:hover:not(:disabled) {background:linear-gradient(135deg,#5b3527,#42221a);}
+html[data-bird-theme="rouge"] body .stage-wrap .aux .cast-btn {background:linear-gradient(135deg,#704032,#48251d);}
+html[data-bird-theme="rouge"] body .stage-wrap .aux button:disabled {opacity:1;color:#96806b;border-color:#78604b;background:linear-gradient(135deg,#32201a,#281813);cursor:not-allowed;box-shadow:inset 0 1px 0 #e0b97b08;}
+html[data-bird-theme="rouge"] body .stage-wrap .aux :is(.panel-title,.cast-note,.y-note) {text-shadow:0 1px 4px #160807;}
+@media(max-width:900px) {html[data-bird-theme] .desk::before {background-position:center 72%;background-size:88vw;}}
+@media(max-width:900px) {.aux {padding-top:88px}.east-nav {top:48px;gap:4px;right:8px}.east-nav-link {padding:7px 9px;letter-spacing:1px;font-size:11px;}}
+@media(max-width:700px) {.bird-palette {top:8px;gap:7px;padding:0 8px}.bird-palette button,.palette-swatch {width:12px;height:12px;}}
+
+/* M-176：以用户P2为准，次级控件保持简洁红漆，主按钮集中装饰。 */
+html[data-bird-theme="rouge"] body .stage-wrap .aux button.sj-btn.active {
+  border:1px solid #f5d18a;
+  box-shadow:0 0 10px #e6a34c65,inset 0 0 9px #ffc76b28;
+  color:#ffe7b3;
+}
+html[data-bird-theme="rouge"] body .stage-wrap .aux button.sj-btn.active::before {opacity:.85;filter:brightness(1.22);}
+html[data-bird-theme="rouge"] body .stage-wrap .aux {background-image:linear-gradient(#26080735,#26080755),url('图片/已批准/zhuque_sidebar_master_v02.png');}
+html[data-bird-theme="rouge"] body .stage-wrap .aux {padding-left:24px;padding-right:24px;scrollbar-color:#e8c68a #36120e;scrollbar-width:thin;}
+html[data-bird-theme="rouge"] body .stage-wrap .aux::-webkit-scrollbar {width:6px;}
+html[data-bird-theme="rouge"] body .stage-wrap .aux::-webkit-scrollbar-thumb {background:#e8c68a;border-radius:4px;}
+html[data-bird-theme="rouge"] body .stage-wrap .aux :is(.act-btn,.mini-btn,.method-options label,.y-modes label)::before {display:none;}
+html[data-bird-theme="rouge"] body .stage-wrap .aux button.sj-btn::before {opacity:.48;}
+html[data-bird-theme="rouge"] body .stage-wrap .aux :is(.sj-btn,.cast-btn) {border-color:transparent;box-shadow:none;}
+html[data-bird-theme="rouge"] body .stage-wrap .aux button.cast-btn {box-shadow:0 0 13px #f1973b5c;}
+html[data-bird-theme="rouge"] body .stage-wrap .aux .act-btn {background:linear-gradient(120deg,#4b1711,#35100c);border:1px solid #985b43;color:#ddbc8d;box-shadow:inset 0 1px 0 #cba16b12;}
+html[data-bird-theme="rouge"] body .stage-wrap .aux .act-btn:disabled {background:linear-gradient(120deg,#42150f,#30100d);color:#bda184;border-color:#89513d;}
+html[data-bird-theme="rouge"] body .stage-wrap .aux .act-btn.danger {border-color:#dbb77a;}
+html[data-bird-theme="rouge"] body .stage-wrap .aux :is(.method-options label,.y-modes label,.question-input,.mini-btn) {background:linear-gradient(130deg,#522019,#32100d);border:1px solid #af7652;color:#e6ceaa;}
+html[data-bird-theme="rouge"] body .stage-wrap .aux .method-options label:has(input:checked) {background:linear-gradient(130deg,#61271c,#41160f);}
+html[data-bird-theme="rouge"] body .stage-wrap .aux .panel-title {color:#e8c78d;font-weight:600;}
+html[data-bird-theme="rouge"] body .stage-wrap .aux .panel-title::before,html[data-bird-theme="rouge"] body .stage-wrap .aux .panel-title::after {height:6px;background:radial-gradient(circle,var(--gold) 0 2px,transparent 2.5px) right center/5px 5px no-repeat,linear-gradient(90deg,#a26a37,#dcb479) center/100% 1px no-repeat;}
+html[data-bird-theme="rouge"] body .stage-wrap .aux .panel-title::after {transform:scaleX(-1);}
+html[data-bird-theme="rouge"] body .stage-wrap .aux .coins-stage {padding-top:22px;padding-bottom:16px;gap:12px;}
+
+
+/* M-182 用户批准朱雀铜钱正面v01、背面v03试用；保留原3D翻面。 */
+html[data-bird-theme="rouge"] .coin .face {border:0;background-color:transparent;box-shadow:none;background-repeat:no-repeat;background-position:center;border-radius:50%;}
+html[data-bird-theme="rouge"] .coin .face.front {background-image:url('图片/已批准/zhuque_coin_front_master_v01.png');background-size:108.5% 108.5%;}
+html[data-bird-theme="rouge"] .coin .face.back {background-image:url('图片/已批准/zhuque_coin_back_master_v03.png');background-size:105.4% 105.4%;}
+html[data-bird-theme="rouge"] .coin .face .coin-mark {visibility:hidden;}
+
+html[data-bird-theme="rouge"] .coin .face::after {display:none;}
+
+/* M-186 批准的整根凤凰纹蓍草，原计数和分束不变。 */
+html[data-bird-theme="rouge"] :is(.y-pile,.y-hung) i {background:transparent url('图片/已批准/zhuque_yarrow_web_v02.svg') center/100% 100% no-repeat;box-shadow:none;}
+.yarrow-art {display:none;}
+html[data-bird-theme="rouge"] #sjYarrow > svg {display:none;}
+html[data-bird-theme="rouge"] #sjYarrow .yarrow-art {display:flex;justify-content:center;align-items:center;gap:4px;width:40px;height:40px;}
+html[data-bird-theme="rouge"] #sjYarrow .yarrow-art i {display:block;width:3px;height:36px;background:url('图片/已批准/zhuque_yarrow_web_v02.svg') center/100% 100% no-repeat;}
+html[data-bird-theme="rouge"] #sjYarrow .yarrow-art i:nth-child(even) {height:30px;}
+
+/* M-187 P2卦录位置：桌面主画面左上，移动端保留可触达入口。 */
+@media(min-width:901px){html[data-bird-theme="rouge"] .rec-prop {top:56px;bottom:auto;left:calc(clamp(264px,24vw,348px) + 12px);}}
+
+/* M-188 凤凰玉牌卦录挂饰，批准试用。 */
+.records-pendant {display:none;}
+html[data-bird-theme="rouge"] .rec-prop .bamboo {display:none;}
+html[data-bird-theme="rouge"] .records-pendant {display:block;width:110px;height:300px;object-fit:contain;pointer-events:none;}
+html[data-bird-theme="rouge"] .rec-prop .prop-tag {top:76px;right:2px;}
+html[data-bird-theme="rouge"] .rec-prop:hover {transform:translateY(2px);}
+html[data-bird-theme="rouge"] .rec-prop:focus-visible {outline:1px solid #edc888;outline-offset:3px;}
+@media(min-width:901px){html[data-bird-theme="rouge"] .rec-prop {top:0;left:calc(clamp(264px,24vw,348px) + 6px);}}
+@media(max-width:900px){html[data-bird-theme="rouge"] .rec-prop {left:auto;right:8px;top:auto;bottom:12px;transform:none;}html[data-bird-theme="rouge"] .records-pendant {width:66px;height:180px;}html[data-bird-theme="rouge"] .rec-prop .prop-tag {top:42px;right:0;}}
+
+/* M-189 朱雀卦录：朱漆、赤金、玉色，保留记录数据。 */
+html[data-bird-theme="rouge"] .rec-drawer {background:linear-gradient(155deg,#68160f 0%,#3b0808 45%,#230507 100%);border-right:1px solid #d29b57;padding:28px 20px;box-shadow:16px 0 50px #13020399,inset -1px 0 #ffdb9625;}
+html[data-bird-theme="rouge"] .rec-drawer::before {content:'';position:absolute;inset:0;pointer-events:none;background:url('图片/已批准/zhuque_sidebar_master_v02.png') center/100% 100% no-repeat;opacity:.24;z-index:-1;}
+html[data-bird-theme="rouge"] .rec-title {font-size:21px;letter-spacing:12px;color:#ffdfa4;padding:9px 30px 22px;margin-bottom:22px;border-bottom:1px solid #deab6460;text-shadow:0 2px 8px #e473342e;}
+html[data-bird-theme="rouge"] .rec-title::after {content:'卦象留存 · 回观所问';display:block;font-size:10px;letter-spacing:3px;color:#d7b58e;margin-top:9px;}
+html[data-bird-theme="rouge"] .rec-close {top:7px;right:0;width:30px;height:30px;border-color:#dca36d;background:#53100b;color:#ffe3ad;}
+html[data-bird-theme="rouge"] .rec-item {position:relative;padding:16px 14px;margin-bottom:14px;border:1px solid #c28a50;border-radius:12px;background:linear-gradient(120deg,#78281ee8,#47100ef5);box-shadow:inset 0 1px #ffe6b526,0 4px 12px #19030335;}
+html[data-bird-theme="rouge"] .rec-item::before {content:'';position:absolute;left:0;top:18px;bottom:18px;width:2px;background:linear-gradient(transparent,#f6cc81,transparent);pointer-events:none;}
+html[data-bird-theme="rouge"] .rec-item:hover {border-color:#ffda8f;background:linear-gradient(120deg,#8b3224,#57140e);box-shadow:0 0 12px #e48b3325;}
+html[data-bird-theme="rouge"] .rec-item .rec-head {flex-wrap:wrap;gap:8px;color:#fff0cf;font-size:14px;line-height:1.6;}
+html[data-bird-theme="rouge"] .rec-item .rec-head span {flex:1 1 calc(100% - 24px);order:0;}
+html[data-bird-theme="rouge"] .rec-item .rec-head i {order:2;width:100%;font-size:10px;color:#d9ad87;letter-spacing:1px;}
+html[data-bird-theme="rouge"] .rec-del {color:#eac796;order:1;padding:4px;}
+html[data-bird-theme="rouge"] .rec-item .rec-meta {color:#ecd6b7;line-height:1.9;font-size:11px;}
+html[data-bird-theme="rouge"] .rec-clear {border:1px solid #b77a50;border-radius:18px;padding:8px 20px;color:#efc99a;background:#3c0b08;margin:24px auto;}
+html[data-bird-theme="rouge"] .rec-clear:hover {border-color:#ffdb99;color:#fff0cf;}
+html[data-bird-theme="rouge"] .rec-empty {color:#ead6b8;border:1px solid #b57f4e70;border-radius:12px;background:#4d120c80;margin-top:24px;padding:32px 12px;}
+
+html[data-bird-theme="rouge"] .rec-item .rec-head {position:relative;padding-right:22px;}
+html[data-bird-theme="rouge"] .rec-item .rec-head span {flex-basis:100%;}
+html[data-bird-theme="rouge"] .rec-del {position:absolute;right:-4px;top:0;}
+
+/* M-190 删除按钮固定卡片右上，更新缓存版本。 */
+html[data-bird-theme="rouge"] .rec-item {position:relative;}
+html[data-bird-theme="rouge"] .rec-item .rec-head {position:static;padding-right:28px;}
+html[data-bird-theme="rouge"] .rec-item .rec-del {position:absolute;left:auto;right:10px;top:13px;width:24px;height:24px;padding:0;display:grid;place-items:center;}
+
+@media(max-width:900px) {html[data-bird-theme="rouge"] .desk {background-size:cover;background-position:center;}}
+
+
+
+
+/* M-176：以用户P2为准，次级控件保持简洁红漆，主按钮集中装饰。 */
+html[data-bird-theme="paper"] body .stage-wrap .aux button.sj-btn.active {
+  border:1px solid #c4cedc;
+  box-shadow:0 0 10px #9ca6b465,inset 0 0 9px #bbc5d328;
+  color:#dae4f2;
+}
+html[data-bird-theme="paper"] body .stage-wrap .aux button.sj-btn.active::before {opacity:.85;filter:brightness(1.22);}
+html[data-bird-theme="paper"] body .stage-wrap .aux {background-image:linear-gradient(#11100e35,#11100e55),url('图片/已批准/zhuque_sidebar_master_v02.png');}
+html[data-bird-theme="paper"] body .stage-wrap .aux {padding-left:24px;padding-right:24px;scrollbar-color:#c4c3c1 #1c1b19;scrollbar-width:thin;}
+html[data-bird-theme="paper"] body .stage-wrap .aux::-webkit-scrollbar {width:6px;}
+html[data-bird-theme="paper"] body .stage-wrap .aux::-webkit-scrollbar-thumb {background:#c4c3c1;border-radius:4px;}
+html[data-bird-theme="paper"] body .stage-wrap .aux :is(.act-btn,.mini-btn,.method-options label,.y-modes label)::before {display:none;}
+html[data-bird-theme="paper"] body .stage-wrap .aux button.sj-btn::before {opacity:.48;}
+html[data-bird-theme="paper"] body .stage-wrap .aux :is(.sj-btn,.cast-btn) {border-color:transparent;box-shadow:none;}
+html[data-bird-theme="paper"] body .stage-wrap .aux button.cast-btn {box-shadow:0 0 13px #a09f9d5c;}
+html[data-bird-theme="paper"] body .stage-wrap .aux .act-btn {background:linear-gradient(120deg,#252422,#1a1917);border:1px solid #696866;color:#bdbcba;box-shadow:inset 0 1px 0 #a3a2a012;}
+html[data-bird-theme="paper"] body .stage-wrap .aux .act-btn:disabled {background:linear-gradient(120deg,#21201e,#191816);color:#a4a3a1;border-color:#5e5d5b;}
+html[data-bird-theme="paper"] body .stage-wrap .aux .act-btn.danger {border-color:#b6b5b3;}
+html[data-bird-theme="paper"] body .stage-wrap .aux :is(.method-options label,.y-modes label,.question-input,.mini-btn) {background:linear-gradient(130deg,#2e2d2b,#1a1917);border:1px solid #807f7d;color:#cecdcb;}
+html[data-bird-theme="paper"] body .stage-wrap .aux .method-options label:has(input:checked) {background:linear-gradient(130deg,#363533,#22211f);}
+html[data-bird-theme="paper"] body .stage-wrap .aux .panel-title {color:#c5c4c2;font-weight:600;}
+html[data-bird-theme="paper"] body .stage-wrap .aux .panel-title::before,html[data-bird-theme="paper"] body .stage-wrap .aux .panel-title::after {height:6px;background:radial-gradient(circle,var(--gold) 0 2px,transparent 2.5px) right center/5px 5px no-repeat,linear-gradient(90deg,#71706e,#b4b3b1) center/100% 1px no-repeat;}
+html[data-bird-theme="paper"] body .stage-wrap .aux .panel-title::after {transform:scaleX(-1);}
+html[data-bird-theme="paper"] body .stage-wrap .aux .coins-stage {padding-top:22px;padding-bottom:16px;gap:12px;}
+
+
+/* M-182 用户批准朱雀铜钱正面v01、背面v03试用；保留原3D翻面。 */
+html[data-bird-theme="paper"] .coin .face {border:0;background-color:transparent;box-shadow:none;background-repeat:no-repeat;background-position:center;border-radius:50%;}
+html[data-bird-theme="paper"] .coin .face.front {background-image:url('图片/已批准/baihu_coin_front_master_v02.png');background-size:108.5% 108.5%;}
+html[data-bird-theme="paper"] .coin .face.back {background-image:url('图片/已批准/baihu_coin_back_master_v02.png');background-size:105.4% 105.4%;}
+html[data-bird-theme="paper"] .coin .face .coin-mark {visibility:hidden;}
+
+html[data-bird-theme="paper"] .coin .face::after {display:none;}
+
+/* M-186 批准的整根凤凰纹蓍草，原计数和分束不变。 */
+html[data-bird-theme="paper"] :is(.y-pile,.y-hung) i {background:transparent url('图片/已批准/zhuque_yarrow_web_v02.svg') center/100% 100% no-repeat;box-shadow:none;}
+.yarrow-art {display:none;}
+html[data-bird-theme="paper"] #sjYarrow > svg {display:none;}
+html[data-bird-theme="paper"] #sjYarrow .yarrow-art {display:flex;justify-content:center;align-items:center;gap:4px;width:40px;height:40px;}
+html[data-bird-theme="paper"] #sjYarrow .yarrow-art i {display:block;width:3px;height:36px;background:url('图片/已批准/zhuque_yarrow_web_v02.svg') center/100% 100% no-repeat;}
+html[data-bird-theme="paper"] #sjYarrow .yarrow-art i:nth-child(even) {height:30px;}
+
+/* M-187 P2卦录位置：桌面主画面左上，移动端保留可触达入口。 */
+@media(min-width:901px){html[data-bird-theme="paper"] .rec-prop {top:56px;bottom:auto;left:calc(clamp(264px,24vw,348px) + 12px);}}
+
+/* M-188 凤凰玉牌卦录挂饰，批准试用。 */
+.records-pendant {display:none;}
+html[data-bird-theme="paper"] .rec-prop .bamboo {display:none;}
+html[data-bird-theme="paper"] .records-pendant {display:block;width:110px;height:300px;object-fit:contain;pointer-events:none;}
+html[data-bird-theme="paper"] .rec-prop .prop-tag {top:76px;right:2px;}
+html[data-bird-theme="paper"] .rec-prop:hover {transform:translateY(2px);}
+html[data-bird-theme="paper"] .rec-prop:focus-visible {outline:1px solid #c6c5c3;outline-offset:3px;}
+@media(min-width:901px){html[data-bird-theme="paper"] .rec-prop {top:0;left:calc(clamp(264px,24vw,348px) + 6px);}}
+@media(max-width:900px){html[data-bird-theme="paper"] .rec-prop {left:auto;right:8px;top:auto;bottom:12px;transform:none;}html[data-bird-theme="paper"] .records-pendant {width:66px;height:180px;}html[data-bird-theme="paper"] .rec-prop .prop-tag {top:42px;right:0;}}
+
+/* M-189 朱雀卦录：朱漆、赤金、玉色，保留记录数据。 */
+html[data-bird-theme="paper"] .rec-drawer {background:linear-gradient(155deg,#2d2c2a 0%,#171614 45%,#0e0d0b 100%);border-right:1px solid #9e9d9b;padding:28px 20px;box-shadow:16px 0 50px #08070599,inset -1px 0 #d8d7d525;}
+html[data-bird-theme="paper"] .rec-drawer::before {content:'';position:absolute;inset:0;pointer-events:none;background:url('图片/已批准/zhuque_sidebar_master_v02.png') center/100% 100% no-repeat;opacity:.24;z-index:-1;}
+html[data-bird-theme="paper"] .rec-title {font-size:21px;letter-spacing:12px;color:#dddcda;padding:9px 30px 22px;margin-bottom:22px;border-bottom:1px solid #acaba960;text-shadow:0 2px 8px #8887852e;}
+html[data-bird-theme="paper"] .rec-title::after {content:'卦象留存 · 回观所问';display:block;font-size:10px;letter-spacing:3px;color:#b7b6b4;margin-top:9px;}
+html[data-bird-theme="paper"] .rec-close {top:7px;right:0;width:30px;height:30px;border-color:#a9a8a6;background:#232220;color:#e1e0de;}
+html[data-bird-theme="paper"] .rec-item {position:relative;padding:16px 14px;margin-bottom:14px;border:1px solid #8f8e8c;border-radius:12px;background:linear-gradient(120deg,#3e3d3be8,#201f1df5);box-shadow:inset 0 1px #e4e3e126,0 4px 12px #0a090735;}
+html[data-bird-theme="paper"] .rec-item::before {content:'';position:absolute;left:0;top:18px;bottom:18px;width:2px;background:linear-gradient(transparent,#cac9c7,transparent);pointer-events:none;}
+html[data-bird-theme="paper"] .rec-item:hover {border-color:#d6d5d3;background:linear-gradient(120deg,#4a4947,#272624);box-shadow:0 0 12px #94939125;}
+html[data-bird-theme="paper"] .rec-item .rec-head {flex-wrap:wrap;gap:8px;color:#eeedeb;font-size:14px;line-height:1.6;}
+html[data-bird-theme="paper"] .rec-item .rec-head span {flex:1 1 calc(100% - 24px);order:0;}
+html[data-bird-theme="paper"] .rec-item .rec-head i {order:2;width:100%;font-size:10px;color:#b3b2b0;letter-spacing:1px;}
+html[data-bird-theme="paper"] .rec-del {color:#c8c7c5;order:1;padding:4px;}
+html[data-bird-theme="paper"] .rec-item .rec-meta {color:#d6d5d3;line-height:1.9;font-size:11px;}
+html[data-bird-theme="paper"] .rec-clear {border:1px solid #848381;border-radius:18px;padding:8px 20px;color:#cbcac8;background:#191816;margin:24px auto;}
+html[data-bird-theme="paper"] .rec-clear:hover {border-color:#d9d8d6;color:#eeedeb;}
+html[data-bird-theme="paper"] .rec-empty {color:#d6d5d3;border:1px solid #85848270;border-radius:12px;background:#22211f80;margin-top:24px;padding:32px 12px;}
+
+html[data-bird-theme="paper"] .rec-item .rec-head {position:relative;padding-right:22px;}
+html[data-bird-theme="paper"] .rec-item .rec-head span {flex-basis:100%;}
+html[data-bird-theme="paper"] .rec-del {position:absolute;right:-4px;top:0;}
+
+/* M-190 删除按钮固定卡片右上，更新缓存版本。 */
+html[data-bird-theme="paper"] .rec-item {position:relative;}
+html[data-bird-theme="paper"] .rec-item .rec-head {position:static;padding-right:28px;}
+html[data-bird-theme="paper"] .rec-item .rec-del {position:absolute;left:auto;right:10px;top:13px;width:24px;height:24px;padding:0;display:grid;place-items:center;}
+
+@media(max-width:900px) {html[data-bird-theme="paper"] .desk {background-size:cover;background-position:center;}}
+
+
+
+
+/* M-216 白虎：朱雀控件结构与用户批准的白虎素材。 */
+html[data-bird-theme="paper"]{--bg0:#1f1e1c;--bg1:#302f2d;--bg2:#454442;--ink:#f2eee2;--ink-dim:#c9c8c6;--motif:#a7a6a4;--jade:#ded8bd;--jade-dim:#c5c4c2;--bronze:#c2b18b;--gold:#e1d1aa;--gold-hi:#fff2cf;--cinnabar:#d7c1a4;--line:#c2b18b66;--line-soft:#c2b18b33;--accent-rgb:194,177,139;--wash:#51504e;color-scheme:dark;}
+html[data-bird-theme="paper"] .desk{background:#232220 url('图片/已批准/baihu_main_panel_master_v01.png') right center/calc(100% - clamp(264px,24vw,348px)) 100% no-repeat;}
+html[data-bird-theme="paper"] .desk::before{background:radial-gradient(ellipse 33% 43% at 62% 48%,#1b1a18d9,transparent 100%),linear-gradient(#1b1a1828,#1b1a1850);opacity:1;}
+html[data-bird-theme="paper"] body .stage-wrap .aux{isolation:isolate;background:linear-gradient(145deg,#373634,#1d1c1a);padding-left:24px;padding-right:24px;}
+html[data-bird-theme="paper"] .aux::after{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:url('图片/已批准/zhuque_sidebar_master_v02.png') center/100% 100% no-repeat;filter:grayscale(1);opacity:.2;}
+html[data-bird-theme="paper"] .aux{position:relative;}
+html[data-bird-theme="paper"] body .stage-wrap .aux button.sj-btn,html[data-bird-theme="paper"] body .stage-wrap .aux button.cast-btn{position:relative;isolation:isolate;background:#343331;border:1px solid #bdae8a;}
+html[data-bird-theme="paper"] body .stage-wrap .aux button.sj-btn::before,html[data-bird-theme="paper"] body .stage-wrap .aux button.cast-btn::before{content:'';display:block;position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;background:url('图片/已批准/zhuque_card_web_v01.svg') center/100% 100% no-repeat;filter:grayscale(1) sepia(.15);opacity:.55;}
+html[data-bird-theme="paper"] body .stage-wrap .aux button.cast-btn::before{background-image:url('图片/已批准/zhuque_button_web_v01.svg');opacity:.7;}
+html[data-bird-theme="paper"] body .stage-wrap .aux button.sj-btn.active{border-color:#fff0c5;box-shadow:0 0 12px #dfd6b566,inset 0 0 9px #f5f4f228;color:#fff4d9;}
+html[data-bird-theme="paper"] body .stage-wrap .aux .act-btn,html[data-bird-theme="paper"] body .stage-wrap .aux :is(.method-options label,.y-modes label,.question-input,.mini-btn){background:linear-gradient(130deg,#434240,#2a2927);color:#eee6d1;border-color:#a49374;}
+html[data-bird-theme="paper"] body .stage-wrap .aux .act-btn:disabled{background:#2f2e2c;color:#a4a3a1;border-color:#767573;}
+html[data-bird-theme="paper"] .coin .face.front,html[data-bird-theme="paper"] .coin .face.back{background-size:100% 100%;}
+html[data-bird-theme="paper"] .records-pendant{display:none;}
+html[data-bird-theme="paper"] .records-pendant-baihu{display:block;width:110px;height:300px;object-fit:contain;pointer-events:none;}
+.records-pendant-baihu{display:none;}
+html[data-bird-theme="paper"] .rec-drawer::before{filter:grayscale(1);}
+html[data-bird-theme="paper"] :is(.hex-caption,.hex-meta,.hex-col-title,.yao-label,.yao-marker){text-shadow:0 1px 5px #181715;}
+@media(max-width:900px){html[data-bird-theme="paper"] .desk{background-size:cover;}html[data-bird-theme="paper"] .records-pendant-baihu{width:66px;height:180px;}}
+
+html[data-bird-theme="paper"] #sjYarrow>svg{display:block;}html[data-bird-theme="paper"] #sjYarrow .yarrow-art{display:none;}html[data-bird-theme="paper"] :is(.y-pile,.y-hung) i{background:linear-gradient(90deg,#958967,#ddd4ac,#a99c77);}
+
+html[data-bird-theme="paper"] body .stage-wrap .aux button.sj-btn.active::before{filter:grayscale(1) sepia(.15) brightness(1.22);}
+html[data-bird-theme="paper"] body .yao-bar.yao-none{background:#d9d1b55c;}
+
+/* M-217 白虎去蓝调：仅背景绘景滤色，保留金色器物。 */
+html[data-bird-theme="paper"] .desk{filter:grayscale(1) sepia(.12);}
+html[data-bird-theme="paper"] .swatch-paper{background:#ffffff;}
+
+html[data-bird-theme="paper"] .desk{filter:none;background:#242322;isolation:isolate;}
+html[data-bird-theme="paper"] .desk::after{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:url('图片/已批准/baihu_main_panel_master_v01.png') right center/calc(100% - clamp(264px,24vw,348px)) 100% no-repeat;filter:grayscale(1) sepia(.12);}
+@media(max-width:900px){html[data-bird-theme="paper"] .desk::after{background-size:cover;background-position:center;}}
+
+/* M-218 白虎白底浅色试用 */
+html[data-bird-theme="paper"]{--bg0:#f5f3ee;--bg1:#fcfaf5;--bg2:#e9e5db;--ink:#373530;--ink-dim:#736e63;--motif:#b9b5ad;--jade:#857c67;--jade-dim:#8e8677;--bronze:#aa9369;--gold:#8c7349;--gold-hi:#695330;--cinnabar:#9a7954;--line:#aa936966;--line-soft:#aa936933;--accent-rgb:170,147,105;--wash:#e8e4dc;color-scheme:light;}
+html[data-bird-theme="paper"] .desk{background:#f7f5f0;}
+html[data-bird-theme="paper"] .desk::after{filter:grayscale(1) invert(1);opacity:.16;}
+html[data-bird-theme="paper"] .desk::before{background:radial-gradient(ellipse 34% 44% at 62% 48%,#fffdf6e8,transparent 100%);opacity:1;}
+html[data-bird-theme="paper"] body .stage-wrap .aux{background:linear-gradient(145deg,#fffdf8,#eeeae1);border-color:#baa47b;scrollbar-color:#b6a079 #eeeae1;}
+html[data-bird-theme="paper"] .aux::after{filter:grayscale(1) invert(1);opacity:.13;}
+html[data-bird-theme="paper"] body .stage-wrap .aux :is(button.sj-btn,button.cast-btn,.act-btn,.mini-btn,.method-options label,.y-modes label,.question-input,.time-fields,.time-fields input){background:linear-gradient(135deg,#fffdf7,#e9e5da);color:#494035;border-color:#b7a078;box-shadow:inset 0 1px #fff;}
+html[data-bird-theme="paper"] body .stage-wrap .aux button.sj-btn::before,html[data-bird-theme="paper"] body .stage-wrap .aux button.cast-btn::before{filter:grayscale(1) invert(1) sepia(.25);opacity:.3;}
+html[data-bird-theme="paper"] body .stage-wrap .aux button.sj-btn.active::before{filter:grayscale(1) invert(1) sepia(.25);opacity:.6;}
+html[data-bird-theme="paper"] body .stage-wrap .aux button.sj-btn.active{background:#fff7df;color:#594421;border-color:#b18e4b;box-shadow:0 0 11px #c9ab6244,inset 0 0 8px #d8bb7d24;}
+html[data-bird-theme="paper"] body .stage-wrap .aux button.cast-btn{background:linear-gradient(135deg,#fff6d8,#e7d5ad);color:#554020;box-shadow:0 0 12px #cdb37440;}
+html[data-bird-theme="paper"] body .stage-wrap .aux button:hover:not(:disabled){background:#f5ecd8;color:#544126;}
+html[data-bird-theme="paper"] body .stage-wrap .aux .act-btn:disabled{background:#eeebe4;color:#a29b8e;border-color:#cec6b7;}
+html[data-bird-theme="paper"] body .stage-wrap .aux .method-options label:has(input:checked){background:#f2e9d5;}
+html[data-bird-theme="paper"] body .stage-wrap .aux .panel-title{color:#897047;}
+html[data-bird-theme="paper"] body .stage-wrap .aux .panel-title::before,html[data-bird-theme="paper"] body .stage-wrap .aux .panel-title::after{background:radial-gradient(circle,#ac9367 0 2px,transparent 2.5px) right center/5px 5px no-repeat,linear-gradient(90deg,#d6c6a8,#a88c5b) center/100% 1px no-repeat;}
+html[data-bird-theme="paper"] .question-input::placeholder{color:#8a8172;}
+html[data-bird-theme="paper"] :is(.hex-caption,.hex-meta,.hex-col-title,.yao-label,.yao-marker){text-shadow:none;}
+html[data-bird-theme="paper"] body .yao-bar.yao-none{background:#aa95766b;}
+html[data-bird-theme="paper"] :is(.boshi,.yarrow,.rec-drawer){background:linear-gradient(145deg,#fffdf7,#eee9df);color:#454038;}
+html[data-bird-theme="paper"] .rec-drawer{border-color:#b59c71;box-shadow:12px 0 35px #71655024;}
+html[data-bird-theme="paper"] .rec-drawer::before{filter:grayscale(1) invert(1);opacity:.12;}
+html[data-bird-theme="paper"] .rec-title{color:#775d35;border-color:#bcaa88;text-shadow:none;}
+html[data-bird-theme="paper"] .rec-title::after,html[data-bird-theme="paper"] .rec-item .rec-meta,html[data-bird-theme="paper"] .rec-item .rec-head i{color:#7d7362;}
+html[data-bird-theme="paper"] :is(.rec-close,.rec-clear,.rec-empty){background:#f4eedf;color:#75603e;border-color:#b9a17a;}
+html[data-bird-theme="paper"] .rec-item{background:linear-gradient(135deg,#fffdf6,#f0e8d8);border-color:#b8a27f;box-shadow:inset 0 1px #fff,0 3px 9px #75674413;}
+html[data-bird-theme="paper"] .rec-item:hover{background:#f7edda;border-color:#9e7f4e;}
+html[data-bird-theme="paper"] .rec-item .rec-head{color:#4b4030;}
+html[data-bird-theme="paper"] .rec-del{color:#8f7858;}
+html[data-bird-theme="paper"] .bird-palette{background:#fffaf0cc;border-color:#b7a586;}
+html[data-bird-theme="paper"] .east-nav-link{background:#fffaf1dd;color:#6c5737;border-color:#b7a586;}
+/* 浅底文字对比，覆盖深色试样的高特异性状态规则。 */
+html[data-bird-theme="paper"] body .stage-wrap .aux :is(button,.method-options label,.y-modes label){color:#514534 !important;border-color:#b4a17f;}
+html[data-bird-theme="paper"] body .stage-wrap .aux button:disabled{color:#91897d !important;}
+html[data-bird-theme="paper"] body .stage-wrap .aux button.sj-btn.active{color:#684e23 !important;}
+html[data-bird-theme="paper"] .east-nav-link{color:#6b5637 !important;}
+html[data-bird-theme="paper"] .cast-note{color:#776f61;text-shadow:none;}
+
+/* M-219 白虎背景纹样浅金着色，保留白底与绘景结构。 */
+html[data-bird-theme="paper"] .desk::after{filter:grayscale(1) invert(1) sepia(1) saturate(1.6);opacity:.24;}
+html[data-bird-theme="paper"] .desk::after{background:#bd995f;filter:none;opacity:.32;mask-image:url('图片/已批准/baihu_main_panel_master_v01.png');mask-mode:luminance;mask-repeat:no-repeat;mask-position:right center;mask-size:calc(100% - clamp(264px,24vw,348px)) 100%;}
+@media(max-width:900px){html[data-bird-theme="paper"] .desk::after{mask-size:cover;mask-position:center;}}
+
+/* M-176：以用户P2为准，次级控件保持简洁红漆，主按钮集中装饰。 */
+html[data-bird-theme="jade"] body .stage-wrap .aux button.sj-btn.active {
+  border:1px solid #f5d18a;
+  box-shadow:0 0 10px #e6a34c65,inset 0 0 9px #ffc76b28;
+  color:#ffe7b3;
+}
+html[data-bird-theme="jade"] body .stage-wrap .aux button.sj-btn.active::before {opacity:.85;filter:brightness(1.22);}
+html[data-bird-theme="jade"] body .stage-wrap .aux {background-image:linear-gradient(#080e1635,#080e1655),url('图片/已批准/zhuque_sidebar_master_v02.png');}
+html[data-bird-theme="jade"] body .stage-wrap .aux {padding-left:24px;padding-right:24px;scrollbar-color:#e8c68a #0d1624;scrollbar-width:thin;}
+html[data-bird-theme="jade"] body .stage-wrap .aux::-webkit-scrollbar {width:6px;}
+html[data-bird-theme="jade"] body .stage-wrap .aux::-webkit-scrollbar-thumb {background:#e8c68a;border-radius:4px;}
+html[data-bird-theme="jade"] body .stage-wrap .aux :is(.act-btn,.mini-btn,.method-options label,.y-modes label)::before {display:none;}
+html[data-bird-theme="jade"] body .stage-wrap .aux button.sj-btn::before {opacity:.48;}
+html[data-bird-theme="jade"] body .stage-wrap .aux :is(.sj-btn,.cast-btn) {border-color:transparent;box-shadow:none;}
+html[data-bird-theme="jade"] body .stage-wrap .aux button.cast-btn {box-shadow:0 0 13px #f1973b5c;}
+html[data-bird-theme="jade"] body .stage-wrap .aux .act-btn {background:linear-gradient(120deg,#111e30,#0c1522);border:1px solid #2f5489;color:#ddbc8d;box-shadow:inset 0 1px 0 #cba16b12;}
+html[data-bird-theme="jade"] body .stage-wrap .aux .act-btn:disabled {background:linear-gradient(120deg,#0f1a2b,#0b1421);color:#bda184;border-color:#2a4b7a;}
+html[data-bird-theme="jade"] body .stage-wrap .aux .act-btn.danger {border-color:#dbb77a;}
+html[data-bird-theme="jade"] body .stage-wrap .aux :is(.method-options label,.y-modes label,.question-input,.mini-btn) {background:linear-gradient(130deg,#15253c,#0c1522);border:1px solid #3a66a6;color:#e6ceaa;}
+html[data-bird-theme="jade"] body .stage-wrap .aux .method-options label:has(input:checked) {background:linear-gradient(130deg,#182b46,#0f1b2c);}
+html[data-bird-theme="jade"] body .stage-wrap .aux .panel-title {color:#e8c78d;font-weight:600;}
+html[data-bird-theme="jade"] body .stage-wrap .aux .panel-title::before,html[data-bird-theme="jade"] body .stage-wrap .aux .panel-title::after {height:6px;background:radial-gradient(circle,var(--gold) 0 2px,transparent 2.5px) right center/5px 5px no-repeat,linear-gradient(90deg,#335a93,#dcb479) center/100% 1px no-repeat;}
+html[data-bird-theme="jade"] body .stage-wrap .aux .panel-title::after {transform:scaleX(-1);}
+html[data-bird-theme="jade"] body .stage-wrap .aux .coins-stage {padding-top:22px;padding-bottom:16px;gap:12px;}
+
+
+/* M-182 用户批准朱雀铜钱正面v01、背面v03试用；保留原3D翻面。 */
+html[data-bird-theme="jade"] .coin .face {border:0;background-color:transparent;box-shadow:none;background-repeat:no-repeat;background-position:center;border-radius:50%;}
+html[data-bird-theme="jade"] .coin .face.front {background-image:url('图片/已批准/xuanwu_coin_front_master_v02.png');background-size:108.5% 108.5%;}
+html[data-bird-theme="jade"] .coin .face.back {background-image:url('图片/已批准/xuanwu_coin_back_master_v02.png');background-size:105.4% 105.4%;}
+html[data-bird-theme="jade"] .coin .face .coin-mark {visibility:hidden;}
+
+html[data-bird-theme="jade"] .coin .face::after {display:none;}
+
+/* M-186 批准的整根凤凰纹蓍草，原计数和分束不变。 */
+html[data-bird-theme="jade"] :is(.y-pile,.y-hung) i {background:transparent url('图片/已批准/zhuque_yarrow_web_v02.svg') center/100% 100% no-repeat;box-shadow:none;}
+.yarrow-art {display:none;}
+html[data-bird-theme="jade"] #sjYarrow > svg {display:none;}
+html[data-bird-theme="jade"] #sjYarrow .yarrow-art {display:flex;justify-content:center;align-items:center;gap:4px;width:40px;height:40px;}
+html[data-bird-theme="jade"] #sjYarrow .yarrow-art i {display:block;width:3px;height:36px;background:url('图片/已批准/zhuque_yarrow_web_v02.svg') center/100% 100% no-repeat;}
+html[data-bird-theme="jade"] #sjYarrow .yarrow-art i:nth-child(even) {height:30px;}
+
+/* M-187 P2卦录位置：桌面主画面左上，移动端保留可触达入口。 */
+@media(min-width:901px){html[data-bird-theme="jade"] .rec-prop {top:56px;bottom:auto;left:calc(clamp(264px,24vw,348px) + 12px);}}
+
+/* M-188 凤凰玉牌卦录挂饰，批准试用。 */
+.records-pendant {display:none;}
+html[data-bird-theme="jade"] .rec-prop .bamboo {display:none;}
+html[data-bird-theme="jade"] .records-pendant {display:block;width:110px;height:300px;object-fit:contain;pointer-events:none;}
+html[data-bird-theme="jade"] .rec-prop .prop-tag {top:76px;right:2px;}
+html[data-bird-theme="jade"] .rec-prop:hover {transform:translateY(2px);}
+html[data-bird-theme="jade"] .rec-prop:focus-visible {outline:1px solid #edc888;outline-offset:3px;}
+@media(min-width:901px){html[data-bird-theme="jade"] .rec-prop {top:0;left:calc(clamp(264px,24vw,348px) + 6px);}}
+@media(max-width:900px){html[data-bird-theme="jade"] .rec-prop {left:auto;right:8px;top:auto;bottom:12px;transform:none;}html[data-bird-theme="jade"] .records-pendant {width:66px;height:180px;}html[data-bird-theme="jade"] .rec-prop .prop-tag {top:42px;right:0;}}
+
+/* M-189 朱雀卦录：朱漆、赤金、玉色，保留记录数据。 */
+html[data-bird-theme="jade"] .rec-drawer {background:linear-gradient(155deg,#14243b 0%,#0a121e 45%,#060b12 100%);border-right:1px solid #d29b57;padding:28px 20px;box-shadow:16px 0 50px #03060999,inset -1px 0 #ffdb9625;}
+html[data-bird-theme="jade"] .rec-drawer::before {content:'';position:absolute;inset:0;pointer-events:none;background:url('图片/已批准/zhuque_sidebar_master_v02.png') center/100% 100% no-repeat;opacity:.24;z-index:-1;}
+html[data-bird-theme="jade"] .rec-title {font-size:21px;letter-spacing:12px;color:#ffdfa4;padding:9px 30px 22px;margin-bottom:22px;border-bottom:1px solid #deab6460;text-shadow:0 2px 8px #e473342e;}
+html[data-bird-theme="jade"] .rec-title::after {content:'卦象留存 · 回观所问';display:block;font-size:10px;letter-spacing:3px;color:#d7b58e;margin-top:9px;}
+html[data-bird-theme="jade"] .rec-close {top:7px;right:0;width:30px;height:30px;border-color:#dca36d;background:#101c2e;color:#ffe3ad;}
+html[data-bird-theme="jade"] .rec-item {position:relative;padding:16px 14px;margin-bottom:14px;border:1px solid #c28a50;border-radius:12px;background:linear-gradient(120deg,#1c3251e8,#0e1a2af5);box-shadow:inset 0 1px #ffe6b526,0 4px 12px #05080d35;}
+html[data-bird-theme="jade"] .rec-item::before {content:'';position:absolute;left:0;top:18px;bottom:18px;width:2px;background:linear-gradient(transparent,#f6cc81,transparent);pointer-events:none;}
+html[data-bird-theme="jade"] .rec-item:hover {border-color:#ffda8f;background:linear-gradient(120deg,#213b60,#121f33);box-shadow:0 0 12px #e48b3325;}
+html[data-bird-theme="jade"] .rec-item .rec-head {flex-wrap:wrap;gap:8px;color:#fff0cf;font-size:14px;line-height:1.6;}
+html[data-bird-theme="jade"] .rec-item .rec-head span {flex:1 1 calc(100% - 24px);order:0;}
+html[data-bird-theme="jade"] .rec-item .rec-head i {order:2;width:100%;font-size:10px;color:#d9ad87;letter-spacing:1px;}
+html[data-bird-theme="jade"] .rec-del {color:#eac796;order:1;padding:4px;}
+html[data-bird-theme="jade"] .rec-item .rec-meta {color:#ecd6b7;line-height:1.9;font-size:11px;}
+html[data-bird-theme="jade"] .rec-clear {border:1px solid #b77a50;border-radius:18px;padding:8px 20px;color:#efc99a;background:#0b1421;margin:24px auto;}
+html[data-bird-theme="jade"] .rec-clear:hover {border-color:#ffdb99;color:#fff0cf;}
+html[data-bird-theme="jade"] .rec-empty {color:#ead6b8;border:1px solid #b57f4e70;border-radius:12px;background:#0f1b2c80;margin-top:24px;padding:32px 12px;}
+
+html[data-bird-theme="jade"] .rec-item .rec-head {position:relative;padding-right:22px;}
+html[data-bird-theme="jade"] .rec-item .rec-head span {flex-basis:100%;}
+html[data-bird-theme="jade"] .rec-del {position:absolute;right:-4px;top:0;}
+
+/* M-190 删除按钮固定卡片右上，更新缓存版本。 */
+html[data-bird-theme="jade"] .rec-item {position:relative;}
+html[data-bird-theme="jade"] .rec-item .rec-head {position:static;padding-right:28px;}
+html[data-bird-theme="jade"] .rec-item .rec-del {position:absolute;left:auto;right:10px;top:13px;width:24px;height:24px;padding:0;display:grid;place-items:center;}
+
+@media(max-width:900px) {html[data-bird-theme="jade"] .desk {background-size:cover;background-position:center;}}
+
+
+
+
+
+/* M-221 玄武接入 */
+html[data-bird-theme="jade"]{--bg0:#081321;--bg1:#102339;--bg2:#1a3651;--ink:#ede4cf;--ink-dim:#b6c1cb;--motif:#7798b6;--jade:#c5b584;--jade-dim:#8eabc0;--bronze:#b79a61;--gold:#debf81;--gold-hi:#ffe4ae;--cinnabar:#cfad79;--line:#b79a6166;--line-soft:#b79a6133;--accent-rgb:183,154,97;--wash:#263d55;color-scheme:dark;}
+html[data-bird-theme="jade"] .desk{background:#081321 url('图片/已批准/xuanwu_landscape_master_v01.png') right center/calc(100% - clamp(264px,24vw,348px)) 100% no-repeat;}
+html[data-bird-theme="jade"] .desk::before{background:radial-gradient(ellipse 36% 48% at 62% 48%,#071321ee,#0713219c 65%,transparent),linear-gradient(#07132130,#07132165);opacity:1;}
+html[data-bird-theme="jade"] body .stage-wrap .aux{position:relative;isolation:isolate;background:linear-gradient(145deg,#102b44,#071423);}
+html[data-bird-theme="jade"] .aux::after{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:url('图片/已批准/zhuque_sidebar_master_v02.png') center/100% 100% no-repeat;filter:grayscale(1) sepia(.5) hue-rotate(165deg);opacity:.23;}
+html[data-bird-theme="jade"] body .stage-wrap .aux button.sj-btn,html[data-bird-theme="jade"] body .stage-wrap .aux button.cast-btn{position:relative;isolation:isolate;border:1px solid #b99b62;background:#10273e;}
+html[data-bird-theme="jade"] body .stage-wrap .aux button.sj-btn::before,html[data-bird-theme="jade"] body .stage-wrap .aux button.cast-btn::before{content:'';position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;background:url('图片/已批准/zhuque_card_web_v01.svg') center/100% 100% no-repeat;filter:grayscale(1) sepia(.7) hue-rotate(165deg) saturate(2);opacity:.6;}
+html[data-bird-theme="jade"] body .stage-wrap .aux button.cast-btn::before{background-image:url('图片/已批准/zhuque_button_web_v01.svg');opacity:.85;}
+html[data-bird-theme="jade"] body .stage-wrap .aux button.sj-btn.active::before{filter:grayscale(1) sepia(.7) hue-rotate(165deg) saturate(2) brightness(1.2);}
+html[data-bird-theme="jade"] .coin .face.front,html[data-bird-theme="jade"] .coin .face.back{background-size:100% 100%;}
+.records-pendant-xuanwu{display:none;}
+html[data-bird-theme="jade"] .records-pendant{display:none;}
+html[data-bird-theme="jade"] .records-pendant-xuanwu{display:block;width:110px;height:300px;object-fit:contain;pointer-events:none;}
+html[data-bird-theme="jade"] .rec-drawer::before{filter:grayscale(1) sepia(.5) hue-rotate(165deg);}
+html[data-bird-theme="jade"] #sjYarrow>svg{display:block;}
+html[data-bird-theme="jade"] #sjYarrow .yarrow-art{display:none;}
+html[data-bird-theme="jade"] :is(.y-pile,.y-hung) i{background:linear-gradient(90deg,#836e46,#cfba84,#94805a);}
+html[data-bird-theme="jade"] body .yao-bar.yao-none{background:#d5bc8059;}
+@media(max-width:900px){html[data-bird-theme="jade"] .desk{background-size:cover;background-position:center;}html[data-bird-theme="jade"] .records-pendant-xuanwu{width:66px;height:180px;}}
+
+
+/* M-223 青龙：批准素材试接，浅玉与淡金。 */
+.records-pendant-qinglong{display:none;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux button.sj-btn.active::before {opacity:.85;filter:brightness(1.22);}
+html[data-bird-theme="apricot"] body .stage-wrap .aux {background-image:linear-gradient(#11100e35,#11100e55),url('图片/已批准/zhuque_sidebar_master_v02.png');}
+html[data-bird-theme="apricot"] body .stage-wrap .aux {padding-left:24px;padding-right:24px;scrollbar-color:#c4c3c1 #1c1b19;scrollbar-width:thin;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux::-webkit-scrollbar {width:6px;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux::-webkit-scrollbar-thumb {background:#c4c3c1;border-radius:4px;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux :is(.act-btn,.mini-btn,.method-options label,.y-modes label)::before {display:none;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux button.sj-btn::before {opacity:.48;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux :is(.sj-btn,.cast-btn) {border-color:transparent;box-shadow:none;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux button.cast-btn {box-shadow:0 0 13px #a09f9d5c;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux .act-btn {background:linear-gradient(120deg,#252422,#1a1917);border:1px solid #696866;color:#bdbcba;box-shadow:inset 0 1px 0 #a3a2a012;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux .act-btn:disabled {background:linear-gradient(120deg,#21201e,#191816);color:#a4a3a1;border-color:#5e5d5b;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux .act-btn.danger {border-color:#b6b5b3;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux :is(.method-options label,.y-modes label,.question-input,.mini-btn) {background:linear-gradient(130deg,#2e2d2b,#1a1917);border:1px solid #807f7d;color:#cecdcb;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux .method-options label:has(input:checked) {background:linear-gradient(130deg,#363533,#22211f);}
+html[data-bird-theme="apricot"] body .stage-wrap .aux .panel-title {color:#c5c4c2;font-weight:600;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux .panel-title::before,html[data-bird-theme="apricot"] body .stage-wrap .aux .panel-title::after {height:6px;background:radial-gradient(circle,var(--gold) 0 2px,transparent 2.5px) right center/5px 5px no-repeat,linear-gradient(90deg,#71706e,#b4b3b1) center/100% 1px no-repeat;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux .panel-title::after {transform:scaleX(-1);}
+html[data-bird-theme="apricot"] body .stage-wrap .aux .coins-stage {padding-top:22px;padding-bottom:16px;gap:12px;}
+html[data-bird-theme="apricot"] .coin .face {border:0;background-color:transparent;box-shadow:none;background-repeat:no-repeat;background-position:center;border-radius:50%;}
+html[data-bird-theme="apricot"] .coin .face.front {background-image:url('图片/已批准/qinglong_coin_front_master_v02.png');background-size:108.5% 108.5%;}
+html[data-bird-theme="apricot"] .coin .face.back {background-image:url('图片/已批准/qinglong_coin_back_master_v02.png');background-size:105.4% 105.4%;}
+html[data-bird-theme="apricot"] .coin .face .coin-mark {visibility:hidden;}
+html[data-bird-theme="apricot"] .coin .face::after {display:none;}
+html[data-bird-theme="apricot"] :is(.y-pile,.y-hung) i {background:transparent url('图片/已批准/zhuque_yarrow_web_v02.svg') center/100% 100% no-repeat;box-shadow:none;}
+html[data-bird-theme="apricot"] #sjYarrow > svg {display:none;}
+html[data-bird-theme="apricot"] #sjYarrow .yarrow-art {display:flex;justify-content:center;align-items:center;gap:4px;width:40px;height:40px;}
+html[data-bird-theme="apricot"] #sjYarrow .yarrow-art i {display:block;width:3px;height:36px;background:url('图片/已批准/zhuque_yarrow_web_v02.svg') center/100% 100% no-repeat;}
+html[data-bird-theme="apricot"] #sjYarrow .yarrow-art i:nth-child(even) {height:30px;}
+@media(min-width:901px){html[data-bird-theme="apricot"] .rec-prop {top:56px;bottom:auto;left:calc(clamp(264px,24vw,348px) + 12px);}}
+html[data-bird-theme="apricot"] .rec-prop .bamboo {display:none;}
+html[data-bird-theme="apricot"] .records-pendant {display:block;width:110px;height:300px;object-fit:contain;pointer-events:none;}
+html[data-bird-theme="apricot"] .rec-prop .prop-tag {top:76px;right:2px;}
+html[data-bird-theme="apricot"] .rec-prop:hover {transform:translateY(2px);}
+html[data-bird-theme="apricot"] .rec-prop:focus-visible {outline:1px solid #c6c5c3;outline-offset:3px;}
+@media(min-width:901px){html[data-bird-theme="apricot"] .rec-prop {top:0;left:calc(clamp(264px,24vw,348px) + 6px);}}
+@media(max-width:900px){html[data-bird-theme="apricot"] .rec-prop {left:auto;right:8px;top:auto;bottom:12px;transform:none;}html[data-bird-theme="apricot"] .records-pendant {width:66px;height:180px;}html[data-bird-theme="apricot"] .rec-prop .prop-tag {top:42px;right:0;}}
+html[data-bird-theme="apricot"] .rec-drawer {background:linear-gradient(155deg,#2d2c2a 0%,#171614 45%,#0e0d0b 100%);border-right:1px solid #9e9d9b;padding:28px 20px;box-shadow:16px 0 50px #08070599,inset -1px 0 #d8d7d525;}
+html[data-bird-theme="apricot"] .rec-drawer::before {content:'';position:absolute;inset:0;pointer-events:none;background:url('图片/已批准/zhuque_sidebar_master_v02.png') center/100% 100% no-repeat;opacity:.24;z-index:-1;}
+html[data-bird-theme="apricot"] .rec-title {font-size:21px;letter-spacing:12px;color:#dddcda;padding:9px 30px 22px;margin-bottom:22px;border-bottom:1px solid #acaba960;text-shadow:0 2px 8px #8887852e;}
+html[data-bird-theme="apricot"] .rec-title::after {content:'卦象留存 · 回观所问';display:block;font-size:10px;letter-spacing:3px;color:#b7b6b4;margin-top:9px;}
+html[data-bird-theme="apricot"] .rec-close {top:7px;right:0;width:30px;height:30px;border-color:#a9a8a6;background:#232220;color:#e1e0de;}
+html[data-bird-theme="apricot"] .rec-item {position:relative;padding:16px 14px;margin-bottom:14px;border:1px solid #8f8e8c;border-radius:12px;background:linear-gradient(120deg,#3e3d3be8,#201f1df5);box-shadow:inset 0 1px #e4e3e126,0 4px 12px #0a090735;}
+html[data-bird-theme="apricot"] .rec-item::before {content:'';position:absolute;left:0;top:18px;bottom:18px;width:2px;background:linear-gradient(transparent,#cac9c7,transparent);pointer-events:none;}
+html[data-bird-theme="apricot"] .rec-item:hover {border-color:#d6d5d3;background:linear-gradient(120deg,#4a4947,#272624);box-shadow:0 0 12px #94939125;}
+html[data-bird-theme="apricot"] .rec-item .rec-head {flex-wrap:wrap;gap:8px;color:#eeedeb;font-size:14px;line-height:1.6;}
+html[data-bird-theme="apricot"] .rec-item .rec-head span {flex:1 1 calc(100% - 24px);order:0;}
+html[data-bird-theme="apricot"] .rec-item .rec-head i {order:2;width:100%;font-size:10px;color:#b3b2b0;letter-spacing:1px;}
+html[data-bird-theme="apricot"] .rec-del {color:#c8c7c5;order:1;padding:4px;}
+html[data-bird-theme="apricot"] .rec-item .rec-meta {color:#d6d5d3;line-height:1.9;font-size:11px;}
+html[data-bird-theme="apricot"] .rec-clear {border:1px solid #848381;border-radius:18px;padding:8px 20px;color:#cbcac8;background:#191816;margin:24px auto;}
+html[data-bird-theme="apricot"] .rec-clear:hover {border-color:#d9d8d6;color:#eeedeb;}
+html[data-bird-theme="apricot"] .rec-empty {color:#d6d5d3;border:1px solid #85848270;border-radius:12px;background:#22211f80;margin-top:24px;padding:32px 12px;}
+html[data-bird-theme="apricot"] .rec-item .rec-head {position:relative;padding-right:22px;}
+html[data-bird-theme="apricot"] .rec-item .rec-head span {flex-basis:100%;}
+html[data-bird-theme="apricot"] .rec-del {position:absolute;right:-4px;top:0;}
+html[data-bird-theme="apricot"] .rec-item {position:relative;}
+html[data-bird-theme="apricot"] .rec-item .rec-head {position:static;padding-right:28px;}
+html[data-bird-theme="apricot"] .rec-item .rec-del {position:absolute;left:auto;right:10px;top:13px;width:24px;height:24px;padding:0;display:grid;place-items:center;}
+@media(max-width:900px) {html[data-bird-theme="apricot"] .desk {background-size:cover;background-position:center;}}
+html[data-bird-theme="apricot"]{--bg0:#1f1e1c;--bg1:#302f2d;--bg2:#454442;--ink:#f2eee2;--ink-dim:#c9c8c6;--motif:#a7a6a4;--jade:#ded8bd;--jade-dim:#c5c4c2;--bronze:#c2b18b;--gold:#e1d1aa;--gold-hi:#fff2cf;--cinnabar:#d7c1a4;--line:#c2b18b66;--line-soft:#c2b18b33;--accent-rgb:194,177,139;--wash:#51504e;color-scheme:dark;}
+html[data-bird-theme="apricot"] .desk{background:#232220 url('图片/已批准/baihu_main_panel_master_v01.png') right center/calc(100% - clamp(264px,24vw,348px)) 100% no-repeat;}
+html[data-bird-theme="apricot"] .desk::before{background:radial-gradient(ellipse 33% 43% at 62% 48%,#1b1a18d9,transparent 100%),linear-gradient(#1b1a1828,#1b1a1850);opacity:1;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux{isolation:isolate;background:linear-gradient(145deg,#373634,#1d1c1a);padding-left:24px;padding-right:24px;}
+html[data-bird-theme="apricot"] .aux::after{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:url('图片/已批准/zhuque_sidebar_master_v02.png') center/100% 100% no-repeat;filter:grayscale(1);opacity:.2;}
+html[data-bird-theme="apricot"] .aux{position:relative;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux button.sj-btn,html[data-bird-theme="apricot"] body .stage-wrap .aux button.cast-btn{position:relative;isolation:isolate;background:#343331;border:1px solid #bdae8a;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux button.sj-btn::before,html[data-bird-theme="apricot"] body .stage-wrap .aux button.cast-btn::before{content:'';display:block;position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;background:url('图片/已批准/zhuque_card_web_v01.svg') center/100% 100% no-repeat;filter:grayscale(1) sepia(.15);opacity:.55;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux button.cast-btn::before{background-image:url('图片/已批准/zhuque_button_web_v01.svg');opacity:.7;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux button.sj-btn.active{border-color:#fff0c5;box-shadow:0 0 12px #dfd6b566,inset 0 0 9px #f5f4f228;color:#fff4d9;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux .act-btn,html[data-bird-theme="apricot"] body .stage-wrap .aux :is(.method-options label,.y-modes label,.question-input,.mini-btn){background:linear-gradient(130deg,#434240,#2a2927);color:#eee6d1;border-color:#a49374;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux .act-btn:disabled{background:#2f2e2c;color:#a4a3a1;border-color:#767573;}
+html[data-bird-theme="apricot"] .coin .face.front,html[data-bird-theme="apricot"] .coin .face.back{background-size:100% 100%;}
+html[data-bird-theme="apricot"] .records-pendant{display:none;}
+html[data-bird-theme="apricot"] .records-pendant-qinglong{display:block;width:110px;height:300px;object-fit:contain;pointer-events:none;}
+html[data-bird-theme="apricot"] .rec-drawer::before{filter:grayscale(1);}
+html[data-bird-theme="apricot"] :is(.hex-caption,.hex-meta,.hex-col-title,.yao-label,.yao-marker){text-shadow:0 1px 5px #181715;}
+@media(max-width:900px){html[data-bird-theme="apricot"] .desk{background-size:cover;}html[data-bird-theme="apricot"] .records-pendant-qinglong{width:66px;height:180px;}}
+html[data-bird-theme="apricot"] #sjYarrow>svg{display:block;}html[data-bird-theme="apricot"] #sjYarrow .yarrow-art{display:none;}html[data-bird-theme="apricot"] :is(.y-pile,.y-hung) i{background:linear-gradient(90deg,#958967,#ddd4ac,#a99c77);}
+html[data-bird-theme="apricot"] body .stage-wrap .aux button.sj-btn.active::before{filter:grayscale(1) sepia(.15) brightness(1.22);}
+html[data-bird-theme="apricot"] body .yao-bar.yao-none{background:#d9d1b55c;}
+html[data-bird-theme="apricot"] .desk{filter:grayscale(1) sepia(.12);}
+html[data-bird-theme="apricot"] .swatch-paper{background:#ffffff;}
+html[data-bird-theme="apricot"] .desk{filter:none;background:#242322;isolation:isolate;}
+html[data-bird-theme="apricot"] .desk::after{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:url('图片/已批准/baihu_main_panel_master_v01.png') right center/calc(100% - clamp(264px,24vw,348px)) 100% no-repeat;filter:grayscale(1) sepia(.12);}
+@media(max-width:900px){html[data-bird-theme="apricot"] .desk::after{background-size:cover;background-position:center;}}
+html[data-bird-theme="apricot"]{--bg0:#f5f3ee;--bg1:#fcfaf5;--bg2:#e9e5db;--ink:#373530;--ink-dim:#736e63;--motif:#b9b5ad;--jade:#857c67;--jade-dim:#8e8677;--bronze:#aa9369;--gold:#8c7349;--gold-hi:#695330;--cinnabar:#9a7954;--line:#aa936966;--line-soft:#aa936933;--accent-rgb:170,147,105;--wash:#e8e4dc;color-scheme:light;}
+html[data-bird-theme="apricot"] .desk{background:#f7f5f0;}
+html[data-bird-theme="apricot"] .desk::after{filter:grayscale(1) invert(1);opacity:.16;}
+html[data-bird-theme="apricot"] .desk::before{background:radial-gradient(ellipse 34% 44% at 62% 48%,#fffdf6e8,transparent 100%);opacity:1;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux{background:linear-gradient(145deg,#fffdf8,#eeeae1);border-color:#baa47b;scrollbar-color:#b6a079 #eeeae1;}
+html[data-bird-theme="apricot"] .aux::after{filter:grayscale(1) invert(1);opacity:.13;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux :is(button.sj-btn,button.cast-btn,.act-btn,.mini-btn,.method-options label,.y-modes label,.question-input,.time-fields,.time-fields input){background:linear-gradient(135deg,#fffdf7,#e9e5da);color:#494035;border-color:#b7a078;box-shadow:inset 0 1px #fff;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux button.sj-btn::before,html[data-bird-theme="apricot"] body .stage-wrap .aux button.cast-btn::before{filter:grayscale(1) invert(1) sepia(.25);opacity:.3;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux button.sj-btn.active::before{filter:grayscale(1) invert(1) sepia(.25);opacity:.6;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux button.sj-btn.active{background:#fff7df;color:#594421;border-color:#b18e4b;box-shadow:0 0 11px #c9ab6244,inset 0 0 8px #d8bb7d24;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux button.cast-btn{background:linear-gradient(135deg,#fff6d8,#e7d5ad);color:#554020;box-shadow:0 0 12px #cdb37440;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux button:hover:not(:disabled){background:#f5ecd8;color:#544126;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux .act-btn:disabled{background:#eeebe4;color:#a29b8e;border-color:#cec6b7;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux .method-options label:has(input:checked){background:#f2e9d5;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux .panel-title{color:#897047;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux .panel-title::before,html[data-bird-theme="apricot"] body .stage-wrap .aux .panel-title::after{background:radial-gradient(circle,#ac9367 0 2px,transparent 2.5px) right center/5px 5px no-repeat,linear-gradient(90deg,#d6c6a8,#a88c5b) center/100% 1px no-repeat;}
+html[data-bird-theme="apricot"] .question-input::placeholder{color:#8a8172;}
+html[data-bird-theme="apricot"] :is(.hex-caption,.hex-meta,.hex-col-title,.yao-label,.yao-marker){text-shadow:none;}
+html[data-bird-theme="apricot"] body .yao-bar.yao-none{background:#aa95766b;}
+html[data-bird-theme="apricot"] :is(.boshi,.yarrow,.rec-drawer){background:linear-gradient(145deg,#fffdf7,#eee9df);color:#454038;}
+html[data-bird-theme="apricot"] .rec-drawer{border-color:#b59c71;box-shadow:12px 0 35px #71655024;}
+html[data-bird-theme="apricot"] .rec-drawer::before{filter:grayscale(1) invert(1);opacity:.12;}
+html[data-bird-theme="apricot"] .rec-title{color:#775d35;border-color:#bcaa88;text-shadow:none;}
+html[data-bird-theme="apricot"] .rec-title::after,html[data-bird-theme="apricot"] .rec-item .rec-meta,html[data-bird-theme="apricot"] .rec-item .rec-head i{color:#7d7362;}
+html[data-bird-theme="apricot"] :is(.rec-close,.rec-clear,.rec-empty){background:#f4eedf;color:#75603e;border-color:#b9a17a;}
+html[data-bird-theme="apricot"] .rec-item{background:linear-gradient(135deg,#fffdf6,#f0e8d8);border-color:#b8a27f;box-shadow:inset 0 1px #fff,0 3px 9px #75674413;}
+html[data-bird-theme="apricot"] .rec-item:hover{background:#f7edda;border-color:#9e7f4e;}
+html[data-bird-theme="apricot"] .rec-item .rec-head{color:#4b4030;}
+html[data-bird-theme="apricot"] .rec-del{color:#8f7858;}
+html[data-bird-theme="apricot"] .bird-palette{background:#fffaf0cc;border-color:#b7a586;}
+html[data-bird-theme="apricot"] .east-nav-link{background:#fffaf1dd;color:#6c5737;border-color:#b7a586;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux :is(button,.method-options label,.y-modes label){color:#31584b !important;border-color:#b4a17f;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux button:disabled{color:#91897d !important;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux button.sj-btn.active{color:#1e6652 !important;}
+html[data-bird-theme="apricot"] .east-nav-link{color:#6b5637 !important;}
+html[data-bird-theme="apricot"] .cast-note{color:#776f61;text-shadow:none;}
+html[data-bird-theme="apricot"] .desk::after{filter:grayscale(1) invert(1) sepia(1) saturate(1.6);opacity:.24;}
+html[data-bird-theme="apricot"] .desk::after{background:#bd995f;filter:none;opacity:.32;mask-image:url('图片/已批准/baihu_main_panel_master_v01.png');mask-mode:luminance;mask-repeat:no-repeat;mask-position:right center;mask-size:calc(100% - clamp(264px,24vw,348px)) 100%;}
+@media(max-width:900px){html[data-bird-theme="apricot"] .desk::after{mask-size:cover;mask-position:center;}}
+html[data-bird-theme="apricot"]{--bg0:#f1f7ef;--bg1:#e7efe3;--bg2:#dbe8d7;--ink:#294a3e;--ink-dim:#687d6b;--motif:#75947a;--jade:#39836b;--jade-dim:#709c84;--bronze:#a68b55;--gold:#b29965;--gold-hi:#d5bd82;--line:#99ac8766;--line-soft:#99ac8733;color-scheme:light;}
+html[data-bird-theme="apricot"] .desk{background:radial-gradient(ellipse at 65% 45%,#fffef5,#e5efe2);}
+html[data-bird-theme="apricot"] .desk::after{mask-image:none;filter:none;opacity:.23;background:var(--beast-pattern) right 6% top 15%/500px 500px no-repeat,url('图片/已批准/zhuque_sidebar_master_v02.png') right center/calc(100% - clamp(264px,24vw,348px)) 100% no-repeat;filter:grayscale(1) invert(1) sepia(.45) hue-rotate(65deg);}
+html[data-bird-theme="apricot"] .desk::before{background:radial-gradient(ellipse 40% 45% at 62% 48%,#f8fcf0f0,transparent);opacity:1;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux{background:linear-gradient(145deg,#f8fcf2,#dfead9);}
+html[data-bird-theme="apricot"] body .stage-wrap .aux button.sj-btn.active{background:#d8ebd8;border-color:#6c9c73;box-shadow:0 0 12px #6baf6b55;}
+html[data-bird-theme="apricot"] body .stage-wrap .aux button.cast-btn{background:linear-gradient(135deg,#e7f2dc,#cbdcbb);}
+html[data-bird-theme="apricot"] .coin .face.front,html[data-bird-theme="apricot"] .coin .face.back{background-size:100% 100%;}
+html[data-bird-theme="apricot"] .records-pendant{display:none;}
+html[data-bird-theme="apricot"] .records-pendant-qinglong{display:block;width:130px;height:300px;object-fit:contain;pointer-events:none;}
+html[data-bird-theme="apricot"] #sjYarrow>svg{display:block;}
+html[data-bird-theme="apricot"] #sjYarrow .yarrow-art{display:none;}
+html[data-bird-theme="apricot"] :is(.y-pile,.y-hung) i{background:linear-gradient(90deg,#688a60,#d8dbaa,#59875f);}
+@media(max-width:900px){html[data-bird-theme="apricot"] .desk::after{background-size:340px 340px,cover;}html[data-bird-theme="apricot"] .records-pendant-qinglong{width:78px;height:180px;}}
+/* M-224 青龙主画面采用浅青玉纯色，取消插画背景。 */
+html[data-bird-theme="apricot"] .desk {background:#edf4e9;}
+html[data-bird-theme="apricot"] .desk::before,html[data-bird-theme="apricot"] .desk::after {display:none;background:none;mask-image:none;}
+/* M-225 朱雀、玄武主画面纯色，与青龙保持简洁。 */
+html[data-bird-theme="rouge"] .desk {background:#310b08;}
+html[data-bird-theme="jade"] .desk {background:#0b1929;}
+html[data-bird-theme="rouge"] .desk::before,html[data-bird-theme="rouge"] .desk::after,
+html[data-bird-theme="jade"] .desk::before,html[data-bird-theme="jade"] .desk::after {display:none;background:none;mask-image:none;}
+/* M-226 朱雀侧栏纹样降为暗纹，独立图层不影响按钮文字。 */
+html[data-bird-theme="rouge"] body .stage-wrap .aux {position:relative;isolation:isolate;background:linear-gradient(145deg,#39110d,#260a08);}
+html[data-bird-theme="rouge"] .aux::after {content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:url('图片/已批准/zhuque_sidebar_master_v02.png') center/100% 100% no-repeat;filter:brightness(.65) saturate(.75);opacity:.2;}
+
+
+
+/* M-233 已批准朱雀锦缎，四方平铺低对比。 */
+html[data-bird-theme="rouge"] .desk {background:linear-gradient(#310b08b3,#310b08b3),url('图片/已批准/zhuque_brocade_tile_master_v01.png') repeat;background-size:auto,640px 640px;}
+/* M-234 用户批准三套独立锦缎暗纹试接；主画面四方平铺。 */
+html[data-bird-theme="paper"] .desk {background:linear-gradient(#fffdf7aa,#fffdf7aa),url('图片/已批准/baihu_brocade_tile_master_v01.png') repeat;background-size:auto,640px 640px;}
+html[data-bird-theme="jade"] .desk {background:linear-gradient(#0b1929bb,#0b1929bb),url('图片/已批准/xuanwu_brocade_tile_master_v01.png') repeat;background-size:auto,640px 640px;}
+html[data-bird-theme="apricot"] .desk {background:linear-gradient(#edf4e9cc,#edf4e9cc),url('图片/已批准/qinglong_brocade_tile_master_v01.png') repeat;background-size:auto,640px 640px;}
+html[data-bird-theme="paper"] .desk::before,html[data-bird-theme="paper"] .desk::after {display:none;background:none;mask-image:none;}
+/* M-236 三象蓍草整根主题纹路，保留分束计数。 */
+html[data-bird-theme="paper"] {--yarrow-art:url('图片/已批准/baihu_yarrow_web_v01.svg');}
+html[data-bird-theme="jade"] {--yarrow-art:url('图片/已批准/xuanwu_yarrow_web_v01.svg');}
+html[data-bird-theme="apricot"] {--yarrow-art:url('图片/已批准/qinglong_yarrow_web_v01.svg');}
+html:is([data-bird-theme="paper"],[data-bird-theme="jade"],[data-bird-theme="apricot"]) :is(.y-pile,.y-hung) i {background:var(--yarrow-art) center/100% 100% no-repeat;box-shadow:none;}
+html:is([data-bird-theme="paper"],[data-bird-theme="jade"],[data-bird-theme="apricot"]) #sjYarrow>svg {display:none;}
+html:is([data-bird-theme="paper"],[data-bird-theme="jade"],[data-bird-theme="apricot"]) #sjYarrow .yarrow-art {display:flex;justify-content:center;align-items:center;gap:4px;width:40px;height:40px;}
+html:is([data-bird-theme="paper"],[data-bird-theme="jade"],[data-bird-theme="apricot"]) #sjYarrow .yarrow-art i {display:block;width:3px;height:36px;background:var(--yarrow-art) center/100% 100% no-repeat;}
+html:is([data-bird-theme="paper"],[data-bird-theme="jade"],[data-bird-theme="apricot"]) #sjYarrow .yarrow-art i:nth-child(even) {height:30px;}
+/* M-237 锦缎衬底、素面承字、细金收边：左栏与卦录小样。 */
+html[data-bird-theme="rouge"] {--cloth:url('图片/已批准/zhuque_brocade_tile_master_v01.png');--cloth-wash:#310b08db;--surface:#39150f;--surface-hi:#54251a;--surface-soft:#2d100d;--surface-ink:#ead9b8;--surface-muted:#bea58b;--surface-edge:#a980526e;--surface-accent:#d3ae72;}
+html[data-bird-theme="paper"] {--cloth:url('图片/已批准/baihu_brocade_tile_master_v01.png');--cloth-wash:#fffdf7d9;--surface:#fffdf6;--surface-hi:#f7efd9;--surface-soft:#f4f0e6;--surface-ink:#514735;--surface-muted:#887e6d;--surface-edge:#bba78188;--surface-accent:#a3874f;}
+html[data-bird-theme="jade"] {--cloth:url('图片/已批准/xuanwu_brocade_tile_master_v01.png');--cloth-wash:#0b1929db;--surface:#12273b;--surface-hi:#1d3850;--surface-soft:#0e2032;--surface-ink:#e6dbc2;--surface-muted:#a8b4bc;--surface-edge:#a68e626e;--surface-accent:#cfb27a;}
+html[data-bird-theme="apricot"] {--cloth:url('图片/已批准/qinglong_brocade_tile_master_v01.png');--cloth-wash:#edf4e9e6;--surface:#f7faf0;--surface-hi:#e3efd9;--surface-soft:#eaf1e3;--surface-ink:#365b48;--surface-muted:#758775;--surface-edge:#9cab7e88;--surface-accent:#8a9862;}
+html[data-bird-theme] body .stage-wrap .aux {background:linear-gradient(var(--cloth-wash),var(--cloth-wash)),var(--cloth) repeat;background-size:auto,440px 440px;border-right:1px solid var(--surface-edge);box-shadow:6px 0 20px #0000000d;}
+html[data-bird-theme] body .stage-wrap .aux::after {display:none;}
+html[data-bird-theme] body .stage-wrap .aux :is(button.sj-btn,button.cast-btn,.act-btn,.mini-btn,.method-options label,.y-modes label,.question-input,.time-fields,.time-fields input) {background:var(--surface);color:var(--surface-ink) !important;border:1px solid var(--surface-edge);box-shadow:inset 0 1px 0 #ffffff0d;}
+html[data-bird-theme] body .stage-wrap .aux :is(button,.method-options label,.y-modes label)::before {display:none;}
+html[data-bird-theme] body .stage-wrap .aux button.sj-btn {border-radius:14px;}
+html[data-bird-theme] body .stage-wrap .aux button.sj-btn.active {background:var(--surface-hi);color:var(--surface-ink) !important;border-color:var(--surface-accent);box-shadow:inset 0 0 0 1px var(--surface-edge),0 0 12px #b99b5420;}
+html[data-bird-theme] body .stage-wrap .aux :is(.method-options label,.y-modes label):has(input:checked) {background:var(--surface-hi);border-color:var(--surface-accent);}
+html[data-bird-theme] body .stage-wrap .aux button.cast-btn {background:var(--surface-hi);border-color:var(--surface-accent);box-shadow:0 3px 12px #00000018;}
+html[data-bird-theme] body .stage-wrap .aux button:hover:not(:disabled) {background:var(--surface-hi);color:var(--surface-ink);border-color:var(--surface-accent);}
+html[data-bird-theme] body .stage-wrap .aux button:disabled {background:var(--surface-soft);color:var(--surface-muted) !important;border-color:var(--surface-edge);box-shadow:none;opacity:.65;}
+html[data-bird-theme] body .stage-wrap .aux :is(.cast-note,.y-note) {color:var(--surface-muted);text-shadow:none;}
+html[data-bird-theme] body .stage-wrap .aux .question-input::placeholder {color:var(--surface-muted);}
+html[data-bird-theme] body .rec-drawer {isolation:isolate;background:linear-gradient(var(--cloth-wash),var(--cloth-wash)),var(--cloth) repeat;background-size:auto,440px 440px;border-right:1px solid var(--surface-accent);box-shadow:12px 0 36px #00000025;padding:28px 20px;}
+html[data-bird-theme] body .rec-drawer::before {display:none;}
+html[data-bird-theme] body .rec-title {color:var(--surface-ink);text-shadow:none;border-bottom:1px solid var(--surface-edge);font-size:22px;letter-spacing:10px;padding:8px 34px 22px;}
+html[data-bird-theme] body .rec-title::after {content:'卦象留存 · 回观所问';color:var(--surface-muted);font-size:10px;letter-spacing:3px;}
+html[data-bird-theme] body .rec-item {background:var(--surface);border:1px solid var(--surface-edge);border-radius:10px;padding:18px 16px;margin-bottom:14px;box-shadow:0 3px 10px #0000000a;}
+html[data-bird-theme] body .rec-item::before {display:none;}
+html[data-bird-theme] body .rec-item:hover {background:var(--surface-hi);border-color:var(--surface-accent);box-shadow:0 3px 12px #00000012;}
+html[data-bird-theme] body .rec-item .rec-head {color:var(--surface-ink);font-size:14px;line-height:1.7;}
+html[data-bird-theme] body .rec-item :is(.rec-meta,.rec-head i) {color:var(--surface-muted);}
+html[data-bird-theme] body :is(.rec-close,.rec-clear,.rec-empty) {background:var(--surface);color:var(--surface-ink);border:1px solid var(--surface-edge);box-shadow:none;}
+html[data-bird-theme] body .rec-del {color:var(--surface-muted);}
+html[data-bird-theme] body .rec-del:hover {color:var(--surface-ink);}
+html[data-bird-theme] body .rec-drawer .rec-item {background:var(--surface) !important;color:var(--surface-ink);}
+html[data-bird-theme] body .rec-drawer .rec-item:hover {background:var(--surface-hi) !important;}
+/* M-238 红玛瑙镂空卦录，以暗红双股绳挂在顶部。 */
+html[data-bird-theme="rouge"] .records-pendant{width:140px;height:230px;object-fit:contain;}
+html[data-bird-theme="rouge"] .rec-prop .prop-tag{top:76px;right:0;}
+@media(max-width:900px){html[data-bird-theme="rouge"] .records-pendant{width:88px;height:145px;}html[data-bird-theme="rouge"] .rec-prop .prop-tag{top:48px;right:0;}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+html[data-bird-theme="rouge"] body .rec-drawer {
+ background:linear-gradient(#310b08b3,#310b08b3),var(--cloth) repeat;background-size:auto,640px 640px;border:0;box-shadow:none;
+}
+html[data-bird-theme="rouge"] body .rec-drawer .rec-item,
+html[data-bird-theme="rouge"] body .rec-drawer .rec-item:hover {background:transparent !important;border:0;border-bottom:1px solid #c5a16b33;border-radius:0;box-shadow:none;}
+html[data-bird-theme="rouge"] body :is(.rec-close,.rec-clear,.rec-empty,.fc-close) {background:transparent;border:0;border-radius:0;box-shadow:none;}
+html[data-bird-theme="rouge"] body .boshi {background:transparent;border:0;border-radius:0;box-shadow:none;}
+html[data-bird-theme="rouge"] body .rec-mask {background:#310b0833;backdrop-filter:none;-webkit-backdrop-filter:none;}
+/* M-241 分界线不依赖滚动条，模式切换保留滚动条占位。 */
+html[data-bird-theme] body .stage-wrap .aux {scrollbar-gutter:stable;}
+@supports not (scrollbar-gutter:stable) {html[data-bird-theme] body .stage-wrap .aux {overflow-y:scroll;}}
+
+
+
+/* M-242 排盘阅读时收起挂饰，保留右下角卦录入口。 */
+html[data-bird-theme] body:has(#fullChart:not([hidden])) .rec-prop {
+ left:auto;top:auto;right:18px;bottom:18px;transform:none;width:auto;height:auto;
+}
+html[data-bird-theme] body:has(#fullChart:not([hidden])) .rec-prop :is(img,.bamboo) {display:none;}
+html[data-bird-theme] body:has(#fullChart:not([hidden])) .rec-prop::after {
+ content:'卦录';display:block;padding:10px 16px;background:var(--bg0);color:var(--ink);font-size:14px;letter-spacing:3px;border-bottom:1px solid var(--gold);box-shadow:0 2px 8px #0001;
+}
+html[data-bird-theme] body:has(#fullChart:not([hidden])) .rec-prop .prop-tag {top:-8px;right:-8px;}
+/* 给右下返回入口留出空间。 */
+html[data-bird-theme] body:has(#fullChart:not([hidden])) .rec-prop {right:100px;}
+/* M-243 蓍草直接落在主题锦缎上，与三钱共用页面舞台。 */
+html[data-bird-theme] body .main-stage .yarrow {
+ background:transparent;border:0;border-radius:0;box-shadow:none;
+ width:min(100%,860px);margin:clamp(90px,18vh,180px) auto 24px;padding:18px 22px 22px;
+}
+html[data-bird-theme] body .main-stage .y-stage {min-height:220px;}
+@media(max-width:900px){
+ html[data-bird-theme] body .main-stage .yarrow {margin:28px auto 24px;padding:18px 0 22px;}
+ html[data-bird-theme] body .main-stage .y-stage {min-height:180px;}
+}
+
+
+/* M-245 排盘时以挂绳打开及关闭卦录。 */
+html[data-bird-theme] {--records-cord:#933e32;}
+html[data-bird-theme="paper"] {--records-cord:#a99066;}
+html[data-bird-theme="jade"] {--records-cord:#71859b;}
+html[data-bird-theme="apricot"] {--records-cord:#618775;}
+html[data-bird-theme] body:has(#fullChart:not([hidden])) .rec-prop {top:0;bottom:auto;right:100px;left:auto;width:44px;height:112px;z-index:310;filter:none;}
+html[data-bird-theme] body:has(#fullChart:not([hidden])) .rec-prop::after {content:'';position:absolute;top:0;left:19px;width:6px;height:88px;padding:0;border:0;box-shadow:none;background:repeating-linear-gradient(35deg,transparent 0 3px,#ffffff22 3px 4px),var(--records-cord);border-radius:0 0 3px 3px;}
+html[data-bird-theme] body:has(#fullChart:not([hidden])) .rec-prop::before {content:'';position:absolute;display:block;left:15px;top:82px;width:14px;height:16px;border:2px solid var(--records-cord);border-radius:45%;background:transparent;box-sizing:border-box;}
+html[data-bird-theme] body:has(#fullChart:not([hidden])) .rec-prop:hover::after {height:94px;}
+html[data-bird-theme] body:has(#fullChart:not([hidden])) .rec-prop:hover::before {top:88px;}
+html[data-bird-theme] body:has(#fullChart:not([hidden])) .rec-prop .prop-tag {display:none;}
+/* M-246 收起只留原悬挂位置的绳，不移到右侧。 */
+@media(min-width:901px){
+ html[data-bird-theme] body:has(#fullChart:not([hidden])) .rec-prop {left:calc(clamp(264px,24vw,348px) + 39px);right:auto;top:0;}
+ html[data-bird-theme="rouge"] body:has(#fullChart:not([hidden])) .rec-prop {left:calc(clamp(264px,24vw,348px) + 51px);}
+ html[data-bird-theme="apricot"] body:has(#fullChart:not([hidden])) .rec-prop {left:calc(clamp(264px,24vw,348px) + 49px);}
+}
+@media(max-width:900px){html[data-bird-theme] body:has(#fullChart:not([hidden])) .rec-prop {left:auto;right:20px;top:auto;bottom:12px;}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* M-254 框图由外层承载，滚动条放进绢面内部。 */
+.aux-scroll {display:contents;}
+
+
+
+
+
+@media(max-width:900px){
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* M-257 蓍草舞台占比提升，保留分束布局。 */
+html[data-bird-theme] body .main-stage .yarrow {width:min(100%,1040px);}
+html[data-bird-theme] body .main-stage .y-head {font-size:20px;}
+html[data-bird-theme] body .main-stage .y-sub {font-size:12px;}
+html[data-bird-theme] body .main-stage .y-stage {min-height:300px;}
+html[data-bird-theme] body .main-stage :is(.y-pile,.y-hung) i {height:140px;width:7px;}
+html[data-bird-theme] body .main-stage .y-pile {gap:4px;max-width:520px;}
+html[data-bird-theme] body .main-stage .y-info {font-size:15px;}
+html[data-bird-theme] body .main-stage :is(.y-progress,.y-step-badge) {font-size:13px;}
+@media(max-width:1100px){html[data-bird-theme] body .main-stage .y-pile {gap:3px;}html[data-bird-theme] body .main-stage :is(.y-pile,.y-hung) i {width:6px;height:125px;}}
+@media(max-width:900px){html[data-bird-theme] body .main-stage .y-stage {min-height:240px;}html[data-bird-theme] body .main-stage .y-pile {max-width:80vw;gap:2px;}html[data-bird-theme] body .main-stage :is(.y-pile,.y-hung) i {width:5px;height:120px;}html[data-bird-theme] body .main-stage .y-sub {font-size:10px;}}
+/* M-258 朱雀卦象：旧金与米绢，取消粉色及发光。 */
+html[data-bird-theme="rouge"] body .yao-bar.yao-yang {background:#cfb57e;box-shadow:none;}
+html[data-bird-theme="rouge"] body .yao-bar.yao-yin::before,
+html[data-bird-theme="rouge"] body .yao-bar.yao-yin::after {background:#e4d6b8;box-shadow:none;}
+html[data-bird-theme="rouge"] body .yao-marker {color:#d58b62;text-shadow:none;}
+html[data-bird-theme="rouge"] body :is(.hex-col-title,.yao-label,.hex-meta) {color:#d6c29e;}
+/* M-259 恢复原尺寸，只增加纵向留白；蓍草始终单排。 */
+html[data-bird-theme] body .main-stage .y-head {font-size:15px;}
+html[data-bird-theme] body .main-stage .y-sub {font-size:10px;margin-bottom:36px;}
+html[data-bird-theme] body .main-stage .y-info {font-size:13px;margin-top:36px;}
+html[data-bird-theme] body .main-stage :is(.y-progress,.y-step-badge) {font-size:11px;}
+html[data-bird-theme] body .main-stage .y-stage {min-height:260px;}
+html[data-bird-theme] body .main-stage .y-pile {flex-wrap:nowrap;max-width:none;gap:3px;min-width:0;}
+html[data-bird-theme] body .main-stage :is(.y-pile,.y-hung) i {height:92px;width:5px;flex-shrink:0;}
+html[data-bird-theme] body .main-stage .y-piles {max-width:100%;width:100%;}
+@media(max-width:1100px){html[data-bird-theme] body .main-stage .y-pile {gap:2px;}}
+@media(max-width:600px){html[data-bird-theme] body .main-stage .y-pile {gap:1px;}html[data-bird-theme] body .main-stage :is(.y-pile,.y-hung) i {width:4px;}html[data-bird-theme] body .main-stage .y-gap {width:12px;}html[data-bird-theme] body .main-stage .y-info {margin-top:28px;}}
+/* M-260 赤金与朱红方向的屏幕调色，哑光且与深绛红拉开明度。 */
+html[data-bird-theme="rouge"] body .yao-bar.yao-yang {background:#e0bc69;box-shadow:none;}
+html[data-bird-theme="rouge"] body .yao-bar.yao-yin::before,
+html[data-bird-theme="rouge"] body .yao-bar.yao-yin::after {background:#db654b;box-shadow:none;}
+html[data-bird-theme="rouge"] body .yao-marker {color:#f0ce87;}
+/* M-261 标题说明拉开，蓍草适度加长，单排不增横向占位。 */
+html[data-bird-theme] body .main-stage .y-head {margin-bottom:20px;}
+html[data-bird-theme] body .main-stage .y-sub {margin-bottom:44px;}
+html[data-bird-theme] body .main-stage :is(.y-pile,.y-hung) i {height:118px;width:5px;}
+html[data-bird-theme] body .main-stage .y-stage {min-height:290px;}
+@media(max-width:600px){html[data-bird-theme] body .main-stage :is(.y-pile,.y-hung) i {width:4px;height:108px;}}
+/* M-262 阴阳爻统一直角。 */
+html[data-bird-theme] body .yao-bar,
+html[data-bird-theme] body .yao-bar::before,
+html[data-bird-theme] body .yao-bar::after {border-radius:0;}
+/* M-263 用统一段距排布，蓍草铺开而不换行。 */
+html[data-bird-theme] body .main-stage .yarrow {width:min(100%,1080px);margin:clamp(72px,12vh,120px) auto 24px;container-type:inline-size;}
+html[data-bird-theme] body .main-stage .y-head {margin-bottom:12px;}
+html[data-bird-theme] body .main-stage .y-sub {margin-bottom:30px;}
+html[data-bird-theme] body .main-stage .y-stage {min-height:0;padding:18px 0;}
+html[data-bird-theme] body .main-stage .y-step-badge {margin-bottom:18px;min-height:16px;}
+html[data-bird-theme] body .main-stage .y-piles {min-height:156px;gap:16px;}
+html[data-bird-theme] body .main-stage .y-pile {gap:clamp(2px,0.55cqw,6px);flex-wrap:nowrap;max-width:none;}
+html[data-bird-theme] body .main-stage :is(.y-pile,.y-hung) i {width:clamp(4px,1.15cqw,10px);height:150px;}
+html[data-bird-theme] body .main-stage .y-info {margin-top:28px;}
+html[data-bird-theme] body .main-stage .y-progress {margin-top:12px;}
+@media(max-width:900px){html[data-bird-theme] body .main-stage .yarrow {margin:28px auto 24px;}}
+@media(max-width:600px){html[data-bird-theme] body .main-stage .y-pile {gap:1px;}html[data-bird-theme] body .main-stage :is(.y-pile,.y-hung) i {width:4px;height:120px;}html[data-bird-theme] body .main-stage .y-piles {min-height:126px;gap:8px;}html[data-bird-theme] body .main-stage .y-gap {width:8px;}}
+/* M264 白虎卦录及卦象配色保留，左栏恢复共用样式。 */
+html[data-bird-theme="paper"] body .rec-drawer {background:linear-gradient(#fffdf4ce,#fffdf4ce),var(--cloth) repeat;background-size:auto,440px 440px;border:0;box-shadow:none;}
+html[data-bird-theme="paper"] body .rec-drawer .rec-item,
+html[data-bird-theme="paper"] body .rec-drawer .rec-item:hover {background:transparent !important;border:0;border-bottom:1px solid #ab946644;border-radius:0;box-shadow:none;}
+html[data-bird-theme="paper"] body :is(.boshi,.rec-close,.rec-clear,.rec-empty,.fc-close) {background:transparent;border:0;border-radius:0;box-shadow:none;}
+html[data-bird-theme="paper"] body .rec-mask {background:#6c60451a;backdrop-filter:none;-webkit-backdrop-filter:none;}
+html[data-bird-theme="paper"] body .yao-bar.yao-yang {background:#a58645;box-shadow:none;}
+html[data-bird-theme="paper"] body .yao-bar.yao-yin::before,
+html[data-bird-theme="paper"] body .yao-bar.yao-yin::after {background:#7b756a;box-shadow:none;}
+html[data-bird-theme="paper"] body .yao-marker {color:#9a683b;text-shadow:none;}
+
+/* M265 用户批准虎形白玉卦录，保留原位置与排盘绳索开关。 */
+html[data-bird-theme="paper"] .records-pendant-baihu{width:130px;height:250px;}
+html[data-bird-theme="paper"] .rec-prop .prop-tag{top:64px;right:-4px;}
+@media(max-width:900px){html[data-bird-theme="paper"] .records-pendant-baihu{width:78px;height:150px;}html[data-bird-theme="paper"] .rec-prop .prop-tag{top:38px;right:0;}}
+
+/* M268 朱雀左栏恢复 M237 共用主题操作栏，无装裱框。 */
+/* M269 白虎卦象：淡金与暖墨，端部若隐若现的虎纹。 */
+html[data-bird-theme="paper"] body .yao-bar.yao-yang{background-color:#c9af78;background-image:repeating-linear-gradient(116deg,transparent 0 9px,#39363013 10px 12px,transparent 13px 22px),repeating-linear-gradient(64deg,transparent 0 12px,#39363013 13px 15px,transparent 16px 25px);background-size:38px 100%,38px 100%;background-position:left center,right center;background-repeat:no-repeat;box-shadow:none;}
+html[data-bird-theme="paper"] body .yao-bar.yao-yin::before,
+html[data-bird-theme="paper"] body .yao-bar.yao-yin::after{background-color:#393630;background-image:repeating-linear-gradient(116deg,transparent 0 10px,#c9af7815 11px 13px,transparent 14px 23px);background-size:32px 100%;background-repeat:no-repeat;box-shadow:none;}
+html[data-bird-theme="paper"] body .yao-bar.yao-yin::before{background-position:left center;}
+html[data-bird-theme="paper"] body .yao-bar.yao-yin::after{background-position:right center;}
+html[data-bird-theme="paper"] body .yao-marker{color:#876c3c;text-shadow:none;}
+/* M270 白虎单选控件，浅金细圈替代原生深色描边。 */
+html[data-bird-theme="paper"] body .aux input[type="radio"]{appearance:none;-webkit-appearance:none;box-sizing:border-box;width:15px;height:15px;flex-shrink:0;margin:0 6px 0 0;border:1px solid #c5b58f;border-radius:50%;background:#fffdf7;box-shadow:none;vertical-align:middle;}
+html[data-bird-theme="paper"] body .aux input[type="radio"]:checked{border-color:#bca16b;background:radial-gradient(circle,#c9af78 0 4px,transparent 4.5px),#fffdf7;}
+html[data-bird-theme="paper"] body .aux input[type="radio"]:focus-visible{outline:2px solid #c9af7880;outline-offset:3px;}
+/* M271 白虎卦象文字改黑，提升浅色锦缎上的辨识度。 */
+html[data-bird-theme="paper"] body :is(.hex-caption,.hex-col-title,.yao-label,.hex-meta,.hex-meta b){color:#222 !important;text-shadow:none;}
+/* M272 白虎铜钱去黑色投影，轻提亮白玉浅金。 */
+html[data-bird-theme="paper"] body .coin{filter:none;box-shadow:none;}
+html[data-bird-theme="paper"] body .coin .face{filter:brightness(1.1);box-shadow:none;}
+/* M273 白虎卦录挂饰去外部投影。 */
+html[data-bird-theme="paper"] body .rec-prop,
+html[data-bird-theme="paper"] body .records-pendant-baihu{filter:none;box-shadow:none;}
+/* M274 卦录挂饰统一隐藏数字角标。 */
+html[data-bird-theme] body .rec-prop .prop-tag{display:none;}
+/* M275 批准的龟蛇灰蓝玉卦录，保留原位置和绳索交互。 */
+html[data-bird-theme="jade"] body .records-pendant-xuanwu{width:150px;height:260px;filter:none;box-shadow:none;}
+html[data-bird-theme="jade"] body .rec-prop{filter:none;box-shadow:none;}
+@media(max-width:900px){html[data-bird-theme="jade"] body .records-pendant-xuanwu{width:90px;height:156px;}}
+/* M278 玄武挂绳贴顶部，消除 contain 居中产生的上方留白。 */
+html[data-bird-theme="jade"] body .records-pendant-xuanwu{object-position:center top;}
+@media(min-width:901px){html[data-bird-theme="jade"] body:not(:has(#fullChart:not([hidden]))) .rec-prop{top:0;bottom:auto;transform:none;}}
+/* M280 玄武统一材质、控件与卦象辨识度。 */
+html[data-bird-theme="jade"] body .coin{filter:none;box-shadow:none;}
+html[data-bird-theme="jade"] body .coin .face{filter:brightness(1.08);box-shadow:none;}
+html[data-bird-theme="jade"] body .aux input[type="radio"]{appearance:none;-webkit-appearance:none;box-sizing:border-box;width:15px;height:15px;flex-shrink:0;margin:0 6px 0 0;border:1px solid #b8a477;border-radius:50%;background:#12273b;box-shadow:none;vertical-align:middle;}
+html[data-bird-theme="jade"] body .aux input[type="radio"]:checked{border-color:#d1b77f;background:radial-gradient(circle,#d1b77f 0 4px,transparent 4.5px),#12273b;}
+html[data-bird-theme="jade"] body .aux input[type="radio"]:focus-visible{outline:2px solid #d1b77f80;outline-offset:3px;}
+html[data-bird-theme="jade"] body .yao-bar.yao-yang{background:#d1b77f;box-shadow:none;}
+html[data-bird-theme="jade"] body .yao-bar.yao-yin::before,
+html[data-bird-theme="jade"] body .yao-bar.yao-yin::after{background:#8daec7;box-shadow:none;}
+html[data-bird-theme="jade"] body .yao-marker{color:#eed6a4;text-shadow:none;}
+html[data-bird-theme="jade"] body :is(.hex-caption,.hex-col-title,.yao-label,.hex-meta,.hex-meta b,.y-head,.y-sub,.y-info,.y-progress,.y-step-badge){color:#e9e0cf;text-shadow:none;}
+/* M281 玄武卦录内页与完整排盘采用朱雀/白虎的无面板样式。 */
+html[data-bird-theme="jade"] body .rec-drawer{background:linear-gradient(#0b1929b3,#0b1929b3),var(--cloth) repeat;background-size:auto,440px 440px;border:0;box-shadow:none;}
+html[data-bird-theme="jade"] body .rec-drawer .rec-item,
+html[data-bird-theme="jade"] body .rec-drawer .rec-item:hover{background:transparent !important;border:0;border-bottom:1px solid #cfb27a44;border-radius:0;box-shadow:none;}
+html[data-bird-theme="jade"] body :is(.boshi,.rec-close,.rec-clear,.rec-empty,.fc-close){background:transparent;border:0;border-radius:0;box-shadow:none;}
+html[data-bird-theme="jade"] body .rec-mask{background:#0b192933;backdrop-filter:none;-webkit-backdrop-filter:none;}
+/* M283 青龙统一卦录内页、排盘与材质控件。 */
+html[data-bird-theme="apricot"] body .rec-drawer{background:linear-gradient(#edf4e9ce,#edf4e9ce),var(--cloth) repeat;background-size:auto,440px 440px;border:0;box-shadow:none;}
+html[data-bird-theme="apricot"] body .rec-drawer .rec-item,
+html[data-bird-theme="apricot"] body .rec-drawer .rec-item:hover{background:transparent !important;border:0;border-bottom:1px solid #8a986244;border-radius:0;box-shadow:none;}
+html[data-bird-theme="apricot"] body :is(.boshi,.rec-close,.rec-clear,.rec-empty,.fc-close){background:transparent;border:0;border-radius:0;box-shadow:none;}
+html[data-bird-theme="apricot"] body .rec-mask{background:#365b481a;backdrop-filter:none;-webkit-backdrop-filter:none;}
+html[data-bird-theme="apricot"] body :is(.coin,.rec-prop,.records-pendant-qinglong){filter:none;box-shadow:none;}
+html[data-bird-theme="apricot"] body .coin .face{filter:brightness(1.08);box-shadow:none;}
+html[data-bird-theme="apricot"] body .aux input[type="radio"]{appearance:none;-webkit-appearance:none;box-sizing:border-box;width:15px;height:15px;flex-shrink:0;margin:0 6px 0 0;border:1px solid #b6ad86;border-radius:50%;background:#f7faf0;box-shadow:none;vertical-align:middle;}
+html[data-bird-theme="apricot"] body .aux input[type="radio"]:checked{border-color:#a89b69;background:radial-gradient(circle,#c3ae77 0 4px,transparent 4.5px),#f7faf0;}
+html[data-bird-theme="apricot"] body .aux input[type="radio"]:focus-visible{outline:2px solid #a89b6980;outline-offset:3px;}
+html[data-bird-theme="apricot"] body .yao-bar.yao-yang{background:#c9af78;box-shadow:none;}
+html[data-bird-theme="apricot"] body .yao-bar.yao-yin::before,
+html[data-bird-theme="apricot"] body .yao-bar.yao-yin::after{background:#386b52;box-shadow:none;}
+html[data-bird-theme="apricot"] body .yao-marker{color:#806838;text-shadow:none;}
+html[data-bird-theme="apricot"] body :is(.hex-caption,.hex-col-title,.yao-label,.hex-meta,.hex-meta b,.y-head,.y-sub,.y-info,.y-progress,.y-step-badge){color:#222 !important;text-shadow:none;}
+html[data-bird-theme="apricot"] body .records-pendant-qinglong{object-position:center top;}
+@media(min-width:901px){html[data-bird-theme="apricot"] body:not(:has(#fullChart:not([hidden]))) .rec-prop{top:0;bottom:auto;transform:none;}}
+/* M284 青绿古朴龙形卦录试接，顶部挂绳及原开关保留。 */
+html[data-bird-theme="apricot"] body .records-pendant-qinglong{width:150px;height:230px;object-position:center top;}
+@media(max-width:900px){html[data-bird-theme="apricot"] body .records-pendant-qinglong{width:90px;height:138px;}}
+/* M285 三主题卦录纹路与桌面共用尺寸和原点。 */
+html:is([data-bird-theme="paper"],[data-bird-theme="jade"],[data-bird-theme="apricot"]) body :is(.desk,.rec-drawer){background-size:auto,640px 640px;background-position:0 0,0 0;background-origin:border-box;}
+/* M287 青龙完整排盘文字提升对比。 */
+html[data-bird-theme="apricot"] body #fullChart{--ink:#222;--ink-dim:#353b32;--gold:#71552b;--gold-hi:#71552b;--jade:#28513e;--jade-dim:#345745;--cinnabar:#81552f;color:#222;}
+html[data-bird-theme="apricot"] body #fullChart :is(.prow,.bo-lifa,.g-o,.g-e,.p-rel em){color:#252b25;text-shadow:none;}
+html[data-bird-theme="apricot"] body #fullChart :is(.prow-head,.p-spirit,.p-fushen,.g-label){color:#2e513e;text-shadow:none;}
+html[data-bird-theme="apricot"] body #fullChart :is(.bo-head h3,.bo-sub,.bo-sub b,.p-rel,.bo-lifa b,.bo-gua h4,.bo-move h4,.fc-close){color:#71552b;text-shadow:none;}
+/* M314 朱雀爻色小样：哑金与赭朱红 */
+html[data-bird-theme="rouge"] body .yao-bar.yao-yang{background:#c5a66a;box-shadow:none;}
+html[data-bird-theme="rouge"] body .yao-bar.yao-yin::before,html[data-bird-theme="rouge"] body .yao-bar.yao-yin::after{background:#bd6652;box-shadow:none;}
+html[data-bird-theme="rouge"] body .yao-marker{color:#d9be87;text-shadow:none;}
+html[data-bird-theme="rouge"] body :is(.hex-caption,.hex-col-title,.yao-label,.hex-meta,.hex-meta b){color:#ddcba6;text-shadow:none;}
+/* M315：呼应朱雀铜钱/蓍草的亮金与朱红 */
+html[data-bird-theme="rouge"] body .yao-bar.yao-yang{background:#e4bd67;box-shadow:none;}
+html[data-bird-theme="rouge"] body .yao-bar.yao-yin::before,html[data-bird-theme="rouge"] body .yao-bar.yao-yin::after{background:#dc7456;box-shadow:none;}
+html[data-bird-theme="rouge"] body .yao-marker{color:#efd08e;}
+/* M316：降低亮度，增加金朱饱和度 */
+html[data-bird-theme="rouge"] body .yao-bar.yao-yang{background:#c99a36;box-shadow:none;}
+html[data-bird-theme="rouge"] body .yao-bar.yao-yin::before,html[data-bird-theme="rouge"] body .yao-bar.yao-yin::after{background:#bd4834;box-shadow:none;}
+html[data-bird-theme="rouge"] body .yao-marker{color:#d9b568;}

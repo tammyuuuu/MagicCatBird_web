@@ -1,0 +1,250 @@
+    /* ----- 顶部导航：配色按钮 + 显化之境 ----- */
+    .top-nav {
+      position: fixed;
+      top: calc(12px + env(safe-area-inset-top));
+      right: 12px;
+      z-index: 999;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      pointer-events: none;
+    }
+    .ui-nav-link {
+      pointer-events: auto;
+      min-height: 40px;
+      padding: 0 18px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 999px;
+      border: 2px solid rgba(213,165,83,.55);
+      background: rgba(30,22,6,.45);
+      color: rgba(240,212,148,.72);
+      font-family: inherit;
+      font-size: 12px; letter-spacing: 2px;
+      text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: background .3s, border-color .3s, color .3s, box-shadow .3s, transform .2s;
+    }
+    .ui-nav-link:hover, .ui-nav-link:active {
+      border-color: #f5dd9a; color: #fff3cf;
+      box-shadow: 0 0 14px rgba(245,221,154,.45);
+    }
+
+    /* ----- 配色入口（顶部居中，点开底部色卡面板） ----- */
+    #themeToggle {
+      position: fixed;
+      top: calc(14px + env(safe-area-inset-top));
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1401;   /* 高于遮罩，面板打开时仍可点按收起 */
+      width: 44px; height: 44px; padding: 0;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      border: 2px solid var(--ui-purple);
+      background: var(--ui-bg);
+      color: var(--ui-purple-text);
+      cursor: pointer;
+      font-family: inherit;
+      -webkit-tap-highlight-color: transparent;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 16px rgba(159,114,223,.22), inset 0 0 10px rgba(159,114,223,.08);
+      transition: transform .28s, border-color .28s, box-shadow .28s, background .28s, color .28s;
+    }
+    #themeToggle:active { transform: translateX(-50%) scale(.94); }
+    #themeToggle[aria-expanded="true"] { border-color: var(--ui-gold); color: var(--ui-gold-text); }
+    #themeToggle svg {
+      width: 23px; height: 23px;
+      fill: none; stroke: currentColor; stroke-width: 1.55;
+      stroke-linecap: round; stroke-linejoin: round;
+      pointer-events: none;
+      filter: drop-shadow(0 0 4px currentColor);
+    }
+
+    /* ----- 底部色卡面板 ----- */
+    #themeSheetBackdrop {
+      position: fixed; inset: 0;
+      z-index: 1399;
+      background: transparent;
+      display: none;
+    }
+    #themeSheetBackdrop.open { display: block; }
+    #themeSheet {
+      position: fixed; left: 0; right: 0; bottom: 0;
+      z-index: 1400;
+      padding: 15px 16px calc(16px + env(safe-area-inset-bottom));
+      border-radius: 22px 22px 0 0;
+      border-top: 2px solid var(--ui-purple);
+      background: var(--ui-bg);
+      color: var(--ui-purple-text);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 -12px 34px rgba(0,0,0,.34);
+      transform: translateY(105%);
+      visibility: hidden;
+      touch-action: manipulation;
+      transition: transform .4s cubic-bezier(.25,1,.5,1), visibility .4s;
+    }
+    #themeSheet.open { transform: translateY(0); visibility: visible; }
+    #themeSheet .ts-title {
+      text-align: center;
+      font-size: 13px; letter-spacing: 5px;
+      padding-bottom: 11px; margin-bottom: 11px;
+      border-bottom: 1px solid var(--ui-purple);
+      opacity: .8;
+    }
+    #themeSheet .ts-list { display: grid; gap: 9px; }
+    #themeSheet .ts-card {
+      width: 100%; min-height: 62px;
+      display: flex; align-items: center; gap: 14px;
+      padding: 8px 15px;
+      border-radius: 15px;
+      border: 2px solid var(--ui-purple);
+      background: rgba(0,0,0,.14);
+      color: inherit; font-family: inherit;
+      text-align: left; cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .2s, border-color .2s, background .2s;
+    }
+    #themeSheet .ts-card:active { transform: scale(.985); }
+    #themeSheet .ts-card.active {
+      border-color: var(--ui-gold);
+      background: rgba(0,0,0,.22);
+      box-shadow: inset 0 0 0 1px var(--ui-gold);
+    }
+    #themeSheet .ts-swatch {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,.4);
+    }
+    #themeSheet .ts-swatch--mystic { background: #8f62d1; border-color: #d4b35f; }
+    #themeSheet .ts-swatch--noir { background: #fffdf9; border-color: rgba(23,23,26,.42); }
+    #themeSheet .ts-swatch--parchment { background: #4a1722; border-color: #c9a454; }
+    #themeSheet .ts-swatch--dopamine { background: #f2a8c5; border-color: #e598b8; }
+    #themeSheet .ts-meta { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    #themeSheet .ts-meta b { font-size: 14px; font-weight: 400; letter-spacing: 2px; }
+    #themeSheet .ts-meta em { font-style: normal; font-size: 10px; letter-spacing: 1px; opacity: .62; }
+    #themeSheet .ts-check { margin-left: auto; font-size: 13px; opacity: 0; transition: opacity .2s; }
+    #themeSheet .ts-card.active .ts-check { opacity: 1; }
+    /* ----- 面板与入口的「框」跟随当前背景的材质语言 ----- */
+    /* 霜白墨羽：象牙白实底 + 墨色双线框 + 轻投影（无发光） */
+    body[data-theme="noir"] #themeToggle { background: rgba(255,253,249,.86); border: 2px solid #17171a; color: #17171a; box-shadow: 0 5px 14px rgba(0,0,0,.1); }
+    body[data-theme="noir"] #themeSheet { background: rgba(255,253,249,.985); border: 2px solid #17171a; border-bottom: 0; box-shadow: 0 -10px 30px rgba(0,0,0,.16), inset 0 0 0 1px rgba(255,255,255,.8); backdrop-filter: none; }
+    body[data-theme="noir"] #themeSheet::before { content:''; position:absolute; inset:7px 7px 0; border:1px solid rgba(23,23,26,.28); border-bottom:0; border-radius:15px 15px 0 0; pointer-events:none; }
+    body[data-theme="noir"] #themeSheet .ts-title { border-bottom-color: rgba(23,23,26,.3); color: #17171a; }
+    body[data-theme="noir"] #themeSheet .ts-card { background: #f4f1eb; border: 2px solid rgba(23,23,26,.42); box-shadow: none; }
+    body[data-theme="noir"] #themeSheet .ts-card.active { background: #fff; border-color: #17171a; box-shadow: inset 0 0 0 1px #17171a; }
+    body[data-theme="noir"] #themeSheet .ts-check { color: #17171a; }
+
+    /* 琥珀秘卷：深浅双色珐琅 + 古铜双圈包边 + 内发光 */
+    body[data-theme="parchment"] #themeToggle { background: radial-gradient(circle at 36% 28%,rgba(255,231,165,.12),transparent 23%),radial-gradient(circle,#54202c 0 58%,#251318 72%); border: 2px solid #b89049; color: #efd584; box-shadow: 0 6px 17px rgba(0,0,0,.38),0 0 0 2px rgba(66,39,22,.85),0 0 0 3px rgba(202,163,82,.35),inset 0 0 10px rgba(238,198,105,.09); }
+    body[data-theme="parchment"] #themeSheet { background: linear-gradient(145deg,rgba(58,20,28,.985),rgba(16,38,34,.985)); border: 2px solid #b89049; border-bottom: 0; color: #f2dc9c; box-shadow: 0 -10px 34px rgba(0,0,0,.5),0 0 0 2px rgba(66,39,22,.85),0 0 0 3px rgba(202,163,82,.3),inset 0 0 24px rgba(238,198,105,.06); backdrop-filter: none; }
+    body[data-theme="parchment"] #themeSheet::before { content:''; position:absolute; inset:7px 7px 0; border:1px solid rgba(221,181,92,.3); border-bottom:0; border-radius:15px 15px 0 0; pointer-events:none; }
+    body[data-theme="parchment"] #themeSheet .ts-title { border-bottom-color: rgba(203,167,92,.5); color: #ead18e; }
+    body[data-theme="parchment"] #themeSheet .ts-card { background: linear-gradient(145deg,rgba(84,31,42,.86),rgba(27,58,52,.8)); border: 2px solid rgba(190,151,79,.62); color: #f0d99a; box-shadow: inset 0 0 10px rgba(215,175,91,.05); }
+    body[data-theme="parchment"] #themeSheet .ts-card.active { background: linear-gradient(145deg,rgba(102,38,52,.95),rgba(32,70,63,.9)); border-color: #e0c174; color: #fff0bd; box-shadow: inset 0 0 0 1px rgba(240,208,128,.4),0 0 16px rgba(203,167,92,.2); }
+    body[data-theme="parchment"] #themeSheet .ts-check { color: #efd584; }
+
+    /* 雾糖奇遇：雾白磨砂玻璃 + 糖果细边 + 内侧白线 */
+    body[data-theme="dopamine"] #themeToggle { background: radial-gradient(circle at 35% 26%,rgba(255,255,255,.95),rgba(255,255,255,.58) 42%,rgba(244,246,250,.7)); border: 2px solid #c5a9dc; color: #68758a; box-shadow: 0 6px 15px rgba(112,129,151,.13),inset 0 0 0 2px rgba(255,255,255,.62); }
+    body[data-theme="dopamine"] #themeSheet { background: linear-gradient(180deg,rgba(255,255,255,.97),rgba(246,248,251,.95)); border: 2px solid #a9cfe3; border-bottom: 0; color: #68758a; box-shadow: 0 -10px 30px rgba(112,129,151,.2),inset 0 0 0 2px rgba(255,255,255,.7); }
+    body[data-theme="dopamine"] #themeSheet .ts-title { border-bottom-color: rgba(145,203,230,.42); color: #607c91; }
+    body[data-theme="dopamine"] #themeSheet .ts-card { background: rgba(255,255,255,.86); border: 2px solid rgba(151,190,215,.55); box-shadow: 0 4px 11px rgba(112,129,151,.08),inset 0 0 0 1px rgba(255,255,255,.7); }
+    body[data-theme="dopamine"] #themeSheet .ts-card.active { background: #fff; border-color: #e598b8; box-shadow: 0 6px 16px rgba(223,114,165,.18),inset 0 0 0 1px rgba(255,255,255,.8); }
+    body[data-theme="dopamine"] #themeSheet .ts-check { color: #df72a5; }
+/* 猫爪配色入口：沿用操作按钮的主题材质与交互。 */
+body #themeToggle, body[data-theme] #themeToggle {
+  --paw-fill: #19191c;
+  --paw-rim: #8a4dff;
+  --paw-hover-rim: #b080ff;
+  --paw-ivory-outline: transparent;
+  --paw-bg: rgba(30,12,60,.9);
+  --paw-shadow: 0 0 14px rgba(180,100,255,.15);
+  --paw-hover-shadow: 0 0 24px rgba(180,100,255,.35);
+  --paw-orbit: rgba(180,100,255,.28);
+  --paw-inner: rgba(180,100,255,.08);
+  box-sizing: border-box;
+  border: 0;
+  background: var(--paw-bg);
+  box-shadow: var(--paw-shadow);
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  color: var(--paw-rim);
+  transition: all .35s cubic-bezier(.25,1,.5,1);
+}
+body[data-theme="noir"] #themeToggle {
+  --paw-fill: #fffaf2;
+  --paw-rim: #17171a; --paw-hover-rim: #17171a;
+  --paw-ivory-outline: #17171a;
+  --paw-bg: rgba(255,253,249,.46);
+  --paw-shadow: 0 5px 14px rgba(0,0,0,.1);
+  --paw-hover-shadow: none;
+  --paw-orbit: rgba(23,23,26,.28);
+  --paw-inner: rgba(23,23,26,.2);
+}
+body[data-theme="parchment"] #themeToggle {
+  --paw-fill: #19191c;
+  --paw-rim: #b89049; --paw-hover-rim: #e0c174;
+  --paw-bg: radial-gradient(circle at 36% 28%,rgba(255,231,165,.12),transparent 23%),radial-gradient(circle,#54202c 0 58%,#251318 72%);
+  --paw-shadow: 0 6px 17px rgba(0,0,0,.38),0 0 0 2px rgba(66,39,22,.85),0 0 0 3px rgba(202,163,82,.35),inset 0 0 10px rgba(238,198,105,.09);
+  --paw-hover-shadow: 0 8px 22px rgba(0,0,0,.42),0 0 0 2px rgba(75,44,24,.9),0 0 0 3px rgba(224,193,116,.48),inset 0 0 13px rgba(255,222,139,.12);
+  --paw-orbit: rgba(221,181,92,.46);
+  --paw-inner: rgba(255,226,148,.15);
+}
+body[data-theme="dopamine"] #themeToggle {
+  --paw-fill: #fffaf2;
+  --paw-rim: #e598b8; --paw-hover-rim: #e598b8;
+  --paw-ivory-outline: #e598b8;
+  --paw-bg: radial-gradient(circle at 35% 26%,rgba(255,255,255,.95),rgba(255,255,255,.58) 42%,rgba(244,246,250,.7));
+  --paw-shadow: 0 6px 15px rgba(112,129,151,.13),inset 0 0 0 2px rgba(255,255,255,.62);
+  --paw-hover-shadow: 0 8px 20px rgba(112,129,151,.17),0 0 0 3px rgba(255,255,255,.5);
+  --paw-orbit: rgba(180,100,255,.28);
+}
+body #themeToggle .theme-paw-icon {
+  width: 100%; height: 100%; display: block;
+  fill: none; stroke: none; filter: none;
+}
+#themeToggle .paw-body {
+  fill: var(--paw-fill); stroke: var(--paw-rim);
+  stroke-width: 2px; vector-effect: non-scaling-stroke;
+}
+#themeToggle .paw-ivory { stroke: var(--paw-ivory-outline); stroke-width: .7; }
+#themeToggle .paw-pad { fill: var(--paw-rim); }
+#themeToggle .paw-ring {
+  fill: none; stroke: var(--paw-rim);
+  stroke-width: 2px; vector-effect: non-scaling-stroke;
+}
+body #themeToggle::before {
+  content: ''; position: absolute; inset: -6px;
+  border: 1px dashed var(--paw-orbit); border-radius: 50%;
+  pointer-events: none; animation: themePawOrbit 14s linear infinite;
+}
+body #themeToggle::after {
+  content: ''; position: absolute; inset: 1px;
+  border: 1px solid var(--paw-inner); border-radius: 50%; pointer-events: none;
+}
+body[data-theme="parchment"] #themeToggle::before,
+body[data-theme="dopamine"] #themeToggle::before { border-style: solid; animation: none; }
+body[data-theme="dopamine"] #themeToggle::before { opacity: .55; }
+@keyframes themePawOrbit { to { transform: rotate(360deg); } }
+body #themeToggle:is([aria-expanded="true"], :focus-visible, :active) {
+  --paw-rim: var(--paw-hover-rim);
+  box-shadow: var(--paw-hover-shadow);
+}
+body[data-theme="noir"] #themeToggle:is([aria-expanded="true"], :focus-visible, :active) { background: #17171a; }
+@media (hover: hover) {
+  body #themeToggle:hover {
+    --paw-rim: var(--paw-hover-rim);
+    box-shadow: var(--paw-hover-shadow);
+    transform: translateX(-50%) scale(1.08);
+  }
+  body[data-theme="noir"] #themeToggle:hover { background: #17171a; }
+  body[data-theme="parchment"] #themeToggle:hover { filter: brightness(1.1); }
+  body[data-theme="dopamine"] #themeToggle:hover { filter: brightness(1.02); transform: translateX(-50%) scale(1.07); }
+}
+body #themeToggle:active { transform: translateX(-50%) scale(.95); }
+body #themeToggle:focus-visible { outline: 2px solid var(--paw-rim); outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) {
+  body #themeToggle { transition: none; }
+  body #themeToggle::before { animation: none; }
+}
+
+body.ritual-special #themeToggle {display:none;} #themeSheet {z-index:11000;} #themeSheetBackdrop {z-index:10990;}
+

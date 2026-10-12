@@ -24972,11 +24972,14 @@
   detailStyle.textContent = ".luck-row{gap:4px}.luck-row>div{cursor:pointer;min-width:68px;padding:6px 3px}.luck-row>div:hover,.fortune-card:hover,.fortune-card.active{border-color:var(--gold);background:#12251f}.annual-detail{margin-top:12px;overflow:hidden;border-top:1px solid var(--line)}.annual-detail h3{color:var(--gold);margin-bottom:2px}.fortune-scroll{overflow:auto;padding-bottom:5px}.fortune-grid{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(68px,1fr);gap:4px;min-width:max-content}.fortune-card{appearance:none;width:auto;min-width:0;margin:0;padding:6px 3px;text-align:center;border:1px solid var(--line);border-radius:6px;background:#071310;color:var(--ink);cursor:pointer}.fortune-card b{display:block;font-size:14px;color:var(--gold);white-space:nowrap}.fortune-card .age,.fortune-card .date{display:block;color:var(--muted);font-size:9px;white-space:nowrap}.fortune-card .pair{display:grid;grid-template-columns:1fr 1fr;margin-top:4px}.fortune-card .pair strong{font-size:17px}.fortune-card small{font-size:8px;white-space:nowrap}.fortune-card .minor{margin-top:4px;padding-top:3px;border-top:1px solid var(--line)}.fortune-card .minor>strong{display:block;font-size:15px}.month-panel{margin-top:12px}.embedded header{display:none}.embedded .layout{padding:9px;grid-template-columns:250px minmax(0,1fr);gap:10px}.embedded .panel{padding:13px}.embedded{background:#07110f}@media(max-width:800px){.embedded .layout{grid-template-columns:1fr}.fortune-grid{grid-auto-columns:64px}}";
   document.head.appendChild(detailStyle);
   document.getElementById("luck").addEventListener("click", (e) => {
+    const monthCard=e.target.closest('[data-month-pillar]');
+    if(monthCard){selectedMonthPillar=monthCard.dataset.monthPillar;renderExtendedChart(activeResult);document.querySelectorAll('[data-month-pillar]').forEach(x=>x.classList.toggle('active',x===monthCard));return;}
     const annualCard = e.target.closest(".annual-card");
     if (annualCard) {
       const result2 = resultFromCurrentForm(), cycleIndex2 = +annualCard.dataset.cycle, yearIndex = +annualCard.dataset.year, cycle2 = result2.luckCycles.cycles[cycleIndex2], year = cycle2.years[yearIndex];
       selectedCycleIndex = cycleIndex2;
       selectedYearIndex = yearIndex;
+      selectedMonthPillar = null;
       renderExtendedChart(result2);
       document.querySelectorAll(".annual-card").forEach((x) => x.classList.toggle("active", x === annualCard));
       let month = document.getElementById("monthPanel");
@@ -24986,7 +24989,7 @@
         month.className = "month-panel";
         document.getElementById("annualDetail").appendChild(month);
       }
-      month.innerHTML = `<h3>${year.year} \u6D41\u6708</h3><div class="fortune-scroll"><div class="fortune-grid">${year.months.map((m) => `<div class="fortune-card"><span class="date">${m.term}</span><b>${m.date}</b><div class="pair"><span><strong>${m.pillar[0]}</strong><small>${m.stemTenGod}</small></span><span><strong>${m.pillar[1]}</strong><small>${m.branchTenGod}</small></span></div></div>`).join("")}</div></div>`;
+      month.innerHTML = `<h3>${year.year} \u6D41\u6708</h3><div class="fortune-scroll"><div class="fortune-grid">${year.months.map((m) => `<div class="fortune-card" role="button" tabindex="0" data-month-pillar="${m.pillar}"><span class="date">${m.term}</span><b>${m.date}</b><div class="pair"><span><strong>${m.pillar[0]}</strong><small>${m.stemTenGod}</small></span><span><strong>${m.pillar[1]}</strong><small>${m.branchTenGod}</small></span></div></div>`).join("")}</div></div>`;
       return;
     }
     const card = e.target.closest(".luck-row>div");
@@ -24994,6 +24997,7 @@
     const result = resultFromCurrentForm(), cards = [...card.parentElement.children], cycleIndex = cards.indexOf(card), cycle = result.luckCycles.cycles[cycleIndex];
     selectedCycleIndex = cycleIndex;
     selectedYearIndex = null;
+    selectedMonthPillar = null;
     renderExtendedChart(result);
     cards.forEach((x) => x.classList.toggle("active", x === card));
     let detail2 = document.getElementById("annualDetail");
@@ -25005,6 +25009,7 @@
     }
     detail2.innerHTML = `<h3>${cycle.pillar}\u5927\u8FD0 \xB7 \u6D41\u5E74\uFF0F\u5C0F\u8FD0</h3><p>\u70B9\u51FB\u4EFB\u4E00\u5E74\u67E5\u770B\u6D41\u6708\u3002\u5C0F\u8FD0\u6309\u5F53\u524D\u89C4\u5219\u63A8\u79FB\uFF0C\u72B6\u6001\u5F85\u4EBA\u5DE5\u9A8C\u8BC1\u3002</p><div class="fortune-scroll"><div class="fortune-grid">${cycle.years.map((y, i) => `<button type="button" class="fortune-card annual-card" data-cycle="${cycleIndex}" data-year="${i}"><span class="date">${y.year}</span><b>${y.nominalAge}\u5C81</b><div class="pair"><span><strong>${y.annual.pillar[0]}</strong><small>${y.annual.stemTenGod}</small></span><span><strong>${y.annual.pillar[1]}</strong><small>${y.annual.branchTenGod}</small></span></div><div class="minor"><small>\u5C0F\u8FD0</small><strong>${y.minorLuck.pillar}</strong><small>${y.minorLuck.stemTenGod} \xB7 ${y.minorLuck.branchTenGod}</small></div></button>`).join("")}</div></div>`;
   });
+  document.getElementById('luck').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('[data-month-pillar]')){e.preventDefault();e.target.click();}});
   var luckObserver = new MutationObserver(() => {
     const row = document.querySelector(".luck-row"), cards = [...document.querySelectorAll(".luck-row>div:not([data-enhanced])")];
     if (!cards.length) return;
@@ -25015,7 +25020,7 @@
       const x = result.luckCycles.cycles[i];
       if (!x) return;
       card.dataset.enhanced = "1";
-      card.innerHTML = `<span class="date">${x.startYear}</span><b>${x.ageStart.toFixed(1)}\u5C81</b><div class="pair"><span><strong>${x.pillar[0]}</strong><small>${x.stemTenGod}</small></span><span><strong>${x.pillar[1]}</strong><small>${x.branchTenGod}</small></span></div><small>${x.startYear}\u2013${x.endYear}</small>`;
+      card.innerHTML = `<span class="date">${x.startYear}</span><b>${x.ageStart.toFixed(1)}\u5C81</b><div class="pair"><span><strong class="element-${STEM_BY_NAME[x.pillar[0]].element}">${x.pillar[0]}</strong><small>${x.stemTenGod}</small></span><span><strong class="element-${BRANCH_BY_NAME[x.pillar[1]].element}">${x.pillar[1]}</strong><small>${x.branchTenGod}</small></span></div><small>${x.startYear}\u2013${x.endYear}</small>`;
       card.classList.add("fortune-card");
     });
   });
@@ -25026,6 +25031,7 @@
   var order = ["year", "month", "day", "hour"];
   var f = (n) => Number(n).toFixed(2);
   function render(r) {
+    if(window.renderBaziReading)window.renderBaziReading(r);
     $("status").textContent = "\u516B\u5B57\u6392\u76D8 Beta / \u4EBA\u5DE5\u9A8C\u76D8\u9636\u6BB5";
     $("timeSummary").innerHTML = `<div><b>\u516C\u5386</b>${esc(r.calendar.gregorian)}</div><div><b>\u519C\u5386</b>${esc(r.calendar.lunar)}</div><div><b>\u6807\u51C6\u65F6\u95F4</b>${esc(r.normalizedTime.civil)} \xB7 UTC${r.normalizedTime.utcOffsetSeconds / 3600 >= 0 ? "+" : ""}${r.normalizedTime.utcOffsetSeconds / 3600}</div><div><b>\u771F\u592A\u9633\u65F6</b>${esc(r.normalizedTime.trueSolarTime)} ${r.options.trueSolarTime ? "\uFF08\u5F53\u524D\u91C7\u7528\uFF09" : "\uFF08\u672A\u91C7\u7528\uFF09"}</div><div><b>\u4FEE\u6B63</b>\u7ECF\u5EA6 ${f(r.normalizedTime.longitudeCorrectionMinutes)} \u5206 + \u5747\u65F6\u5DEE ${f(r.normalizedTime.equationOfTimeMinutes)} \u5206</div>`;
     const row = (n, fn) => `<tr><th>${n}</th>${order.map((k) => `<td>${fn(r.calculatedResult[k], k)}</td>`).join("")}</tr>`;
@@ -25103,6 +25109,7 @@
   var activeResult = null;
   var selectedCycleIndex = null;
   var selectedYearIndex = null;
+  var selectedMonthPillar = null;
   var currentRelationColumns = [];
   function dynamicPillar(name, title, tenGod) {
     const stem = name[0], branch = name[1], hidden = Object.entries(getHiddenStems(branch)).filter(([, v]) => v).map(([role, s]) => ({ role, stem: s, tenGod: getTenGod(activeResult.calculatedResult.day.stem, s), element: STEM_BY_NAME[s].element }));
@@ -25121,6 +25128,11 @@
       }
     }
     currentRelationColumns = [...order.map((k) => ({ ...r.calculatedResult[k], title: labels[k] })), ...extras];
+    if(window.renderBaziPlate){
+      if(selectedMonthPillar)currentRelationColumns.push(dynamicPillar(selectedMonthPillar,'流月'));
+      window.renderBaziPlate(r,currentRelationColumns,import_lunar_javascript.default.LunarUtil);
+      return;
+    }
     extras.forEach((p) => {
       chart.tHead.rows[0].insertAdjacentHTML("beforeend", `<th class="transit-pillar">${esc(p.title)}</th>`);
       const cells = [esc(p.tenGod), `<strong class="stem element-${p.stemAttributes.element}">${p.stem}</strong><small>${p.stemAttributes.polarity}${p.stemAttributes.element}</small>`, `<strong class="branch element-${p.branchAttributes.element}">${p.branch}</strong><small>${p.branchAttributes.polarity}${p.branchAttributes.element}</small>`, p.hiddenStems.map((x) => `<span class="element-${x.element}">${x.stem}</span><small>${x.tenGod}</small>`).join("<br>"), esc(p.nayin)];
@@ -25152,6 +25164,7 @@
       activeResult = calculateBazi(inputSnapshot());
       selectedCycleIndex = null;
       selectedYearIndex = null;
+    selectedMonthPillar = null;
       render(activeResult);
       renderExtendedChart(activeResult);
       baziForm.hidden = true;

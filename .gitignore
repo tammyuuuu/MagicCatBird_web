@@ -1,6 +1,7 @@
 ﻿tmp/
 书/
 node_modules/
+tools/.validation_python/
 工具/
 项目管理/
 图片/待审核/
@@ -13,3 +14,11 @@ node_modules/
 图片/*.psd
 图片/*.png
 图片/*.jpg
+
+# Downloaded location source archives and validation inputs (not web assets)
+tools/ok_geo.csv
+tools/china_geo.7z
+tools/tw_geonames/
+tools/tw_geonames.zip
+china_cities_source.json
+china_cities_LICENSE.txt

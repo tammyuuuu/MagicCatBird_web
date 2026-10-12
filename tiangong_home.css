@@ -1,0 +1,148 @@
+html[data-workshop-theme="rouge"]{--bg0:#310b08;--bg1:#39150f;--bg2:#54251a;--ink:#ead9b8;--ink-dim:#c5ad94;--jade:#d6b780;--jade-dim:#c5ad94;--gold:#dec28b;--gold-hi:#f2ddad;--bronze:#b48f59;--line:#b48f5966;--line-soft:#b48f5933;--wash:#310b08b3;--cloth:url('图片/已批准/zhuque_brocade_tile_master_v01.png');}
+html[data-workshop-theme="paper"]{--bg0:#fffdf7;--bg1:#fffdf6;--bg2:#f7efd9;--ink:#292720;--ink-dim:#716554;--jade:#806b45;--jade-dim:#716554;--gold:#806337;--gold-hi:#6b502b;--bronze:#bba06a;--line:#bba06a88;--line-soft:#bba06a44;--wash:#fffdf7aa;--cloth:url('图片/已批准/baihu_brocade_tile_master_v01.png');}
+html[data-workshop-theme="jade"]{--bg0:#0b1929;--bg1:#12273b;--bg2:#1d3850;--ink:#e9e0cf;--ink-dim:#b1c2ce;--jade:#8daec7;--jade-dim:#b1c2ce;--gold:#d1b77f;--gold-hi:#eed6a4;--bronze:#b49a65;--line:#b49a6566;--line-soft:#b49a6533;--wash:#0b1929bb;--cloth:url('图片/已批准/xuanwu_brocade_tile_master_v01.png');}
+html[data-workshop-theme="apricot"]{--bg0:#edf4e9;--bg1:#f7faf0;--bg2:#e3efd9;--ink:#242d26;--ink-dim:#55715e;--jade:#386b52;--jade-dim:#55715e;--gold:#71552b;--gold-hi:#66502d;--bronze:#a99b6d;--line:#a99b6d88;--line-soft:#a99b6d44;--wash:#edf4e9cc;--cloth:url('图片/已批准/qinglong_brocade_tile_master_v01.png');}
+html[data-workshop-theme]{--bg:var(--bg0);--muted:var(--ink-dim);--gold2:var(--gold-hi);--soft:var(--line-soft);}
+html[data-workshop-theme] body{color:var(--ink);background:var(--bg0);}
+html[data-workshop-theme] .room{background:linear-gradient(var(--wash),var(--wash)),var(--cloth) repeat;background-size:auto,640px 640px;}
+.room::before,.room::after,.beam{display:none!important;}
+body[data-workshop-view=home] .room>*{visibility:hidden!important;}
+.tiangong-home{position:fixed;inset:70px 0 30px;overflow:auto;padding:7vh 24px 30px;text-align:center;z-index:10;}
+.tiangong-home header p{font-size:13px;letter-spacing:9px;color:var(--ink-dim);}
+.tiangong-home h1{font-size:32px;font-weight:400;letter-spacing:9px;margin:22px 0;color:var(--gold-hi);}
+.tiangong-home header div{font-size:13px;letter-spacing:3px;color:var(--ink-dim);}
+.tiangong-entries{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;max-width:990px;margin:9vh auto 0;}
+.tiangong-entry{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:290px;padding:30px 15px;background:color-mix(in srgb,var(--bg1) 78%,transparent);border:1px solid var(--line);color:var(--ink);text-decoration:none;transition:background .2s,border-color .2s;}
+.tiangong-entry:hover,.tiangong-entry:focus-visible{background:var(--bg2);border-color:var(--bronze);outline:1px solid var(--bronze);outline-offset:5px;}
+.entry-index{font-size:12px;color:var(--bronze);margin-bottom:30px;}
+.tiangong-entry strong{font-size:34px;font-weight:400;letter-spacing:12px;padding-left:12px;color:var(--gold-hi);}
+.entry-note{font-size:12px;letter-spacing:2px;margin-top:26px;color:var(--ink-dim);}
+.entry-open{font-size:11px;letter-spacing:4px;margin-top:35px;color:var(--gold);}
+.tiangong-back{position:fixed;top:65px;left:22px;z-index:100;color:var(--ink);font-size:12px;letter-spacing:2px;text-decoration:none;border-bottom:1px solid var(--bronze);padding:8px 0;}
+.tiangong-palette{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:2600;height:30px;padding:0 10px;border:1px solid var(--line);border-radius:16px;background:var(--bg1);display:flex;align-items:center;gap:9px;}
+.tiangong-palette button{position:relative;width:14px;height:14px;padding:0;border:1px solid #8885;border-radius:50%;cursor:pointer;}
+.tiangong-palette button[aria-pressed=true]::after{content:'';position:absolute;inset:-4px;border:1px solid var(--gold-hi);border-radius:50%;}
+.tiangong-palette button:focus-visible{outline:2px solid var(--bronze);outline-offset:3px;}
+html[data-workshop-theme] .east-nav{position:fixed;top:12px;right:16px;bottom:auto;left:auto;display:flex;gap:10px;z-index:2000;}
+html[data-workshop-theme] .east-nav-link{display:inline-block;padding:6px 14px;font-size:12px;letter-spacing:2px;text-decoration:none;color:var(--gold);background:var(--bg1);border:1px solid var(--line);border-radius:20px;box-shadow:none;}
+.east-nav-link::before{display:none!important;}
+html[data-workshop-theme] :is(.cabinet,.materials,.folio,.bench,.choice,.bench-close,.bench-actions button,.trace-switch button,.trace-tools button,.mat,.ingredient,.step,.toast){background:var(--bg1);color:var(--ink);box-shadow:none;border-color:var(--line);}
+html[data-workshop-theme] :is(.sheet p,.source-card span,.source-card b,.source-link,.figure-card b,.trace-disclaimer){color:var(--ink)!important;}
+html[data-workshop-theme] :is(.source-card,.figure-card){background:var(--bg2);border-color:var(--line);}
+html[data-workshop-theme] .folio::after{display:none;}
+html[data-workshop-theme] .cabinet{top:115px;bottom:24px;border-radius:0;}
+html[data-workshop-theme] .folio{top:115px;bottom:24px;border-radius:0;}
+html[data-workshop-theme] .materials{top:115px;bottom:24px;border-radius:0;}
+html[data-workshop-theme] .door{background:transparent;color:var(--ink-dim);box-shadow:none;}
+html[data-workshop-theme] .door.active{color:var(--gold-hi);background:var(--bg2);}
+html[data-workshop-theme] .shushu-stage{top:115px;background:var(--bg0);border:0;border-radius:0;}
+html[data-workshop-theme] :is(.catalogue,.page,.shushu-stage){scrollbar-color:var(--bronze) transparent;scrollbar-width:thin;}
+html[data-workshop-theme] :is(.library-book-head,.library-spine,.laozi-cover,.laozi-chapter,.laozi-note-card,.laozi-about,.laozi-reading .page-head,.laozi-reading .page-tabs,.laozi-nav button,.library-rail-toggle){background:var(--bg1);color:var(--ink);box-shadow:none;border-color:var(--line);}
+html[data-workshop-theme] :is(.laozi-original,.laozi-translation,.laozi-note-type,.laozi-reading .sheet p){color:var(--ink)!important;}
+html[data-workshop-theme] .page-head{background:var(--bg1);}
+html[data-workshop-theme] :is(.library-book,.library-chapter-drawer,.laozi-pair,.laozi-understanding,.laozi-note-preview){background:var(--bg2);color:var(--ink);border-color:var(--line);box-shadow:none;}
+html[data-workshop-theme] .east-nav-link{font:12px/1 "Noto Serif SC","Songti SC",serif;letter-spacing:3px;border-radius:18px;}
+@media(max-width:900px){html[data-workshop-theme] .east-nav{top:48px;right:8px;gap:4px;}html[data-workshop-theme] .east-nav-link{padding:7px 9px;font-size:11px;letter-spacing:1px;}.tiangong-back{top:84px;left:14px}.tiangong-home{top:85px}.tiangong-entries{gap:16px}.tiangong-entry{min-height:240px;}}
+@media(max-width:640px){.tiangong-palette{top:8px;gap:7px;padding:0 8px}.tiangong-palette button{width:12px;height:12px}.tiangong-home{padding:20px 22px 80px}.tiangong-home h1{font-size:25px;letter-spacing:5px}.tiangong-entries{grid-template-columns:1fr;margin-top:30px;gap:16px}.tiangong-entry{min-height:190px;padding:22px}.entry-index{margin-bottom:15px}.entry-open{margin-top:18px}.entry-note{margin-top:18px}.tiangong-entry strong{font-size:28px}.room{padding:120px 10px 85px!important;}.room .cabinet{position:relative;inset:auto!important;}.doors{grid-template-columns:repeat(3,1fr)!important}.room .folio{position:relative;inset:auto!important;min-height:680px}.room .shushu-stage{position:relative;inset:auto!important;height:calc(100dvh - 220px);margin-top:15px}.room.shushu-open .folio,.room.shushu-open .materials{display:none}.room.shushu-open .cabinet{visibility:visible}.room:has(.shushu-stage.open){min-height:100dvh}.tiangong-back{font-size:11px}}
+
+/* 内页仅目录与内容两栏，门类选择留在首页。 */
+html[data-workshop-theme] .cabinet,html[data-workshop-theme] .materials{display:none!important;}
+html[data-workshop-theme] .folio,html[data-workshop-theme] .shushu-stage{left:18px;right:18px;}
+
+/* M293 内页铺满，目录固定宽度，内容独立滚动。 */
+html[data-workshop-theme]{--workshop-rail:300px;}
+/* M298 世界切换小猫跟随四象。 */
+html[data-workshop-theme] .world-switch--east{--ws-ink:var(--gold);--ws-ink-hi:var(--gold-hi);--ws-border:var(--line);--ws-border-hi:var(--bronze);--ws-halo:var(--line-soft);--ws-glow:var(--line);background:var(--bg1);box-shadow:0 0 0 4px var(--line-soft);}
+html[data-workshop-theme] .world-switch--east:hover{background:var(--bg2);box-shadow:0 0 0 4px var(--line-soft);}
+html[data-workshop-theme] .world-switch .ws-tip{background:var(--bg1);color:var(--ink);border-color:var(--line);}
+html[data-workshop-theme] body:not([data-workshop-view=home]) .room{position:fixed;inset:0;padding:0!important;overflow:hidden;}
+html[data-workshop-theme] body:not([data-workshop-view=home]) :is(.folio,.shushu-stage){position:absolute;inset:0!important;margin:0;min-height:0;height:100dvh;border:0;border-radius:0;}
+html[data-workshop-theme] body:not([data-workshop-view=home]) .folio{display:grid;grid-template-columns:var(--workshop-rail) minmax(0,1fr);background:transparent;}
+/* M296 内容回归纸面，说明以细竖线区分。 */
+html[data-workshop-theme] .folio :is(.source-card,.figure-card,.ingredient,.step,.laozi-pair,.laozi-note-card,.laozi-about,.laozi-note-preview,.laozi-note-empty){background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;}
+html[data-workshop-theme] .folio :is(.source-card,.quote,.laozi-understanding,.laozi-note-card,.laozi-about,.laozi-note-preview){background:transparent!important;border:0!important;border-left:2px solid var(--bronze)!important;border-radius:0!important;padding:14px 18px;box-shadow:none!important;}
+html[data-workshop-theme] .folio .laozi-pair{padding:16px 0;border-bottom:1px solid var(--line-soft)!important;}
+html[data-workshop-theme] .folio :is(.ingredient,.step){padding:12px 0;border-bottom:1px solid var(--line-soft)!important;}
+html[data-workshop-theme] .folio .figure-card{padding:12px 0;}
+html[data-workshop-theme] .folio .laozi-about-list div{background:transparent;}
+html[data-workshop-theme] .folio .catalogue{padding:76px 22px 90px;max-height:none;height:100%;overflow:auto;background:color-mix(in srgb,var(--bg1) 88%,transparent);border-right:1px solid var(--line);scrollbar-gutter:stable;}
+html[data-workshop-theme] .folio .page{padding:76px 36px 70px;min-height:0;height:100%;overflow:auto;background:transparent;}
+html[data-workshop-theme] .laozi-reading .page-head{position:relative;top:auto;margin:0;padding:0 0 16px;background:transparent;backdrop-filter:none;}
+html[data-workshop-theme] .laozi-reading .page-tabs{position:relative;top:auto;margin:0 0 24px;padding:14px 0 0;background:transparent;}
+html[data-workshop-theme] .library-rail-toggle{display:none!important;}
+html[data-workshop-theme] .tiangong-back{top:auto;bottom:20px;left:22px;z-index:2700;padding:9px 13px;background:var(--bg1);border:1px solid var(--line);border-radius:18px;}
+/* M297 内页阅读字号与节奏。 */
+html[data-workshop-theme] .folio .section-kicker{font-size:11px;letter-spacing:3px;}
+html[data-workshop-theme] .folio .section-title{font-size:25px;}
+html[data-workshop-theme] .folio .section-note{font-size:12px;line-height:1.9;min-height:0;margin-top:12px;}
+html[data-workshop-theme] .folio .records{margin-top:26px;gap:12px;}
+html[data-workshop-theme] .folio .record{padding:17px 24px 17px 14px;}
+html[data-workshop-theme] .folio .record b{font-size:15px;line-height:1.6;}
+html[data-workshop-theme] .folio .record small{font-size:11px;line-height:1.8;}
+html[data-workshop-theme] .folio .page-head h2{font-size:23px;letter-spacing:3px;line-height:1.5;}
+html[data-workshop-theme] .folio .page-head p{font-size:12px;line-height:1.8;letter-spacing:1px;}
+html[data-workshop-theme] .folio .page-tab{font-size:14px;padding:11px 17px;}
+html[data-workshop-theme] .folio .sheet{max-width:920px;margin:0 auto;}
+html[data-workshop-theme] .folio .sheet h3{font-size:16px;line-height:1.7;margin-bottom:17px;}
+html[data-workshop-theme] .folio .sheet p{font-size:15px!important;line-height:2!important;letter-spacing:.7px;}
+html[data-workshop-theme] .folio :is(.quote,.source-card span,.ingredient span,.step span,.laozi-understanding,.laozi-note-preview,.laozi-about-list div){font-size:13px;line-height:1.95;}
+html[data-workshop-theme] .folio :is(.source-card b,.ingredient b,.step b){font-size:14px;line-height:1.7;margin-bottom:7px;}
+html[data-workshop-theme] .folio .source-grid{gap:28px;margin:22px 0;}
+html[data-workshop-theme] .folio .laozi-sheet{max-width:880px;}
+html[data-workshop-theme] .folio .laozi-pair{grid-template-columns:minmax(190px,35%) minmax(0,1fr);gap:28px;padding:22px 0;margin-bottom:12px;}
+html[data-workshop-theme] .folio .laozi-section-label{font-size:13px;margin:28px 0 15px;}
+html[data-workshop-theme] .folio .library-book-meta b{font-size:16px;line-height:1.6;}
+html[data-workshop-theme] .folio .library-book-meta small{font-size:11px;line-height:1.8;}
+html[data-workshop-theme] .folio :is(.library-book-meta i,.laozi-progress-label,.laozi-nav span){font-size:10px;line-height:1.8;}
+html[data-workshop-theme] .folio .laozi-chapter b{font-size:11px;line-height:1.6;}
+html[data-workshop-theme] .folio .laozi-chapter span{font-size:9px;}
+html[data-workshop-theme] .folio :is(.laozi-note-impact,.laozi-note-target,.laozi-keywords span,.laozi-understanding small){font-size:12px;line-height:1.8;}
+@media(max-width:640px){html[data-workshop-theme] .folio .section-title{font-size:18px;letter-spacing:2px;}html[data-workshop-theme] .folio .section-note{font-size:11px;}html[data-workshop-theme] .folio .record{padding:13px 5px;}html[data-workshop-theme] .folio .record b{font-size:12px;letter-spacing:1px;}html[data-workshop-theme] .folio .page-head h2{font-size:18px;letter-spacing:1px;}html[data-workshop-theme] .folio .page-head p{font-size:11px;}html[data-workshop-theme] .folio .page-tab{font-size:12px;padding:10px 5px;letter-spacing:1px;}html[data-workshop-theme] .folio .sheet p{font-size:14px!important;line-height:1.9!important;}html[data-workshop-theme] .folio .laozi-pair{grid-template-columns:1fr;gap:14px;padding:20px 0;}html[data-workshop-theme] .folio .library-book-meta b{font-size:12px;}html[data-workshop-theme] .folio .library-book-meta small{font-size:10px;}html[data-workshop-theme] .folio .source-grid{gap:20px;}html[data-workshop-theme] .folio .figure-pair{flex-wrap:wrap;}html[data-workshop-theme] .folio .figure-card{width:100%;}}
+@media(max-width:900px){html[data-workshop-theme] .folio .page{padding-top:100px;}}
+@media(max-width:640px){html[data-workshop-theme]{--workshop-rail:120px;}html[data-workshop-theme] .folio .catalogue{padding:100px 10px 85px;}html[data-workshop-theme] .folio .page{padding:100px 14px 85px;}html[data-workshop-theme] .records{grid-template-columns:1fr;}html[data-workshop-theme] .section-title{font-size:16px;letter-spacing:2px;}html[data-workshop-theme] .section-note{font-size:9px;}html[data-workshop-theme] .page-head h2{font-size:16px;letter-spacing:1px;}html[data-workshop-theme] .page-head{flex-wrap:wrap;gap:8px;}html[data-workshop-theme] .draft{display:none;}html[data-workshop-theme] .page-tabs{gap:0;}html[data-workshop-theme] .page-tab{padding:8px 5px;font-size:11px;letter-spacing:1px;}html[data-workshop-theme] .laozi-pair{grid-template-columns:1fr;}html[data-workshop-theme] .library-book-head{display:block;padding:8px;}html[data-workshop-theme] .library-spine{display:none;}html[data-workshop-theme] .library-book-meta b{font-size:11px;letter-spacing:1px;}html[data-workshop-theme] .laozi-chapters{grid-template-columns:1fr;}html[data-workshop-theme] .tiangong-back{left:8px;font-size:10px;padding:8px;}}
+/* M309：阁藏卡片，共用题签与细线外框 */
+html[data-workshop-theme] body[data-workshop-view=talisman] .folio .records .record{display:grid;grid-template-columns:42px minmax(0,1fr) 10px;grid-template-rows:auto auto;column-gap:12px;row-gap:7px;padding:18px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg1);box-shadow:none;text-align:left;}
+html[data-workshop-theme] body[data-workshop-view=talisman] .folio .records .record::before{content:'符箓';grid-column:1;grid-row:1/3;writing-mode:vertical-rl;letter-spacing:6px;display:flex;align-items:center;justify-content:center;min-height:72px;border:1px solid var(--line);border-radius:5px;font-size:12px;color:var(--gold);background:transparent;position:static;}
+html[data-workshop-theme] body[data-workshop-view=talisman] .folio .records .record b{grid-column:2;grid-row:1;font-size:15px;line-height:1.6;font-weight:400;letter-spacing:1px;}
+html[data-workshop-theme] body[data-workshop-view=talisman] .folio .records .record small{grid-column:2;grid-row:2;margin:0;font-size:11px;line-height:1.8;color:var(--ink-dim);}
+html[data-workshop-theme] body[data-workshop-view=talisman] .folio .records .record i{position:static;grid-column:3;grid-row:1/3;align-self:center;font-size:20px;color:var(--gold);}
+html[data-workshop-theme] body[data-workshop-view=talisman] .folio .records .record.active{border:1px solid var(--bronze);background:var(--bg1);}
+@media(max-width:640px){html[data-workshop-theme] body[data-workshop-view=talisman] .folio .records .record{grid-template-columns:minmax(0,1fr) 8px;padding:12px 7px;gap:6px;}html[data-workshop-theme] body[data-workshop-view=talisman] .folio .records .record::before{display:none;}html[data-workshop-theme] body[data-workshop-view=talisman] .folio .records .record :is(b,small){grid-column:1;}html[data-workshop-theme] body[data-workshop-view=talisman] .folio .records .record b{font-size:12px;}html[data-workshop-theme] body[data-workshop-view=talisman] .folio .records .record small{font-size:10px;}html[data-workshop-theme] body[data-workshop-view=talisman] .folio .records .record i{grid-column:2;}}
+
+html[data-workshop-theme] body[data-workshop-view=talisman] .folio .records .record::after{display:none!important;}
+html[data-workshop-theme] body[data-workshop-view=talisman] .folio .records .record{grid-template-columns:minmax(0,1fr) 10px;}
+html[data-workshop-theme] body[data-workshop-view=talisman] .folio .records .record::before{display:none!important;}
+html[data-workshop-theme] body[data-workshop-view=talisman] .folio .records .record :is(b,small){grid-column:1;}
+html[data-workshop-theme] body[data-workshop-view=talisman] .folio .records .record i{grid-column:2;}
+html[data-workshop-theme] .folio{grid-template-columns:var(--workshop-rail) minmax(0,1fr);transition:none!important;}html[data-workshop-theme] .folio .catalogue{width:auto;min-width:0;transition:none!important;}
+/* M313：符箓标题与正文直接落在锦缎上，阅读限宽靠左。 */
+html[data-workshop-theme] body[data-workshop-view=talisman] .folio .page-head{background:transparent!important;box-shadow:none;backdrop-filter:none;}
+html[data-workshop-theme] body[data-workshop-view=talisman] .folio .sheet{margin-left:0;margin-right:0;}
+html[data-workshop-theme="apricot"] .folio .catalogue{background:#cbd9c7!important;color:#253f35;border-right-color:#8b9e83;}
+html[data-workshop-theme="apricot"] .folio .catalogue :is(.section-title,.record b,.library-book-meta b){color:#253f35;}
+html[data-workshop-theme="apricot"] .folio .catalogue :is(.section-note,.section-kicker,.record small,.library-book-meta small){color:#526b58;font-weight:400;}
+html[data-workshop-theme="apricot"] body[data-workshop-view=talisman] .folio .records .record,html[data-workshop-theme="apricot"] .folio .library-book-head{background:#e5e9d8!important;border-color:#94a489;}
+html[data-workshop-theme="apricot"] body[data-workshop-view=talisman] .folio .records .record.active{background:#dae3cf!important;border-color:#57755c;}
+html[data-workshop-theme="apricot"] .folio .catalogue .record i{color:#57755c;}
+html[data-workshop-theme="apricot"] .tiangong-back{background:#e5e9d8;border-color:#94a489;color:#253f35;}
+html[data-workshop-theme="apricot"] .folio .catalogue :is(.section-kicker,.record i,.library-chevron){color:#8d5d25!important;}
+html[data-workshop-theme="apricot"] body[data-workshop-view=talisman] .folio .records .record,html[data-workshop-theme="apricot"] .folio .library-book-head{border-color:#b29255!important;}
+html[data-workshop-theme="apricot"] body[data-workshop-view=talisman] .folio .records .record.active{border-color:#976426!important;}
+html[data-workshop-theme="apricot"] .tiangong-back{border-color:#b29255;color:#8d5d25;}
+html[data-workshop-theme="apricot"] .folio .catalogue :is(.section-kicker,.record i,.library-chevron){color:#93483f!important;}
+html[data-workshop-theme="apricot"] body[data-workshop-view=talisman] .folio .records .record,html[data-workshop-theme="apricot"] .folio .library-book-head{border-color:#94a489!important;}
+html[data-workshop-theme="apricot"] body[data-workshop-view=talisman] .folio .records .record.active{border-color:#93483f!important;}
+html[data-workshop-theme="apricot"] .tiangong-back{border-color:#94a489;color:#93483f;}
+html[data-workshop-theme="apricot"] .folio .catalogue :is(.section-kicker,.record i,.library-chevron){color:#365e70!important;}
+html[data-workshop-theme="apricot"] body[data-workshop-view=talisman] .folio .records .record.active{border-color:#365e70!important;}
+html[data-workshop-theme="apricot"] .tiangong-back{color:#365e70;}
+/* M321 青龙右页点缀随紫灰 */
+html[data-workshop-theme="apricot"] .folio .page{--gold:#365e70;--gold-hi:#2d5060;--gold2:#2d5060;--bronze:#6b8994;--line:#6b899488;--line-soft:#6b899444;--soft:#6b899444;--red:#365e70;}
+html[data-workshop-theme="apricot"] .folio .page :is(.seal,.draft,.page-tab,h2,h3,.source-card b,.figure-card b,.source-link){color:#2d5060!important;border-color:#6b8994!important;}
+html[data-workshop-theme="apricot"] .folio .page .seal{color:#365e70!important;border-color:#365e70!important;}
+html[data-workshop-theme="apricot"] .folio .page :is(.page-head,.page-tabs,.page-tab,.quote,.source-card){border-color:#6b8994!important;}
+/* M323 卡片内加深玉绿，文字保留清晰的深石青层次。 */
+html[data-workshop-theme="apricot"] body[data-workshop-view=talisman] .folio .records .record,html[data-workshop-theme="apricot"] .folio .library-book-head{background:#cedcc5!important;}
+html[data-workshop-theme="apricot"] body[data-workshop-view=talisman] .folio .records .record.active{background:#bccfb5!important;}
+html[data-workshop-theme="apricot"] .folio .catalogue :is(.record b,.library-book-meta b){color:#203f4b!important;}
+html[data-workshop-theme="apricot"] .folio .catalogue :is(.record small,.library-book-meta small){color:#3d5962!important;}

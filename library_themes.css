@@ -1,0 +1,65 @@
+/* Library themes share the four worlds used by the divination table. */
+body[data-theme] { background: var(--library-background); color: var(--ink); }
+body[data-theme="mystic"] { --library-background: radial-gradient(ellipse at 68% 6%,#38234a,#17101f 38%,#07050a 100%); --library-surface: rgba(27,15,34,.84); --library-header: rgba(8,5,13,.9); }
+body[data-theme="noir"] { --library-background: repeating-linear-gradient(0deg,transparent 0 47px,rgba(30,30,32,.035) 48px),repeating-linear-gradient(90deg,transparent 0 47px,rgba(30,30,32,.035) 48px),linear-gradient(135deg,#fffdf9,#f0ede6); --library-surface: rgba(255,253,249,.88); --library-header: rgba(255,253,249,.94); --gold:#38383b; --gold2:#17171a; --ink:#17171a; --body:#39393d; --muted:#747477; --line:rgba(23,23,26,.25); --vline:rgba(23,23,26,.18); --paper:var(--library-surface); }
+body[data-theme="parchment"] { --library-background: radial-gradient(ellipse at 15% 15%,rgba(128,73,43,.25),transparent 50%),linear-gradient(135deg,#451b28,#182e29 70%,#0d1d19); --library-surface: rgba(40,27,28,.87); --library-header: rgba(28,19,22,.94); --gold:#c9a454; --gold2:#f1d994; --ink:#f1e1c1; --body:#d8c7a7; --muted:#b29e7c; --line:rgba(201,164,84,.3); --vline:rgba(201,164,84,.2); --paper:var(--library-surface); }
+body[data-theme="dopamine"] { --library-background: radial-gradient(ellipse at 15% 12%,#fbe2ed,transparent 55%),radial-gradient(ellipse at 90% 55%,#dceef6,transparent 60%),linear-gradient(135deg,#fff8f5,#eee9f6); --library-surface: rgba(255,255,255,.76); --library-header: rgba(255,255,255,.85); --gold:#a17a9d; --gold2:#795f83; --ink:#596b80; --body:#66778e; --muted:#8693a5; --line:rgba(169,150,195,.35); --vline:rgba(145,203,230,.4); --paper:var(--library-surface); }
+body[data-theme] .global-header { background:var(--library-header); }
+body[data-theme] .tool-sidebar { background:linear-gradient(90deg,var(--library-surface),transparent); }
+body[data-theme] .top-nav a, body[data-theme] #libraryTheme { background:var(--library-surface); color:var(--body); border-color:var(--vline); }
+body[data-theme] .tool, body[data-theme] .side-label, body[data-theme] .entry-sigil p { color:var(--muted); }
+body[data-theme] .tool.active { color:var(--gold2); }
+body[data-theme] :is(input,textarea,select) { background:var(--library-surface); color:var(--ink); border-color:var(--line); color-scheme:light; }
+body[data-theme="noir"]::before, body[data-theme="dopamine"]::before { opacity:.04; }
+#libraryTheme { margin-right:12px; padding:7px 10px; border:1px solid; border-radius:8px; font:inherit; font-size:11px; cursor:pointer; }
+body[data-theme] :is(.archive-item,.atlas-detail,.aux,.cycle-detail,.detail-panel,.empty-card,.evidence,.meaning,.pair-card,.plain-summary,.quiet-card,.reality,.relationship-quick,.stage-together,.star-field,.timeline) { background:var(--library-surface); color:var(--body); border-color:var(--line); }
+body[data-theme] :is(.soft-btn,.birth-form button,.digit-selector button,.archive-tabs button) { background:var(--library-surface); color:var(--gold2); border-color:var(--line); }
+body[data-theme="noir"] *, body[data-theme="dopamine"] * { text-shadow:none; }
+body:is([data-theme="noir"],[data-theme="dopamine"]) .global-header { box-shadow:0 4px 16px rgba(70,70,90,.08); }
+@media(max-width:600px) { #libraryTheme { max-width:104px; margin-right:6px; } }
+/* The library is one continuous workspace, without a separate header strip. */
+body[data-theme] .shell { margin-top:0; min-height:100vh; }
+body[data-theme] .tool-sidebar { top:0; height:100vh; padding-top:92px; display:flex; flex-direction:column; background:transparent; }
+body[data-theme] .report-wrap { padding-top:80px; }
+body[data-theme] .birth-entry { min-height:calc(100vh - 150px); }
+body[data-theme] .library-sidebar-nav { position:fixed; top:12px; right:12px; z-index:999; margin:0; display:flex; flex-direction:row; gap:10px; padding:0; }
+body[data-theme] .library-sidebar-nav a { text-align:center; }
+body[data-theme] .world-switch--west {
+  --ws-ink: var(--gold); --ws-ink-hi: var(--gold2);
+  --ws-border: var(--line); --ws-border-hi: var(--gold);
+  --ws-halo: var(--vline); --ws-glow: var(--vline);
+  background: var(--library-surface);
+}
+body[data-theme="mystic"] .world-switch--west { --ws-ink:#c5a6ea; --ws-ink-hi:#e8d4ff; --ws-border:rgba(159,114,223,.6); --ws-border-hi:#c39bf5; --ws-halo:rgba(159,114,223,.14); --ws-glow:rgba(159,114,223,.42); }
+body[data-theme="dopamine"] .world-switch--west { --ws-ink:#b66788; --ws-ink-hi:#df72a5; --ws-border:#e598b8; --ws-border-hi:#df78a7; --ws-halo:rgba(229,152,184,.2); --ws-glow:rgba(229,152,184,.3); }
+body[data-theme] .world-switch--west .ws-tip { background:var(--library-surface); color:var(--body); }
+.library-system-switch { position:fixed; top:80px; left:50vw; transform:translateX(-50%); z-index:20; display:flex; justify-content:center; gap:12px; margin:0; width:max-content; }
+body[data-theme] .library-system-switch :is(a,button) { padding:10px 20px; border:1px solid var(--line); border-radius:20px; background:var(--library-surface); color:var(--body); text-decoration:none; font:inherit; font-size:13px; cursor:pointer; }
+body[data-theme] .library-system-switch a[aria-current="page"] { border-color:var(--gold); color:var(--gold2); }
+body[data-theme] .library-system-switch button:disabled { opacity:.45; cursor:default; }
+body[data-theme] .library-system-switch a { box-sizing:border-box; width:112px; height:42px; display:flex; align-items:center; justify-content:center; white-space:nowrap; }
+body[data-library-system="vedic"] main { margin-top:0; padding-top:80px; }
+body[data-library-system="vedic"] :is(.birth-panel,.advanced,.chart-paper,.guide,.house-card,.moon-panel,.selection-panel,.dasha-node,.teaching-note) { background:var(--library-surface); color:var(--body); border-color:var(--line); }
+body[data-library-system="vedic"] :is(label,summary,.legend,.convention) { color:var(--body); }
+body[data-library-system="vedic"] :is(.primary-btn,.quiet-btn) { color:var(--gold2); border-color:var(--gold); background:var(--library-surface); }
+body[data-library-system="vedic"] .chart-paper svg text { fill:var(--ink); }
+body[data-library-system="vedic"] .chart-paper svg :is(line,polygon,polyline,rect) { stroke:var(--gold); }
+body[data-library-system="vedic"]:is([data-theme="noir"],[data-theme="dopamine"]) .graha-card { background:var(--library-surface); border-color:var(--line); color:var(--body); box-shadow:none; }
+body[data-library-system="vedic"]:is([data-theme="noir"],[data-theme="dopamine"]) .graha-card strong { color:var(--ink); }
+body[data-library-system="vedic"]:is([data-theme="noir"],[data-theme="dopamine"]) .graha-card .graha-summary { color:var(--body); }
+body[data-library-system="vedic"]:is([data-theme="noir"],[data-theme="dopamine"]) .graha-card small { color:var(--muted); }
+body[data-library-system="vedic"]:is([data-theme="noir"],[data-theme="dopamine"]) .graha-card :is(b,i) { color:var(--gold2); border-color:var(--line); }
+body[data-library-system="vedic"]:is([data-theme="noir"],[data-theme="dopamine"]) .graha-card:is(:hover,:focus-visible) { background:var(--library-header); border-color:var(--gold); }
+@media(max-width:760px) {
+  body[data-theme] .tool-sidebar { height:auto; min-height:0; padding-top:72px; }
+  body[data-theme] .library-sidebar-nav { margin:0; }
+  body[data-theme] .report-wrap { padding-top:24px; }
+}
+body[data-theme] .report-wrap,
+body[data-library-system="vedic"] main,
+body[data-library-system="western"] main { padding-top:150px; }
+@media(max-width:760px) {
+  body[data-theme] .library-system-switch { gap:6px; }
+  body[data-theme] .library-system-switch a { width:96px; }
+}
+

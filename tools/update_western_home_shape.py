@@ -1,0 +1,7 @@
+from pathlib import Path
+p=Path('library_home.css');s=p.read_text(encoding='utf-8-sig');s=s.split('/* Twelve zodiac sectors replace')[0];s+='''/* Twelve zodiac sectors replace the western home's diamond. */
+body[data-library-system="western"] .library-entry-sigil::before { display:none; }
+.library-entry-dodecagon { position:absolute;inset:7%;width:86%;height:86%;fill:none;stroke:var(--line);stroke-width:.5;pointer-events:none; }
+''';p.write_text(s,encoding='utf-8')
+p=Path('library_home.js');s=p.read_text(encoding='utf-8-sig');s=s.replace("button.onclick=()=>location.hash=id;grid.append(button);","if(system==='western'){const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 100 100');svg.classList.add('library-entry-dodecagon');svg.setAttribute('aria-hidden','true');const polygon=document.createElementNS(svg.namespaceURI,'polygon');polygon.setAttribute('points',Array.from({length:12},(_,i)=>{const a=(i*30-105)*Math.PI/180;return `${50+49*Math.cos(a)},${50+49*Math.sin(a)}`;}).join(' '));svg.append(polygon);button.querySelector('.library-entry-sigil').append(svg);}button.onclick=()=>location.hash=id;grid.append(button);");p.write_text(s,encoding='utf-8')
+p=Path('western_web.html');s=p.read_text(encoding='utf-8-sig').replace('library_home.css?v=m059b','library_home.css?v=m062').replace('library_home.js?v=m059b','library_home.js?v=m062');p.write_text(s,encoding='utf-8')

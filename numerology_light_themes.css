@@ -1,0 +1,66 @@
+/* Fixed palette overrides for the numerology and relationship reports. */
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .global-header {background:var(--library-surface)!important;box-shadow:0 8px 28px rgba(30,30,40,.07)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .top-nav a {border-color:var(--line)!important;background:var(--library-surface)!important;color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .tool-sidebar {background:var(--library-surface)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .side-label {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .tool {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .tool.active {background:var(--library-surface)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .entry-sigil {border-color:var(--line)!important;box-shadow:0 8px 28px rgba(30,30,40,.07)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .entry-sigil p {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .birth-form label {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .birth-form button,body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .soft-btn {background:var(--library-surface)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .error {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .soft-btn {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .section-number {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .core-orbit {box-shadow:0 8px 28px rgba(30,30,40,.07)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .core-orbit:before {border-color:var(--line)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .path small {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .keywords span {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .meaning {background:var(--library-surface)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .aux {background:var(--library-surface)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .star-field {background:var(--library-surface)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .star-field:before,body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .star-field:after {border-color:var(--line)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .digit-star {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .digit-star em {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .digit-star.present {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .detail-panel {background:var(--library-surface)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .growth-node {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .evidence {background:var(--library-surface)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .timeline:before {background:var(--library-surface)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .era .node {background:var(--library-surface)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .era.current .node,body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .era.selected .node {box-shadow:0 8px 28px rgba(30,30,40,.07)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .era small {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .challenge-line {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .challenge-line b {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .cycle-detail {background:var(--library-surface)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .year-number small {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .digit-selector button {background:var(--library-surface)!important;color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .digit-selector button.active {box-shadow:0 8px 28px rgba(30,30,40,.07)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .disclaimer {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .empty-card {background:var(--library-surface)!important;box-shadow:0 8px 28px rgba(30,30,40,.07)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .archive-tabs span {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .empty-note {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .tool:not(.active) {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .tool:not(.active) small {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .pair-person {background:var(--library-surface)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .pair-card,body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .relation-card {background:var(--library-surface)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .pair-numbers span {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .archive-item {background:var(--library-surface)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .relationship-quick a {background:var(--library-surface)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .relationship-quick a:hover {background:var(--library-surface)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .plain-summary {background:var(--library-surface)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .translation-note {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .reality {background:var(--library-surface)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .difference-grid p {background:var(--library-surface)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .stage-together,body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .year-together {background:var(--library-surface)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .archive-tabs button {color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .archive-delete {border-color:var(--line)!important;background:var(--library-surface)!important;color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .archive-delete:hover {border-color:var(--line)!important;color:var(--body)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .cosmic-card {background:var(--library-surface)!important;}
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .cosmic-evidence {background:var(--library-surface)!important;}
+/* Report templates also contain inline palette declarations. */
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) :is(.report,.relationship-view) [style*="background"] { background:var(--library-surface)!important; }
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) :is(.report,.relationship-view) [style*="color:"] { color:var(--body)!important; }
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) .section-number { color:var(--line)!important; }
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) :is(.report,.relationship-view) :is(h1,h2,h3,h4,strong) { color:var(--ink); }
+body.numerology-page:is([data-theme="noir"],[data-theme="dopamine"]) :is(.soft-btn,.archive-tabs button,.digit-selector button).active { color:var(--gold2)!important;border-color:var(--gold)!important; }

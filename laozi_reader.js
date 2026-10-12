@@ -2,11 +2,11 @@
   var book=window.LAOZI_DE_WORKING;if(!book)return;
   var state={chapter:Math.min(40,Math.max(1,+(localStorage.getItem('tiangong-laozi-chapter')||1))),tab:'reading',expanded:false,sidebarCollapsed:false};
   var $=function(id){return document.getElementById(id)},doors=$('doors'),records=$('records'),sheet=$('sheet'),active=false;
-  var link=document.createElement('link');link.rel='stylesheet';link.href='laozi_reader.css';document.head.appendChild(link);
+  if(!document.querySelector('link[href="laozi_reader.css"]')){var link=document.createElement('link');link.rel='stylesheet';link.href='laozi_reader.css';document.head.appendChild(link);}
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   function chapter(){return book.chapters[state.chapter-1]}
   function restore(){active=false;document.body.classList.remove('laozi-reading','library-rail-collapsed')}
-  function ensureRailToggle(){var folio=document.querySelector('.folio'),toggle=folio.querySelector('.library-rail-toggle');if(!toggle){toggle=document.createElement('button');toggle.className='library-rail-toggle';toggle.type='button';toggle.style.display='grid';toggle.setAttribute('aria-label','收起藏书阁侧栏');toggle.innerHTML='<span>‹</span>';toggle.onclick=function(){state.sidebarCollapsed=!state.sidebarCollapsed;syncRail()};folio.appendChild(toggle)}return toggle}
+  function ensureRailToggle(){var folio=document.querySelector('.folio'),toggle=folio.querySelector('.library-rail-toggle');if(!toggle){toggle=document.createElement('button');toggle.className='library-rail-toggle';toggle.type='button';toggle.setAttribute('aria-label','收起藏书阁侧栏');toggle.innerHTML='<span>‹</span>';toggle.onclick=function(){state.sidebarCollapsed=!state.sidebarCollapsed;syncRail()};folio.appendChild(toggle)}return toggle}
   function syncRail(){var toggle=ensureRailToggle();document.body.classList.toggle('library-rail-collapsed',state.sidebarCollapsed);toggle.setAttribute('aria-label',state.sidebarCollapsed?'展开藏书阁侧栏':'收起藏书阁侧栏');toggle.setAttribute('aria-expanded',String(!state.sidebarCollapsed));toggle.innerHTML='<span>'+(state.sidebarCollapsed?'›':'‹')+'</span>'}
   function renderCatalogue(){
     $('catTitle').textContent='藏 书 阁';$('catNote').textContent='点击书名展开章节；收起时只保留书目与阅读进度。';

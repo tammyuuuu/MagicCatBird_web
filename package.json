@@ -4,7 +4,12 @@
   "type": "module",
   "scripts": {
     "test:bazi": "node --test tests/bazi/*.test.js",
-    "build:bazi": "esbuild src/bazi/ui/baziApp.js --bundle --platform=browser --format=iife --outfile=bazi_app.js"
+    "build:bazi": "esbuild src/bazi/ui/baziApp.js --bundle --platform=browser --format=iife --outfile=bazi_app.js",
+    "test:vedic": "node --test tests/vedic/*.test.js",
+    "test:cosmic": "node --test tests/cosmic/*.test.js",
+    "build:cosmic": "esbuild src/cosmic/cosmicApp.js --bundle --platform=browser --format=iife --outfile=cosmic_app.js",
+    "build:vedic": "esbuild src/vedic/ui/vedicVerifyApp.js --bundle --platform=browser --format=iife --outfile=vedic_verify_app.js",
+    "build:vedic:classic": "node tools/build_vedic_classic.mjs"
   },
   "dependencies": {
     "@js-joda/core": "^6.1.0",
